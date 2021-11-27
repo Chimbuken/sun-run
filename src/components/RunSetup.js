@@ -2,6 +2,9 @@ import {useState} from 'react'
 import axios from 'axios';
 
 function RunSetup() {
+  const month= ["January","February","March","April","May","June","July",
+  "August","September","October","November","December"];
+
   const d = new Date();
   const [firstRun, setFirstRun] = useState({
     pace :'Jog',
@@ -10,7 +13,10 @@ function RunSetup() {
     userSunrise: false,
     userSunset: false,
     lat: 43.64829, 
-    lng: -79.39785
+    lng: -79.39785,
+    year: d.getFullYear(),
+    month: d.getMonth(),
+    day: d.getDate()
   })
   
   const [runResults, setRunResults] = useState({})
@@ -32,7 +38,7 @@ function RunSetup() {
     }
   }
   const setRun = (e)=> {
- 
+
     e.preventDefault()
     console.log(firstRun)
 // https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400
@@ -46,19 +52,35 @@ function RunSetup() {
       }
     }).then((response) => {
       console.log(response.data.results)
-      const something = response.data.results.sunrise;
-      console.log('something: ', something)
+      // getting the values for sunrise and sunset from api call. 
+      const sunrise = response.data.results.sunrise;
+      const sunset = response.data.results.sunset;
+    
+      // converting the results in to utc format so that we can convert it to local time. 
+      const utcSunrise = `${firstRun.day} ${month[firstRun.month]} ${firstRun.year} ${sunrise} UTC`
+      const utcSunset= `${firstRun.day} ${month[firstRun.month]} ${firstRun.year} ${sunset} UTC`
 
-      const event = new Date();
-      // expected output: Wed Oct 05 2011 16:48:00 GMT+0200 (CEST)
-      // (note: your timezone may vary)
-
-      // something:  12:25:27 PM
-
-      // new Date('05 October 2011 14:48 UTC');
+      // Sat Nov 27 2021 16:45:15 GMT-0500 (Eastern Standard Time) RunSetup.js:69
       
-      const isoDate= event.toISOString()
-      console.log("isoDate: ", isoDate);
+      // converting the utc time to local time which gives us a sting of date , time and year and time zone. 
+      let localSunriseTime = new Date(utcSunrise).toString()
+      let localSunsetTime = new Date(utcSunset).toString()
+
+      // converting the strings into array to get the time for now. 
+      const sunriseArray = localSunriseTime.split(" ")
+      const sunsetArray = localSunsetTime.split(" ")
+      console.log('local Sunrise Time with date: ', localSunriseTime);
+      console.log('local Sunrise Time with date: ', localSunsetTime);
+      console.log('sunset local time: ', sunsetArray);
+      
+      localSunriseTime =  sunriseArray[4]
+      localSunsetTime =  sunsetArray[4]
+      console.log('sunrise local time: ', localSunriseTime);
+      console.log('sunset local time: ', localSunsetTime);
+     
+      // console.log("iso: ", event.toISOString())
+      // const isoDate= event.toISOString()
+      // console.log("isoDate: ", isoDate);
 
       setRunResults({...response.data.results, ...firstRun});
       
@@ -130,8 +152,8 @@ function RunSetup() {
           {runResults.userSunrise === true ? <p>sunrise: {runResults.sunrise}</p> : null}
           {/* {runResults.userSunrise === true ?
             runResults.pace ==='Jog'  ?
-           <p>sunrise: {runResults.sunrise-}</p> 
-           
+            <p>sunrise: {runResults.sunrise-}</p> 
+            
            : null} */}
           {runResults.userSunset === true ? <p>sunset: {runResults.sunset}</p> : null}
           </>
