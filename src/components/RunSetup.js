@@ -29,6 +29,7 @@ function RunSetup() {
   }
   const handleTimeClick = (e)=>{
     e.preventDefault()
+    
 
     const {id} = e.target;
     if(id === "userSunrise"){
@@ -41,6 +42,7 @@ function RunSetup() {
 
     e.preventDefault()
     console.log(firstRun)
+    
 // https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400
     axios({
       url: `https://api.sunrise-sunset.org/json?lat=${firstRun.lat}=${firstRun.lng}=today`,
@@ -77,34 +79,57 @@ function RunSetup() {
       localSunsetTime =  sunsetArray[4]
       console.log('sunrise local time: ', localSunriseTime);
       console.log('sunset local time: ', localSunsetTime);
-     
-      // console.log("iso: ", event.toISOString())
-      // const isoDate= event.toISOString()
-      // console.log("isoDate: ", isoDate);
 
-      setRunResults({...response.data.results, ...firstRun});
+      let totalTime
+
+      setRunResults({...response.data.results, ...firstRun});   
+      if(firstRun.pace ==="Jog" ){
+        if(firstRun.distance === '5km'){
+          totalTime = 37.5
+        }
+        if(firstRun.distance === '10km'){
+          totalTime = 75
+        }
+        if(firstRun.distance === 'Half Marathon'){
+          totalTime = 157.5
+        }
+        if(firstRun.distance === 'Marathon'){
+          totalTime = 315
+        }
+        // firstRun.distance
+      }
+      if(firstRun.pace ==="Run"){
+        if(firstRun.distance === '5km'){
+          totalTime = 18.75
+        }
+        if(firstRun.distance === '10km'){
+          totalTime = 37.5
+        }
+        if(firstRun.distance === 'Half Marathon'){
+          totalTime = 78.75
+        }
+        if(firstRun.distance === 'Marathon'){
+          totalTime = 157.5
+        }
+      }
+      console.log('localSunriseTime: ', localSunriseTime -localSunsetTime )
       
-      // if(firstRun.pace === "Jog" ){
-      //   if(firstRun.distance === "5km"){
-      //           {/* 
-      //   if user chooses jog - 5k - 
-      //   mid point: sunrise
-      //   total time 37.5minutes
-      //   runResults.sunrise -  37.5/2
+      let timeInMinutes = convertH2M(localSunriseTime);
+      console.log('timeInMinutes: ', timeInMinutes);
 
-      // */}
-      //     const totalRunTime = 37.5
-      //     const startTime = totalRunTime/
-      //   }
-
-      // }
-      // if(firstRun.pace === "Run" ){
-
-      // }
-    
-
-
+      const startTime = Number(timeInMinutes) -(totalTime/2)
+      const test = convertM2H(startTime)
+      console.log('start time if sunrise: ', startTime)
+      console.log('start time if sunrise: ', test)      
     });
+    function convertH2M(timeInHour){
+      var timeParts = timeInHour.split(":");
+      return Number(timeParts[0]) * 60 + Number(timeParts[1]);
+    }
+    function convertM2H(timeInMinuets){
+      var timeParts = timeInMinuets;
+      return Number(timeInMinuets / 60);
+    }
   }
   return (
     <section>
