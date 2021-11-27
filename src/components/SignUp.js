@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import firebase from '../firebase';
-
+import axios from 'axios';
 
 // profanity list import
 import list from '../includes/list.txt';
+
+
 function SignUp() {
 
   // useState declarations
@@ -13,7 +15,6 @@ function SignUp() {
   const [isNameValid, setIsNameValid] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isAddressValid, setIsAddressValid] = useState(false);
-  const [isSignupValid, setIsSignupValid] = useState(false);
 
 
   // uid generator (for now)
@@ -28,75 +29,78 @@ function SignUp() {
 
     // set name
     setName(event.target.value);
-    console.log(name)
 
     // this regex requires first and last name
-    const nameRegex = /\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/g;
+    const nameRegex = /\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
 
-    if(nameRegex.test(name)) {
+    if(nameRegex.test(event.target.value)) {
       setIsNameValid(true);
     }
+
   }
 
   // handleEmailChange -> setEmail -> email
   const handleEmailChange = (event) => {
     
-    // setIsEmailValid(false)
+    setIsEmailValid(false)
 
     // set email
     setEmail(event.target.value);
-    console.log(email)
 
     // check if email is in proper format and is not empty -> set email validation to true
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if(emailRegex.test(email)) {
-      setIsEmailValid(true);
-      
-    }
-     
-    
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(emailRegex.test(event.target.value)) {
+      setIsEmailValid(true); 
+    }  
 
   }
 
   // handleAddressChange -> setAddress -> address
   const handleAddressChange = (event) => {
 
+    setIsAddressValid(false)
+
     // set address
     setAddress(event.target.value);
-
+  
+    if(isNotEmpty(event.target.value)) {
+      setIsAddressValid(true); 
+    }
   }
+
+  // declare a variable which checks if all 3 inputs (name, email, address) are all valid
+  const isSignupValid = (isNameValid && isEmailValid && isAddressValid) ? true : false;
 
   // handleSignup (handle all error checking, submit to firebase, proceed to runsetup)
   const handleSignup = (event) => {
 
     event.preventDefault();
 
-    // error handler
-    let isError = false;
+    if(isSignupValid) {
 
-    // generate uid for user
-    const userId = uid();
+      // generate uid for user
+      const userId = uid();
 
-    // check if name is alpha only and is not empty -> set name validation to true
-    // const nameRegex = /[^a-zA-Z]+$/;
-    // const nameRegex = /^[a-z]+$/g;
-    // const nameValid = nameRegex.test(name)
-    // if(nameValid) {
-    //   setIsNameValid(true);
-    // }
-   
+      // if all 3 inputs are valid without errors, then setUser to database
+      const userObj = {
+        uid: userId,
+        name: name,
+        email: email,
+        address: address,
+        coords: {
+          lat: 69,
+          long: 420
+        }
+      }
 
+      // set up firebase prepare statement/reference
+      const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
 
-  //testing purpose
+      // update db to user object
+      dbRef.update(userObj);
+      
+    }
 
-  console.log('is email valid' + isEmailValid)
-console.log(isEmailValid)
-
-  // console.log('is name valid' + isNameValid)
-    
-  // setIsNameValid(false)
-  // setIsEmailValid(false)
-  // setIsAddressValid(false)
   }
 
   // function to check if input is empty
@@ -117,20 +121,8 @@ console.log(isEmailValid)
 
     // user is set to an object (uid, name, email, address, cords: {lat,long})
 
-
-
     // set up firebase prepare statement/reference
     const dbRef = firebase.database().ref(`/${user.uid}`);
-
-    // [key=uid] = {
-    //   [key as uid]
-    //   [name as name]
-    //   [email as email]
-    //   [address as address]
-    //   [coords] {
-    //     lat:
-    //     long:
-    //   }
 
     // update db to user object
     dbRef.update(user);
