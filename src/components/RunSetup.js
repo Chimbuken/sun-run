@@ -58,11 +58,11 @@ function RunSetup() {
       const sunrise = response.data.results.sunrise;
       const sunset = response.data.results.sunset;
     
+    
       // converting the results in to utc format so that we can convert it to local time. 
       const utcSunrise = `${firstRun.day} ${month[firstRun.month]} ${firstRun.year} ${sunrise} UTC`
       const utcSunset= `${firstRun.day} ${month[firstRun.month]} ${firstRun.year} ${sunset} UTC`
 
-      // Sat Nov 27 2021 16:45:15 GMT-0500 (Eastern Standard Time) RunSetup.js:69
       
       // converting the utc time to local time which gives us a sting of date , time and year and time zone. 
       let localSunriseTime = new Date(utcSunrise).toString()
@@ -82,7 +82,7 @@ function RunSetup() {
 
       let totalTime
 
-      setRunResults({...response.data.results, ...firstRun});   
+      
       if(firstRun.pace ==="Jog" ){
         if(firstRun.distance === '5km'){
           totalTime = 37.5
@@ -112,23 +112,34 @@ function RunSetup() {
           totalTime = 157.5
         }
       }
-      console.log('localSunriseTime: ', localSunriseTime -localSunsetTime )
-      
-      let timeInMinutes = convertH2M(localSunriseTime);
-      console.log('timeInMinutes: ', timeInMinutes);
+      let timeInMinutes
+      if(firstRun.userSunrise){
+        timeInMinutes = convertH2M(localSunriseTime);
+      }else if(firstRun.userSunset){
+        timeInMinutes = convertH2M(localSunsetTime);
+      }
 
       const startTime = Number(timeInMinutes) -(totalTime/2)
-      const test = convertM2H(startTime)
-      console.log('start time if sunrise: ', startTime)
-      console.log('start time if sunrise: ', test)      
+      let startMinute = Math.floor(startTime % 60)
+      let startHour = (Math.floor(startTime / 60 ))
+      if(startMinute < 10){
+        startMinute = `0${startMinute}`
+      }
+      let convertingToHourMinute
+      if(startHour > 12){
+        convertingToHourMinute = (`${startHour-12}:${startMinute} PM`)
+      }else {
+        convertingToHourMinute = (`${startHour}:${startMinute} AM`)
+      }
+
+      localSunriseTime =  sunriseArray[4]
+      localSunsetTime =  sunsetArray[4]  
+      setRunResults({...firstRun, sunsetData: localSunsetTime, sunriseData:localSunriseTime, departureTime: convertingToHourMinute });   
+
     });
     function convertH2M(timeInHour){
       var timeParts = timeInHour.split(":");
       return Number(timeParts[0]) * 60 + Number(timeParts[1]);
-    }
-    function convertM2H(timeInMinuets){
-      var timeParts = timeInMinuets;
-      return Number(timeInMinuets / 60);
     }
   }
   return (
@@ -137,7 +148,7 @@ function RunSetup() {
 
       <form onSubmit={setRun} >
         <div>
-          <label for="pace">Pace</label>
+          <label htmlFor="pace">Pace</label>
           <select name="pace" id="pace" value={firstRun.pace} onChange={handleChange}> 
             <option value="Jog">Jog 8km/hr</option>
             <option value="Run">Run 16km/h</option>
@@ -145,7 +156,7 @@ function RunSetup() {
         </div>
         
         <div>
-          <label for="distance">Distance</label>
+          <label htmlFor="distance">Distance</label>
           <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange}>
             <option value="5km">5km</option>
             <option value="10km">10km</option>
@@ -154,7 +165,7 @@ function RunSetup() {
           </select>
         </div>
         <div>
-        <label for="date">Start date:</label>
+        <label htmlFor="date">Start date:</label>
           <input type="date" id="date" name="date"
           onChange={handleChange}
           value={firstRun.date}
@@ -174,13 +185,26 @@ function RunSetup() {
         {
           runResults ?
           <>
-          {runResults.userSunrise === true ? <p>sunrise: {runResults.sunrise}</p> : null}
+          {runResults.userSunrise === true ? 
+          <div>
+            <p>Sunrise: {runResults.sunriseData}</p> 
+            <p>Departure Time:  {runResults.departureTime}</p>
+
+          </div>
+          : null}
           {/* {runResults.userSunrise === true ?
             runResults.pace ==='Jog'  ?
             <p>sunrise: {runResults.sunrise-}</p> 
             
            : null} */}
-          {runResults.userSunset === true ? <p>sunset: {runResults.sunset}</p> : null}
+          {runResults.userSunset === true ? 
+          <div>
+            <p>Sunset: {runResults.sunsetData}</p>
+            <p>Departure Time:  {runResults.departureTime}</p>
+
+          </div>
+          
+          : null}
           </>
           : null
         }
