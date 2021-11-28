@@ -13,12 +13,18 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [zipcode, setZipcode] = useState('');
+  const [country, setCountry] = useState('canada');
   const [isNameValid, setIsNameValid] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isAddressValid, setIsAddressValid] = useState(false);
   const [isCityValid, setIsCityValid] = useState(false);
   const [isCountryValid, setIsCountryValid] = useState(false);
+  const [isZipValid, setIsZipValid] = useState(false);
+  const [isPostalValid, setIsPostalValid] = useState(false);
+  const [retrievedData, setRetrievedData] = useState([]);
+  const [multipleData, setMultipleData] = useState(false);
 
   // uid generator (for now)
   const uid = function(){
@@ -87,18 +93,47 @@ function SignUp() {
   // handleCountryChange ->
   const handleCountryChange = (event) => {
 
-    setIsCountryValid(false)
+    setIsCountryValid(false);
+    setIsPostalValid(false);
+    setIsZipValid(false);
 
     // set Country
     setCountry(event.target.value);
+    console.log(event.target.value)
   
     if(isNotEmpty(event.target.value)) {
       setIsCountryValid(true); 
     }
   }
+  // handlePostalCodeChange ->
+  const handlePostalCodeChange = (event) => {
+    setIsPostalValid(false);
+
+    // set Country
+    setPostalCode(event.target.value);
+
+    const nameRegex = /^[a-zA-z][\d][a-zA-z]$/g; //first last
+
+    if (nameRegex.test(event.target.value)) {
+      setIsPostalValid(true);
+    }
+  }
+  // handleZipCodeChange ->
+  const handleZipcodeChange = (event) => {
+    setIsZipValid(false);
+    
+    // set Country
+    setZipcode(event.target.value);
+
+    const nameRegex = /^\d{5}(?:[-\s]\d{4})?$/g; //first last
+
+    if (nameRegex.test(event.target.value)) {
+      setIsZipValid(true);
+    }
+  }
 
   // declare a variable which checks if all 3 inputs (name, email, address) are all valid
-  const isSignupValid = (isNameValid && isEmailValid && isAddressValid && isCityValid && isCountryValid) ? true : false;
+  let isSignupValid = (isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false;
 
   // handleSignup (handle all error checking, submit to firebase, proceed to runsetup)
   const handleSignup = async (event) => {
@@ -114,9 +149,9 @@ function SignUp() {
         uid: userId,
         name: name,
         email: email,
-        address: address,
-        city: city,
+        location: "",
         country: country,
+        registrationDate: "",
         coords: {
           lat: 0,
           long: 0
@@ -124,34 +159,63 @@ function SignUp() {
       }
 
       // fetch data via user entered address
-      await axios({
+      const axiosCanada = {
         method: "GET",
         url: "https://us1.locationiq.com/v1/search.php?",
         params: {
           key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
           format: 'json',
-          street: address,
-          city: city,
-          country: country
+          postalcode: postalCode,
+          matchquality: 1
+        }}
+
+      const axiosUSA = {
+        method: "GET",
+        url: "https://us1.locationiq.com/v1/search.php?",
+        params: {
+          key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
+          format: 'json',
+          postalcode: zipcode,
+          country: 'USA',
+          matchquality: 1
         }
-      })
+      }
+
+      let axiosParams = {};
+      if (country === 'canada'){
+        axiosParams = {...axiosCanada}
+      } else {
+        axiosParams = {...axiosUSA}
+      }
+
+      await axios(axiosParams)
         .then((res) => {
-          console.log('data', res.data[0])
-          // console.log(res.data[0].lon)
-          // console.log('in functions: ', dataObj)
+          console.log('data', res.data)
+          console.log('number of results: ', res.data.length)
+          
           userObj.coords.lat = res.data[0].lat
           userObj.coords.long = res.data[0].lon
+          userObj.location = res.data[0].display_name
+
+          // create a timestamp
+          const currentDate = new Date()
+          userObj.registrationDate = currentDate.toLocaleTimeString() + " " + currentDate.toLocaleDateString();
+
+          console.log(userObj);
+          // set up firebase prepare statement/reference
+          const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
+
+          // update db to user object
+          dbRef.update(userObj);
+
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+        
+        })
 
-      console.log('134 userObj: ', userObj);
+        console.log('this logs after axios if async works.')
 
-      // set up firebase prepare statement/reference
-      const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
-
-      // update db to user object
-      dbRef.update(userObj);
-      
     }
   }
 
@@ -166,6 +230,21 @@ function SignUp() {
     // if input is not empty return true
     return true;
 
+  }
+
+  function SelectResult() {
+    return (
+      <form>
+        {retrievedData.map((item, index) => (
+          item.importance > 0.5 ? 
+          <>
+            <input type="radio" id={index} name="confirmCity" value={item.display_name}/>
+            <label htmlFor={index}>{item.display_name}</label>
+          </>
+          : null
+        ))}
+      </form>
+    )
   }
 
   return (
@@ -184,31 +263,55 @@ function SignUp() {
       <form aria-label="Welcome wizard form" onSubmit={handleSignup}>
 
         {/* Error handling suggestion for app.js: alpha characters only, check for empty input*/}
-        <label for="name" className="sr-only">Name</label>
+        <label htmlFor="name" className="sr-only">Name</label>
         <input type="text" id="name" name="name" value={name} onChange={handleNameChange} placeholder="Full name"></input>
 
         {/* Error handling suggestion for app.js: regex to check for email format, check for empty input*/}
-        <label for="email" className="sr-only">Email</label>
+        <label htmlFor="email" className="sr-only">Email</label>
         <input type="text" id="email" name="email" value={email} onChange={handleEmailChange} placeholder="Email address"></input>
 
         {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        <label for="address" className="sr-only">Street Address</label>
-        <input type="text" id="address" name="address" value={address} onChange={handleAddressChange} placeholder="Street Address"></input>
+        <label htmlFor="country" className="sr-only">Country</label>
+        <select name="country" id="country" onChange={handleCountryChange}>
+          <option value="canada">Canada</option>
+          <option value="usa">USA</option>
+        </select>
 
         {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        <label for="city" className="sr-only">City</label>
-        <input type="text" id="city" name="city" value={city} onChange={handleCityChange} placeholder="City"></input>
-        
+        {/* <label for="address" className="sr-only">Street Address</label>
+        <input type="text" id="address" name="address" value={address} onChange={handleAddressChange} placeholder="Street Address"></input> */}
+
         {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        <label for="country" className="sr-only">Country</label>
-        <input type="text" id="country" name="country" value={country} onChange={handleCountryChange} placeholder="Country"></input>
+        {country === 'canada' ?
+        <>
+        <label htmlFor="postalcode" className="sr-only">Postal Code</label>
+        <input type="text" id="postalcode" name="postalcode" value={postalCode} onChange={handlePostalCodeChange} placeholder="first 3 letter o postalcode" maxLength="3"></input>
+        </>
+        :
+        <>
+          <label htmlFor="zipcode" className="sr-only">Zip Code</label>
+            <input type="text" id="zipcode" name="zipcode" value={zipcode} placeholder="zipcode" onChange={handleZipcodeChange}></input>
+        </>
+        }
+        
+
+        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
+        {/* <label for="city" className="sr-only">City</label>
+        <input type="text" id="city" name="city" value={city} onChange={handleCityChange} placeholder="City"></input>
+         */}
+        {/* <input type="text" id="country" name="country" value={country} onChange={handleCountryChange} placeholder="Country"></input> */}
       
         {/* Submit button to sign up and pass info to input handlers */}
         <button aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
+        {!isSignupValid && <p className="error-text">Form is invalid, please try again.</p> }
+
+        {multipleData && <SelectResult />}
 
       </form>
     </div>
   )
 }
+
+
 
 export default SignUp;
