@@ -180,9 +180,7 @@ function RunSetup() {
         // localSunsetTime =  sunsetArray[4] 
         
         setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute });   
-  
       });
-
     }
     
   }
