@@ -197,6 +197,8 @@ function RunSetup() {
     let timeParts = timeInHour.split(":");
     return Number(timeParts[0]) * 60 + Number(timeParts[1]);
   }
+
+  // function to handle User's Choice to confirm and store their run results or move back to the setup form screen to edit their run pace, distance and time.
   const handleConfirmation = (e)=> {
     const confirmationID = e.target.id
     if (confirmationID === "confirmRun") {
@@ -207,6 +209,7 @@ function RunSetup() {
     }
   }
 
+  // Firebase connection to intake users latitude and longitude from address from sign up form
   const userId = useParams()
   useEffect(()=>{
     firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
@@ -219,8 +222,6 @@ function RunSetup() {
 
       console.log(data.coords) 
     })
-  
-
   },[])
 
   return (
@@ -260,8 +261,8 @@ function RunSetup() {
         <button onSubmit={setRun}>Set</button>
       </form> :
       null
-
       }
+
       {
         showResult === true ?
           <div className='runResults'>
