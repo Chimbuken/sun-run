@@ -182,6 +182,7 @@ function RunSetup() {
         setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute });   
   
       });
+
     }
     
   }
