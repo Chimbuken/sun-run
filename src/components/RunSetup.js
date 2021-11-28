@@ -2,12 +2,15 @@ import {useState, useEffect} from 'react'
 import axios from 'axios';
 import firebase from '../firebase';
 import {useParams} from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid';
+
 
 function RunSetup() {
-  // useStates holds runSetup and firstRun setup default parameters
   const month= ["January","February","March","April","May","June","July",
   "August","September","October","November","December"];
   const d = new Date();
+
+  // useState
   const [alert, setAlert] = useState({alert: false, alertMessage:''})
   const [firstRun, setFirstRun] = useState({
     pace :'Jog',
@@ -18,17 +21,20 @@ function RunSetup() {
     lat: 43.64829, 
     lng: -79.39785,
   })
-  const [showForm, setShowForm] =useState(true)
-  const [showResult, setShowResult] =useState(false)
 
-  // useState holds Users chosen values 
+  const [showForm, setShowForm] =useState(true)
+  const [showResult, setShowResult] =useState(false);
+  const [ userInfo, setUserInfo] =useState({})
   const [runResults, setRunResults] = useState({})
+  
+  // Event Handlers
+  // handleChange targets User's choice of Pace and Distance
   const handleChange = (e)=>{
     const {id, value} = e.target;
     setFirstRun({...firstRun, [id]:value})
   }
 
-  // handlerTimeClick stores the User choice Sunrise and Sunset values
+  // handleTimeClick stores the User's choice of Sunrise and Sunset
   const handleTimeClick = (e)=>{
     e.preventDefault()
     const {id} = e.target;
@@ -41,18 +47,18 @@ function RunSetup() {
 
   // setRun function - alerts User to select either Sunrise or Sunset
   // launches Axios call 
-  // passes Users params (lat, lng) from Firebase
-  // response Object holds data of Sunrise time and Sunset time of selected date
+  // passes User's params (lat, lng) from Firebase
+  // Response Object holds data of Sunrise and Sunset time of selected date
   const setRun = (e)=> {
 
     e.preventDefault()
     console.log(firstRun)
     if(firstRun.userSunrise ===false && firstRun.userSunset === false){
       console.log('please select at least sunrise or sunset')
-      setAlert({alert: true, alertMessage:'Please atleast select sunrise or sunset'})
+      setAlert({alert: true, alertMessage:'Please select sunrise or sunset'})
     } else{
       setAlert({alert: false, alertMessage:''})
-      // https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400
+      
       axios({
         url: `https://api.sunrise-sunset.org/json?lat=${firstRun.lat}=${firstRun.lng}=${firstRun.date}`,
         method: "GET",
@@ -62,35 +68,31 @@ function RunSetup() {
           lng: firstRun.lng
         }
       }).then((response) => {
-        console.log(`API Call`, response.data.results)
-        // getting the values for sunrise and sunset from api call. results are in format HH:MM:SS AM or PM in UTC 
+        // Stored values of sunrise and sunset values from API call
+        // Results in format HH:MM:SS AM or PM UTC timezone
         const sunrise = response.data.results.sunrise;
         const sunset = response.data.results.sunset;
   
-        // getting the values of date to convert the time from utc to local time
+        // Stored values of Date and converted from the User's Choice to be in the same format as the API call response in UTC time
         const selectedDateArray =  firstRun.date.split("-")
         console.log('dateArray: ', selectedDateArray)
         const selectedYear = selectedDateArray[0]
         const selectedMonth = selectedDateArray[1]
         const selectedDate = selectedDateArray[2]
-      
-        // converting the results in to utc format so that we can convert it to local time. 
         const utcSunrise = `${selectedDate} ${month[selectedMonth-1]} ${selectedYear} ${sunrise} UTC`
         const utcSunset= `${selectedDate} ${month[selectedMonth-1]} ${selectedYear} ${sunset} UTC`
         
-        // converting the utc time to local time which gives a sting for the date, time and year and time zone. 
+        // Converting UTC time to Local time by changing format from a string to an array
         let localSunriseTime = new Date(utcSunrise).toString()
         let localSunsetTime = new Date(utcSunset).toString()
-  
-        // converting the strings into array to get the time for now. 
         const sunriseArray = localSunriseTime.split(" ")
         const sunsetArray = localSunsetTime.split(" ")
         
         localSunriseTime =  sunriseArray[4]
         localSunsetTime =  sunsetArray[4]
 
-        // User Choice Logic
-        // totalTime calculated using Pace (Jog or Run km/h) and Distance (5km, 10km, 1/2 marathon, marathon) in minutes
+        // User's Choice Logic
+        // totalTime calculated using pre-determined Pace (Jog or Run km/h) and Distance (5km, 10km, 1/2 marathon, marathon) to minutes to make Time a number.
 
         let totalTime
         // Logic for Jog Choice
@@ -125,7 +127,7 @@ function RunSetup() {
           }
         }
 
-        // converting time from a string to a number - take time of day in hours and calculates total minutes
+        // User's firstRun values converted from a string to a number
         let timeInMinutes
         if(firstRun.userSunrise){
           timeInMinutes = convertH2M(localSunriseTime);
@@ -133,8 +135,9 @@ function RunSetup() {
           timeInMinutes = convertH2M(localSunsetTime);
         }
         
-        // takes the API result of sunrise or sunset time minus the total run time divided by 2
-        // total time is divided by 2 to account the user reaching the destination as the mid-point of the journey, and then back
+        // Determining the User's Run Departure Time:
+        // API results Sunrise or Sunset have been converted to a number.  The Sunrise and Sunset time act as the mid-point of the run.
+        // totalRun time divided by 2 accounts for the User reaching the destination at the mid-point of the journey.
         // startTime is then converted back from a number to HH:MM AM/PM
         const startTime = Number(timeInMinutes) -(totalTime/2)
         let startMinute = Math.floor(startTime % 60)
@@ -179,17 +182,12 @@ function RunSetup() {
         }else {
           sunsetToHourMinute = (`${sunsetHour}:${sunsetMin} AM`)
         }
-  
-        // localSunriseTime =  sunriseArray[4]
-        // localSunsetTime =  sunsetArray[4] 
-        
+
         setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute });   
-        setShowForm(!showForm)
-        setShowResult(!showResult)
-  
+        setShowForm(false)
+        setShowResult(true)
       });
     }
-    
   }
 
   function convertH2M(timeInHour){
@@ -197,29 +195,85 @@ function RunSetup() {
     return Number(timeParts[0]) * 60 + Number(timeParts[1]);
   }
 
-  // function to handle User's Choice to confirm and store their run results or move back to the setup form screen to edit their run pace, distance and time.
+  // Function to handle User's Choice to confirm and store their Run Results or move back to the Run Setup form to edit their run pace, distance and time of day.
+  // Firebase collects User's info and pushes to the User's Account for storage of their Run Data
   const handleConfirmation = (e)=> {
+    const runId = uuidv4();
+
+    console.log('runId: ', runId)
     const confirmationID = e.target.id
     if (confirmationID === "confirmRun") {
       console.log('confirm')
+      if(userInfo.runs){
+        console.log('there are some runs')        
+        let timeOfDay ;
+        if(runResults.userSunrise){
+          timeOfDay = 'sunrise'
+        }else {
+          timeOfDay = 'sunset'
+        }
+        const newRun ={
+                id: runId,
+                pace: runResults.pace,
+                distance: runResults.distance,
+                timeOfDay: timeOfDay,
+                date: runResults.date,
+                departureTime: runResults.departureTime,
+                completed: false
+              }
+              let usersCurrenRunArray = [...userInfo.runs]
+              usersCurrenRunArray.push(newRun)
+          console.log(usersCurrenRunArray)
+          const updateUsersRun={
+            runs: usersCurrenRunArray
+            }
+          firebase.database().ref(`/sample/${userId.userId}`).update(updateUsersRun);
+          console.log('firebase updated')
+
+      } else {
+        console.log('there are no runs')
+        let timeOfDay;
+        if(runResults.userSunrise){
+          timeOfDay = 'sunrise'
+        }else {
+          timeOfDay = 'sunset'
+        }
+        const runObj ={
+          runs:[
+              {
+                id: runId,
+                pace: runResults.pace,
+                distance: runResults.distance,
+                timeOfDay: timeOfDay,
+                date: runResults.date,
+                departureTime: runResults.departureTime,
+                completed: false
+              }
+          ]
+      }
+        firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
+        console.log('firebase updated')
+      }
+
     } else {
       console.log('edit run')
-      setShowForm(!showForm)
+      setShowForm(true)
+      setShowResult(true)
     }
   }
 
-  // Firebase connection to intake users latitude and longitude from address from sign up form
+  // Firebase connection to intake users latitude and longitude from address from sign up form using useParams
   const userId = useParams()
   useEffect(()=>{
     firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
       const data = response.val();
+      console.log('date: ', data)
+      setUserInfo(data)
       setFirstRun({
         ...firstRun,
         lat: data.coords.lat, 
         lng: data.coords.long,
       })
-
-      console.log(data.coords) 
     })
   },[])
 
@@ -280,17 +334,11 @@ function RunSetup() {
 
               </div>
               : null}
-              {/* {runResults.userSunrise === true ?
-                runResults.pace ==='Jog'  ?
-                <p>sunrise: {runResults.sunrise-}</p> 
-                
-              : null} */}
               {runResults.userSunset === true ? 
               <div>
                 <p>Date: {runResults.date}</p>
                 <p>Sunset: {runResults.sunsetData}</p>
                 <p>Departure Time:  {runResults.departureTime}</p>
-
               </div>
               
               : null}
@@ -304,10 +352,6 @@ function RunSetup() {
           </div>
           : null
       }
-
-
-
-
     </section>
   )
 }
