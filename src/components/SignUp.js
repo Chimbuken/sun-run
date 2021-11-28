@@ -1,6 +1,6 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import firebase from '../firebase';
-import axios from 'axios';
 
 // profanity list import
 import list from '../includes/list.txt';
@@ -12,9 +12,14 @@ function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const [isNameValid, setIsNameValid] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isAddressValid, setIsAddressValid] = useState(false);
+  const [isCityValid, setIsCityValid] = useState(false);
+  const [isCountryValid, setIsCountryValid] = useState(false);
+  const [coordinates, setCoordinates] = useState({})
 
 
   // uid generator (for now)
@@ -68,8 +73,34 @@ function SignUp() {
     }
   }
 
+  // handleCityChange
+  const handleCityChange = (event) => {
+
+    setIsCityValid(false)
+
+    // set City
+    setCity(event.target.value);
+  
+    if(isNotEmpty(event.target.value)) {
+      setIsCityValid(true); 
+    }
+  }
+
+  // handleCountryChange ->
+  const handleCountryChange = (event) => {
+
+    setIsCountryValid(false)
+
+    // set Country
+    setCountry(event.target.value);
+  
+    if(isNotEmpty(event.target.value)) {
+      setIsCountryValid(true); 
+    }
+  }
+
   // declare a variable which checks if all 3 inputs (name, email, address) are all valid
-  const isSignupValid = (isNameValid && isEmailValid && isAddressValid) ? true : false;
+  const isSignupValid = (isNameValid && isEmailValid && isAddressValid && isCityValid && isCountryValid) ? true : false;
 
   // handleSignup (handle all error checking, submit to firebase, proceed to runsetup)
   const handleSignup = (event) => {
@@ -78,29 +109,92 @@ function SignUp() {
 
     if(isSignupValid) {
 
+      axios({
+        url: "https://us1.locationiq.com/v1/search.php?",
+        params: {
+          key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
+          format: 'json',
+          street: address,
+          city: city,
+          country: country
+        }
+      })
+        .then((data) => {
+          const userObj = {
+            uid: userId,
+            name: name,
+            email: email,
+            address: address,
+            city: city,
+            country: country,
+            coords: {
+              lat: data.data[0].lat,
+              long: data.data[0].lon
+            }
+          }
+          const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
+          dbRef.update(userObj);
+          console.log(userObj);
+        })
+        .catch((err) => console.error(err))
+
+
+      // get long/lat based on user address
+      // const coordinates = getCoordinate(address, city, country);
+      // console.log(coordinates)
+
       // generate uid for user
       const userId = uid();
 
       // if all 3 inputs are valid without errors, then setUser to database
-      const userObj = {
-        uid: userId,
-        name: name,
-        email: email,
-        address: address,
-        coords: {
-          lat: 69,
-          long: 420
-        }
-      }
+      // const userObj = {
+      //   uid: userId,
+      //   name: name,
+      //   email: email,
+      //   address: address,
+      //   city: city,
+      //   country: country,
+      //   coords: {
+      //     lat: 0,
+      //     long: 0
+      //   }
+      // }
+
+      // console.log(userObj);
 
       // set up firebase prepare statement/reference
-      const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
+      // const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
 
       // update db to user object
-      dbRef.update(userObj);
+      // dbRef.update(userObj);
       
     }
+  }
 
+  // function to fetch + get long+lat
+  const getCoordinate = (address, city, country) => {
+    console.log('in axios: ', address, city, country)
+    let dataObj;
+    axios({
+      url: "https://us1.locationiq.com/v1/search.php?",
+      params: {
+        key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
+        format: 'json',
+        street: address,
+        city: city,
+        country: country
+      }
+    })
+    .then((data) => {
+      console.log('data', data)
+      console.log(data.data[0].lon)
+      // console.log('in functions: ', dataObj)
+    })
+    .catch((err) => console.error(err))
+
+    
+
+    return dataObj;
   }
 
   // function to check if input is empty
@@ -115,21 +209,6 @@ function SignUp() {
     return true;
 
   }
-
-  // function to push user's data to firebase
-  const setUser = (user) => {
-
-    // user is set to an object (uid, name, email, address, cords: {lat,long})
-
-    // set up firebase prepare statement/reference
-    const dbRef = firebase.database().ref(`/${user.uid}`);
-
-    // update db to user object
-    dbRef.update(user);
-
-  }
-
-
 
   return (
     /*
@@ -155,14 +234,21 @@ function SignUp() {
         <input type="text" id="email" name="email" value={email} onChange={handleEmailChange} placeholder="Email address"></input>
 
         {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        <label for="address" className="sr-only">Address</label>
-        <input type="text" id="address" name="address" value={address} onChange={handleAddressChange} placeholder="Address starting point"></input>
+        <label for="address" className="sr-only">Street Address</label>
+        <input type="text" id="address" name="address" value={address} onChange={handleAddressChange} placeholder="Street Address"></input>
+
+        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
+        <label for="city" className="sr-only">City</label>
+        <input type="text" id="city" name="city" value={city} onChange={handleCityChange} placeholder="City"></input>
+        
+        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
+        <label for="country" className="sr-only">Country</label>
+        <input type="text" id="country" name="country" value={country} onChange={handleCountryChange} placeholder="Country"></input>
       
         {/* Submit button to sign up and pass info to input handlers */}
         <button aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
 
       </form>
-   
     </div>
   )
 }
