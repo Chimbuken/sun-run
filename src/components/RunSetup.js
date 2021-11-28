@@ -1,5 +1,7 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios';
+import firebase from '../firebase';
+import {useParams} from 'react-router-dom'
 
 function RunSetup() {
   // useStates holds runSetup and firstRun setup default parameters
@@ -16,6 +18,8 @@ function RunSetup() {
     lat: 43.64829, 
     lng: -79.39785,
   })
+  const [showForm, setShowForm] =useState(true)
+  const [showResult, setShowResult] =useState(false)
 
   // useState holds Users chosen values 
   const [runResults, setRunResults] = useState({})
@@ -180,6 +184,8 @@ function RunSetup() {
         // localSunsetTime =  sunsetArray[4] 
         
         setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute });   
+        setShowForm(!showForm)
+        setShowResult(!showResult)
   
       });
 
@@ -191,11 +197,37 @@ function RunSetup() {
     let timeParts = timeInHour.split(":");
     return Number(timeParts[0]) * 60 + Number(timeParts[1]);
   }
+  const handleConfirmation = (e)=> {
+    const confirmationID = e.target.id
+    if (confirmationID === "confirmRun") {
+      console.log('confirm')
+    } else {
+      console.log('edit run')
+      setShowForm(!showForm)
+    }
+  }
+
+  const userId = useParams()
+  useEffect(()=>{
+    firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
+      const data = response.val();
+      setFirstRun({
+        ...firstRun,
+        lat: data.coords.lat, 
+        lng: data.coords.long,
+      })
+
+      console.log(data.coords) 
+    })
+  
+
+  },[])
 
   return (
-    <section>
+    <section className="runSetupPage">
       <h1>Let's setup your first run!</h1>
-
+      {
+        showForm === true ?
       <form onSubmit={setRun} id="runSetupForm">
         <div>
           <label htmlFor="pace" className="sr-only">Pace</label>
@@ -204,7 +236,6 @@ function RunSetup() {
             <option value="Run">Run (16km/h)</option>
           </select>
         </div>
-        
         <div>
           <label htmlFor="distance" className="sr-only">Distance</label>
           <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange}>
@@ -222,48 +253,60 @@ function RunSetup() {
           min={firstRun.date}/>
         </div>
         <div>
-          <button id="userSunrise" onClick={handleTimeClick}>Sunrise</button>
-          <button id="userSunset" onClick={handleTimeClick}>Sunset</button>
+          {/* selectedBtn */}
+          <button id="userSunrise" className={firstRun.userSunrise ? 'selectedBtn' : null} onClick={handleTimeClick}>Sunrise</button>
+          <button id="userSunset" className={firstRun.userSunset ? 'selectedBtn' : null} onClick={handleTimeClick}>Sunset</button>
         </div>
-
         <button onSubmit={setRun}>Set</button>
-      </form>
+      </form> :
+      null
 
-      <div className='runResults'>
-        <h3>Here's what we got for you:</h3>
-        {
-          alert.alert === true ? <p style={{color: "red"}}>{alert.alertMessage}</p> : null
-        }
+      }
+      {
+        showResult === true ?
+          <div className='runResults'>
+            <h3>Here's what we got for you:</h3>
+            {
+              alert.alert === true ? <p style={{color: "red"}}>{alert.alertMessage}</p> : null
+            }
+            {
+              runResults ?
+              <>
+              {runResults.userSunrise === true ? 
+              <div>
+                <p>Date: {runResults.date}</p>
+                <p>Sunrise: {runResults.sunriseData}</p> 
+                <p>Departure Time:  {runResults.departureTime}</p>
 
-        {
-          runResults ?
-          <>
-          {runResults.userSunrise === true ? 
-          <div>
-            <p>Date: {runResults.date}</p>
-            <p>Sunrise: {runResults.sunriseData}</p> 
-            <p>Departure Time:  {runResults.departureTime}</p>
+              </div>
+              : null}
+              {/* {runResults.userSunrise === true ?
+                runResults.pace ==='Jog'  ?
+                <p>sunrise: {runResults.sunrise-}</p> 
+                
+              : null} */}
+              {runResults.userSunset === true ? 
+              <div>
+                <p>Date: {runResults.date}</p>
+                <p>Sunset: {runResults.sunsetData}</p>
+                <p>Departure Time:  {runResults.departureTime}</p>
 
+              </div>
+              
+              : null}
+              </>
+              : null
+            }
+            <div>
+              <button id='confirmRun' onClick={handleConfirmation}>Confirm Run</button>
+              <button id='editRun' onClick={handleConfirmation}>Edit Run</button>
+            </div>
           </div>
-          : null}
-          {/* {runResults.userSunrise === true ?
-            runResults.pace ==='Jog'  ?
-            <p>sunrise: {runResults.sunrise-}</p> 
-            
-           : null} */}
-          {runResults.userSunset === true ? 
-          <div>
-            <p>Date: {runResults.date}</p>
-            <p>Sunset: {runResults.sunsetData}</p>
-            <p>Departure Time:  {runResults.departureTime}</p>
-
-          </div>
-          
-          : null}
-          </>
           : null
-        }
-      </div>
+
+      }
+
+
 
 
     </section>

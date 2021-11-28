@@ -26,4 +26,11 @@ a, li {
   color: #B8E070;
 }
 
+.runSetupPage{
+  width: 80%;
+  margin: 0 auto;
+}
+.selectedBtn {
+  border: 2px solid #B8E070;
+}
 /* APP.JS */
