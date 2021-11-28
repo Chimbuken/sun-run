@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import firebase from '../firebase';
 
 // profanity list import
@@ -8,23 +9,21 @@ import list from '../includes/list.txt';
 
 function SignUp() {
 
+  // declare navigate to next page
+  let navigate = useNavigate();
+
   // useState declarations
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [zipcode, setZipcode] = useState('');
   const [country, setCountry] = useState('canada');
   const [isNameValid, setIsNameValid] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isAddressValid, setIsAddressValid] = useState(false);
-  const [isCityValid, setIsCityValid] = useState(false);
-  const [isCountryValid, setIsCountryValid] = useState(false);
   const [isZipValid, setIsZipValid] = useState(false);
   const [isPostalValid, setIsPostalValid] = useState(false);
-  const [retrievedData, setRetrievedData] = useState([]);
-  const [multipleData, setMultipleData] = useState(false);
+  const [isSignupValid, setIsSignupValid] = useState(' ');
+  const [isBackendValid, setIsBackendValid] = useState(true);
 
   // uid generator (for now)
   const uid = function(){
@@ -64,46 +63,17 @@ function SignUp() {
 
   }
 
-  // handleAddressChange -> setAddress -> address
-  const handleAddressChange = (event) => {
-
-    setIsAddressValid(false)
-
-    // set address
-    setAddress(event.target.value);
-  
-    if(isNotEmpty(event.target.value)) {
-      setIsAddressValid(true); 
-    }
-  }
-
-  // handleCityChange
-  const handleCityChange = (event) => {
-
-    setIsCityValid(false)
-
-    // set City
-    setCity(event.target.value);
-  
-    if(isNotEmpty(event.target.value)) {
-      setIsCityValid(true); 
-    }
-  }
-
   // handleCountryChange ->
   const handleCountryChange = (event) => {
 
-    setIsCountryValid(false);
     setIsPostalValid(false);
     setIsZipValid(false);
 
     // set Country
     setCountry(event.target.value);
-    console.log(event.target.value)
-  
-    if(isNotEmpty(event.target.value)) {
-      setIsCountryValid(true); 
-    }
+    setZipcode('');
+    setPostalCode('');
+
   }
   // handlePostalCodeChange ->
   const handlePostalCodeChange = (event) => {
@@ -132,15 +102,20 @@ function SignUp() {
     }
   }
 
-  // declare a variable which checks if all 3 inputs (name, email, address) are all valid
-  let isSignupValid = (isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false;
+  
 
   // handleSignup (handle all error checking, submit to firebase, proceed to runsetup)
   const handleSignup = async (event) => {
 
     event.preventDefault();
 
-    if(isSignupValid) {
+    // declare a variable which checks if all 3 inputs (name, email, address) are all valid
+    // let isSignupValid = (isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false;
+    
+    setIsSignupValid((isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false)
+    console.log('signupvalidation:', isSignupValid)
+
+    if(isNameValid && isEmailValid && (isZipValid || isPostalValid)) {
       
       // generate uid for user
       const userId = uid();
@@ -204,17 +179,33 @@ function SignUp() {
           console.log(userObj);
           // set up firebase prepare statement/reference
           const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
-
+          const dbRef2 = firebase.database().ref(`poop/${userObj.uid}`);
           // update db to user object
           dbRef.update(userObj);
+          
+          // check to see if userObj was updated
+          dbRef.on('value', (response) => {
+            
+            // check if the response is null / does not exist
+            if(response.val() !== null) {
+
+              // route to run set up form
+              navigate(`/setup/${userObj.uid}`)
+
+            } else {
+
+              setIsBackendValid(false)            
+
+            }
+
+          })
+
 
         })
         .catch((err) => {
+          setIsBackendValid(false)
           console.error(err)
-        
         })
-
-        console.log('this logs after axios if async works.')
 
     }
   }
@@ -232,20 +223,6 @@ function SignUp() {
 
   }
 
-  function SelectResult() {
-    return (
-      <form>
-        {retrievedData.map((item, index) => (
-          item.importance > 0.5 ? 
-          <>
-            <input type="radio" id={index} name="confirmCity" value={item.display_name}/>
-            <label htmlFor={index}>{item.display_name}</label>
-          </>
-          : null
-        ))}
-      </form>
-    )
-  }
 
   return (
     /*
@@ -304,8 +281,11 @@ function SignUp() {
         {/* Submit button to sign up and pass info to input handlers */}
         <button aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
         {!isSignupValid && <p className="error-text">Form is invalid, please try again.</p> }
-
-        {multipleData && <SelectResult />}
+        {!isBackendValid && <p className="error-text">Something's wrong on our end it's not your fault, try again later.</p> }
+        {!isNameValid && <p className="error-text">Your name is not in the proper format.</p> }
+        {!isEmailValid && <p className="error-text">Please enter a valid email address.</p> }
+        {!isPostalValid && country === 'canada' && <p className="error-text">Please enter the first 3 characters of a valid postal code.</p> }
+        {!isZipValid && country === 'usa' && <p className="error-text">Please enter a valid zip code.</p> }
 
       </form>
     </div>
