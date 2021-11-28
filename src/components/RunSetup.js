@@ -128,10 +128,13 @@ function RunSetup() {
   
         localSunriseTime =  sunriseArray[4]
         localSunsetTime =  sunsetArray[4]  
-        setRunResults({...firstRun, sunsetData: localSunsetTime, sunriseData:localSunriseTime, departureTime: convertingToHourMinute });   
-  
+        setRunResults({
+          ...firstRun, 
+          sunsetData: localSunsetTime, 
+          sunriseData: localSunriseTime, 
+          departureTime: convertingToHourMinute 
+        }); 
       });
-
     }
     
   }
@@ -142,7 +145,6 @@ function RunSetup() {
   return (
     <section>
       <h1>Let's setup your first run!</h1>
-
       <form onSubmit={setRun} >
         <div>
           <label htmlFor="pace">Pace</label>
