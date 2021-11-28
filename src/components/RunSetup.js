@@ -316,13 +316,13 @@ function RunSetup() {
       null
       }
 
+{
+  alert.alert === true ? <p style={{color: "red"}}>{alert.alertMessage}</p> : null
+}
       {
         showResult === true ?
           <div className='runResults'>
             <h3>Here's what we got for you:</h3>
-            {
-              alert.alert === true ? <p style={{color: "red"}}>{alert.alertMessage}</p> : null
-            }
             {
               runResults ?
               <>
