@@ -19,8 +19,6 @@ function SignUp() {
   const [isAddressValid, setIsAddressValid] = useState(false);
   const [isCityValid, setIsCityValid] = useState(false);
   const [isCountryValid, setIsCountryValid] = useState(false);
-  const [coordinates, setCoordinates] = useState({})
-
 
   // uid generator (for now)
   const uid = function(){
@@ -103,13 +101,31 @@ function SignUp() {
   const isSignupValid = (isNameValid && isEmailValid && isAddressValid && isCityValid && isCountryValid) ? true : false;
 
   // handleSignup (handle all error checking, submit to firebase, proceed to runsetup)
-  const handleSignup = (event) => {
+  const handleSignup = async (event) => {
 
     event.preventDefault();
 
     if(isSignupValid) {
+      
+      // generate uid for user
+      const userId = uid();
 
-      axios({
+      const userObj = {
+        uid: userId,
+        name: name,
+        email: email,
+        address: address,
+        city: city,
+        country: country,
+        coords: {
+          lat: 0,
+          long: 0
+        }
+      }
+
+      // fetch data via user entered address
+      await axios({
+        method: "GET",
         url: "https://us1.locationiq.com/v1/search.php?",
         params: {
           key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
@@ -119,80 +135,24 @@ function SignUp() {
           country: country
         }
       })
-        .then((data) => {
-          const userObj = {
-            uid: userId,
-            name: name,
-            email: email,
-            address: address,
-            city: city,
-            country: country,
-            coords: {
-              lat: data.data[0].lat,
-              long: data.data[0].lon
-            }
-          }
-          const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
-          dbRef.update(userObj);
-          console.log(userObj);
+        .then((res) => {
+          console.log('data', res.data[0])
+          // console.log(res.data[0].lon)
+          // console.log('in functions: ', dataObj)
+          userObj.coords.lat = res.data[0].lat
+          userObj.coords.long = res.data[0].lon
         })
         .catch((err) => console.error(err))
 
-
-      // get long/lat based on user address
-      // const coordinates = getCoordinate(address, city, country);
-      // console.log(coordinates)
-
-      // generate uid for user
-      const userId = uid();
-
-      // if all 3 inputs are valid without errors, then setUser to database
-      // const userObj = {
-      //   uid: userId,
-      //   name: name,
-      //   email: email,
-      //   address: address,
-      //   city: city,
-      //   country: country,
-      //   coords: {
-      //     lat: 0,
-      //     long: 0
-      //   }
-      // }
-
-      // console.log(userObj);
+      console.log('134 userObj: ', userObj);
 
       // set up firebase prepare statement/reference
-      // const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
+      const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
 
       // update db to user object
-      // dbRef.update(userObj);
+      dbRef.update(userObj);
       
     }
-  }
-
-  // function to fetch + get long+lat
-  const getCoordinate = (address, city, country) => {
-    console.log('in axios: ', address, city, country)
-    let dataObj;
-    axios({
-      url: "https://us1.locationiq.com/v1/search.php?",
-      params: {
-        key: 'pk.e792824e9f1ab7cae5b956f6c6de2845',
-        format: 'json',
-        street: address,
-        city: city,
-        country: country
-      }
-    })
-    .then((data) => {
-      console.log('data', data)
-      console.log(data.data[0].lon)
-      // console.log('in functions: ', dataObj)
-    })
-    .catch((err) => console.error(err))
-
-    return dataObj;
   }
 
   // function to check if input is empty
