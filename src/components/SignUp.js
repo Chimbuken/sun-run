@@ -192,8 +192,6 @@ function SignUp() {
     })
     .catch((err) => console.error(err))
 
-    
-
     return dataObj;
   }
 
