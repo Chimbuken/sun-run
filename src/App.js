@@ -7,7 +7,7 @@ import Dashboard from './components/Dashboard';
 function App() {
   return (
     <BrowserRouter>
-      <ul>
+      <ul className="test-menu">
         <h4>Route Setup / Testing</h4>
         <li><Link to="/">to home/sign up</Link></li>
         <li><Link to="/setup">to setup</Link></li>
