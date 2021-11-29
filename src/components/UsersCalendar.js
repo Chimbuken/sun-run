@@ -12,24 +12,36 @@ function UsersCalendar(props) {
     const [runs, setRuns] = useState([])
 
     const renderingRunsArray =({ date, view })=>{
-        // console.log('date: ', date)
-        // console.log('view: ', view)
+
         // "2021-11-30"
         let className = ''
 
         if(runs.length>0){
             runs.forEach(run=>{
-                // console.log('is it here')
-                // console.log('this is from fire:',run.date)
-                // console.log(moment(date).format("YYYY-MM-DD") )
                 if(run.date === moment(date).format("YYYY-MM-DD") ){
                     className='runDay'
-                  return 'runDay'
+                    return 'runDay'
                 }
             })
 
         }
         return className
+    }
+    const showRunContent =({ date, view })=>{
+
+        // "2021-11-30"
+        let content = ''
+
+        if(runs.length>0){
+            runs.forEach(run=>{
+                if(run.date === moment(date).format("YYYY-MM-DD") ){
+                    content='runDay'
+                    return 'runDay'
+                }
+            })
+
+        }
+        return content
     }
     
     useEffect(()=>{
@@ -43,15 +55,13 @@ function UsersCalendar(props) {
     },[])
     return(
         <div>
+
             <Calendar
             onChange={setRunDate}
             value={runDate}
             tileClassName={renderingRunsArray}
-            // tileContent ={showContent}
+            tileContent ={showRunContent}
             />
-            {/* {runs.map(run=>
-                <p>{run.date}</p>
-                )} */}
         </div>
     )
 }
