@@ -3,6 +3,7 @@ import Calendar from "react-calendar";
 import { useState, useEffect } from "react";
 import firebase from "firebase";
 import moment from "moment";
+import '../usersCalendar.css'
 
 function UsersCalendar(props) {
     const userId = props.userId
