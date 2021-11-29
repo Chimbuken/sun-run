@@ -1,5 +1,7 @@
+import {useParams } from 'react-router-dom';
 import UsersCalendar from "./UsersCalendar";
-import {useParams } from 'react-router-dom'
+import UpcomingRuns from './UpcomingRuns.js';
+
 
 
 function Dashboard(){
@@ -8,9 +10,9 @@ function Dashboard(){
 
   return (
     <>
-    <h1>Dashboard</h1>
-    <UsersCalendar userId={userId} />
-
+      <h1>Dashboard</h1>
+      <UpcomingRuns/>
+      <UsersCalendar userId={userId} />
     </>
   )
 }
