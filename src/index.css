@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+
+.runDay {
+  background: peru;
+}
+.react-calendar__month-view__weekdays__weekday{
+  background: red;
+}

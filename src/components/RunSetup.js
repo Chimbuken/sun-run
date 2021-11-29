@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios';
 import firebase from '../firebase';
-import {useParams} from 'react-router-dom'
+import { useParams, useNavigate} from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -9,6 +9,8 @@ function RunSetup() {
   const month= ["January","February","March","April","May","June","July",
   "August","September","October","November","December"];
   const d = new Date();
+  let navigate = useNavigate();
+
 
   // useState
   const [alert, setAlert] = useState({alert: false, alertMessage:''})
@@ -233,6 +235,7 @@ function RunSetup() {
             }
           firebase.database().ref(`/sample/${userId.userId}`).update(updateUsersRun);
           console.log('firebase updated')
+          navigate(`/dashboard/${userId.userId}`);
 
       } else {
         console.log('there are no runs')
@@ -259,6 +262,7 @@ function RunSetup() {
       }
         firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
         console.log('firebase updated')
+        navigate(`/dashboard/${userId.userId}`);
       }
 
     } else {
