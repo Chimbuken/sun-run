@@ -40,6 +40,7 @@ function RunSetup() {
   const handleTimeClick = (e)=>{
     e.preventDefault()
     const {id} = e.target;
+    console.log(id);
     if(id === "userSunrise"){
       setFirstRun({...firstRun, userSunrise:true, userSunset:false})
     }else {
@@ -290,24 +291,28 @@ function RunSetup() {
   },[])
 
   return (
-    <section className="runSetupPage">
+
+    <main className="card-full">
+    <section className="runSetupPage signup-form wrapper">
+      
+      {
+        showForm === true ?
+      <>
       {userInfo.runs?
       
       <h1>Add New</h1>
       :
       <h1>Let's setup your first run!</h1>
     }
-      {
-        showForm === true ?
-      <form onSubmit={setRun} id="runSetupForm">
-        <div>
+      <form onSubmit={setRun} id="runSetupForm" className="flex-column">
+        
           <label htmlFor="pace" className="sr-only">Pace</label>
           <select name="pace" id="pace" value={firstRun.pace} onChange={handleChange}> 
             <option value="Jog">Jog (8km/hr)</option>
             <option value="Run">Run (16km/h)</option>
           </select>
-        </div>
-        <div>
+        
+        
           <label htmlFor="distance" className="sr-only">Distance</label>
           <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange}>
             <option value="5km">5km</option>
@@ -315,21 +320,29 @@ function RunSetup() {
             <option value="Half Marathon">Half Marathon</option>
             <option value="Marathon">Marathon</option>
           </select>
-        </div>
-        <div>
+        
+        
         <label htmlFor="date" className="sr-only">Start date:</label>
           <input type="date" id="date" name="date"
           onChange={handleChange}
           value={firstRun.date}
           min={firstRun.date}/>
-        </div>
-        <div>
+        
+        <div className="select-box">
           {/* selectedBtn */}
-          <button id="userSunrise" className={firstRun.userSunrise ? 'selectedBtn' : null} onClick={handleTimeClick}>Sunrise</button>
-          <button id="userSunset" className={firstRun.userSunset ? 'selectedBtn' : null} onClick={handleTimeClick}>Sunset</button>
+          {/* <button id="userSunrise" className={firstRun.userSunrise ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunrise</button>
+          <button id="userSunset" className={firstRun.userSunset ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunset</button> */}
+
+          <input type="radio" name="userTime" id="userSunrise" onChange={handleTimeClick} checked={firstRun.userSunrise}/>
+          <label htmlFor="userSunrise" >Sunrise</label>
+          <input type="radio" name="userTime" id="userSunset" onChange={handleTimeClick} checked={firstRun.userSunset}/>
+          <label htmlFor="userSunset">Sunset</label>
+
         </div>
-        <button onSubmit={setRun}>Set</button>
-      </form> :
+        <button className="btn-red" onSubmit={setRun}>Set</button>
+      </form>
+      </>
+      :
       null
       }
 
@@ -338,38 +351,39 @@ function RunSetup() {
 }
       {
         showResult === true ?
-          <div className='runResults'>
+          <div className='runResults flex-column'>
             <h3>Here's what we got for you:</h3>
             {
               runResults ?
               <>
               {runResults.userSunrise === true ? 
               <div>
-                <p>Date: {runResults.date}</p>
-                <p>Sunrise: {runResults.sunriseData}</p> 
+                <h4>{runResults.date}</h4>
                 <p>Departure Time:  {runResults.departureTime}</p>
+                <p>Sunrise: {runResults.sunriseData}</p> 
 
               </div>
               : null}
               {runResults.userSunset === true ? 
               <div>
-                <p>Date: {runResults.date}</p>
-                <p>Sunset: {runResults.sunsetData}</p>
+                <h4>{runResults.date}</h4>
                 <p>Departure Time:  {runResults.departureTime}</p>
+                <p>Sunset: {runResults.sunsetData}</p>
               </div>
               
               : null}
               </>
               : null
             }
-            <div>
-              <button id='confirmRun' onClick={handleConfirmation}>Confirm Run</button>
-              <button id='editRun' onClick={handleConfirmation}>Edit Run</button>
+            <div className="select-box">
+              <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Confirm Run</button>
+                <button id='editRun' className="btn-red" onClick={handleConfirmation}>Edit Run</button>
             </div>
           </div>
           : null
       }
     </section>
+    </main>
   )
 }
 
