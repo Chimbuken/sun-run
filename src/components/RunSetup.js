@@ -204,15 +204,19 @@ function RunSetup() {
   const handleConfirmation = (e)=> {
     const runId = uuidv4();
 
+    console.log('runId: ', runId)
     const confirmationID = e.target.id
     if (confirmationID === "confirmRun") {
+      console.log('confirm')
       if(userInfo.runs){
+        console.log('there are some runs')        
         let timeOfDay ;
         if(runResults.userSunrise){
           timeOfDay = 'sunrise'
         }else {
           timeOfDay = 'sunset'
         }
+
         const newRun ={
                 id: runId,
                 pace: runResults.pace,
@@ -225,14 +229,18 @@ function RunSetup() {
                 completed: false
               }
               let usersCurrenRunArray = [...userInfo.runs]
+              console.log('usersCurrenRunArray', usersCurrenRunArray)
               usersCurrenRunArray.push(newRun)
+          console.log(usersCurrenRunArray)
           const updateUsersRun={
             runs: usersCurrenRunArray
             }
           firebase.database().ref(`/sample/${userId.userId}`).update(updateUsersRun);
+          console.log('firebase updated')
           navigate(`/dashboard/${userId.userId}`);
 
       } else {
+        console.log('there are no runs')
         let timeOfDay;
         if(runResults.userSunrise){
           timeOfDay = 'sunrise'
@@ -255,10 +263,12 @@ function RunSetup() {
           ]
       }
         firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
+        console.log('firebase updated')
         navigate(`/dashboard/${userId.userId}`);
       }
 
     } else {
+      console.log('edit run')
       setShowForm(true)
       setShowResult(true)
     }
@@ -269,6 +279,7 @@ function RunSetup() {
   useEffect(()=>{
     firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
       const data = response.val();
+      console.log('date: ', data)
       setUserInfo(data)
       setFirstRun({
         ...firstRun,
@@ -280,9 +291,9 @@ function RunSetup() {
 
   return (
     <section className="runSetupPage">
-      {userInfo.runs ?
+      {userInfo.runs?
       
-      <h1>Add New Run</h1>
+      <h1>Add New</h1>
       :
       <h1>Let's setup your first run!</h1>
     }
