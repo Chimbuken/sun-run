@@ -217,6 +217,7 @@ function RunSetup() {
         }else {
           timeOfDay = 'sunset'
         }
+
         const newRun ={
                 id: runId,
                 pace: runResults.pace,
@@ -229,6 +230,7 @@ function RunSetup() {
                 completed: false
               }
               let usersCurrenRunArray = [...userInfo.runs]
+              console.log('usersCurrenRunArray', usersCurrenRunArray)
               usersCurrenRunArray.push(newRun)
           console.log(usersCurrenRunArray)
           const updateUsersRun={
@@ -289,13 +291,19 @@ function RunSetup() {
   },[])
 
   return (
+
     <main className="card-full">
     <section className="runSetupPage signup-form wrapper">
       
       {
         showForm === true ?
       <>
+      {userInfo.runs?
+      
+      <h1>Add New</h1>
+      :
       <h1>Let's setup your first run!</h1>
+    }
       <form onSubmit={setRun} id="runSetupForm" className="flex-column">
         
           <label htmlFor="pace" className="sr-only">Pace</label>
