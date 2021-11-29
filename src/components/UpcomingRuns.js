@@ -5,7 +5,9 @@ import {useParams} from 'react-router-dom'
 function UpcomingRuns() {
 
     // useState declarations
-    const [userRuns, setUserRuns] = useState([])
+    const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
+    const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
+    const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
 
     // get userId from url and store in userId
     const user = useParams()
@@ -25,16 +27,32 @@ function UpcomingRuns() {
             const data = response.val();
 
             // check if data is fetched
-            console.log(data)
+            console.log(data.runs)
 
             // store all user's runs in useState
             setUserRuns(data.runs)
-
             
+            // iterate through userRuns and deconstruct userRuns into separate useState arrays
+            Object.entries(data.runs).map(([key, value]) => {
+
+                // if run is completed (true) we push to incompleteRuns
+                if(value.completed)
+                {
+                    setCompletedRuns(completedRuns => [...completedRuns, value])
+                }
+                // if run is incomplete (false) we push to completedRuns
+                else
+                {
+                    setIncompleteRuns(incompleteRuns => [...incompleteRuns, value])
+                }
+
+            })
+
         })
     },[])
 
-    console.log(userRuns)
+    
+
 
     return (
         <>
@@ -44,7 +62,7 @@ function UpcomingRuns() {
             <ul>
                 {
                     // using map to iterate through userRuns array
-                    userRuns.map((run) => {
+                    incompleteRuns.map((run) => {
                         return(
                             <li key={run.id}>
                                 <p>Date: {run.date}</p>
@@ -54,6 +72,7 @@ function UpcomingRuns() {
                                         run.completed ?
                                         (
                                             <span> true</span>
+                                            
                                         ) :
                                         (
                                             <span> false</span>
@@ -63,12 +82,6 @@ function UpcomingRuns() {
                             </li>
                         )
                     })
-                    
-                    /*
-
-                     we need to filter userRuns and store into a new array if completed is set to false
-                    
-                     */
 
                 }
             </ul>
