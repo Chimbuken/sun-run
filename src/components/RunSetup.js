@@ -351,16 +351,16 @@ function RunSetup() {
               {runResults.userSunrise === true ? 
               <div>
                 <h4>{runResults.date}</h4>
-                <p>Departure Time:  {runResults.departureTime}</p>
-                <p>Sunrise: {runResults.sunriseData}</p> 
+                <p>Start run at {runResults.departureTime}</p>
+                <p>Sunrise at {runResults.sunriseData}</p> 
 
               </div>
               : null}
               {runResults.userSunset === true ? 
               <div>
                 <h4>{runResults.date}</h4>
-                <p>Departure Time:  {runResults.departureTime}</p>
-                <p>Sunset: {runResults.sunsetData}</p>
+                <p>Start run at {runResults.departureTime}</p>
+                <p>Sunset at {runResults.sunsetData}</p>
               </div>
               
               : null}
