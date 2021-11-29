@@ -79,7 +79,7 @@ function SignUp() {
     // set Country
     setPostalCode(event.target.value);
 
-    const nameRegex = /^[a-zA-z][\d][a-zA-z]$/g; //first last
+    const nameRegex = /^[a-zA-z][\d][a-zA-z]$/g; // postal regex
 
     if (nameRegex.test(event.target.value)) {
       setIsPostalValid(true);
@@ -92,7 +92,7 @@ function SignUp() {
     // set Country
     setZipcode(event.target.value);
 
-    const nameRegex = /^\d{5}(?:[-\s]\d{4})?$/g; //first last
+    const nameRegex = /^\d{5}(?:[-\s]\d{4})?$/g; // zip code regex
 
     if (nameRegex.test(event.target.value)) {
       setIsZipValid(true);
@@ -105,13 +105,11 @@ function SignUp() {
   const handleSignup = async (event) => {
 
     event.preventDefault();
-
-    // declare a variable which checks if all 3 inputs (name, email, address) are all valid
-    // let isSignupValid = (isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false;
     
     setIsSignupValid((isNameValid && isEmailValid && (isZipValid || isPostalValid)) ? true : false)
     console.log('signupvalidation:', isSignupValid)
 
+    // check all form inputs are valid
     if(isNameValid && isEmailValid && (isZipValid || isPostalValid)) {
       
       // generate uid for user
@@ -130,7 +128,7 @@ function SignUp() {
         }
       }
 
-      // fetch data via user entered address
+      // fetch long lat based on user location input
       const axiosCanada = {
         method: "GET",
         url: "https://us1.locationiq.com/v1/search.php?",
@@ -153,12 +151,7 @@ function SignUp() {
         }
       }
 
-      let axiosParams = {};
-      if (country === 'canada'){
-        axiosParams = {...axiosCanada}
-      } else {
-        axiosParams = {...axiosUSA}
-      }
+      let axiosParams = (country === 'canada') ? { ...axiosCanada } : { ...axiosUSA };
 
       await axios(axiosParams)
         .then((res) => {
@@ -185,19 +178,12 @@ function SignUp() {
             
             // check if the response is null / does not exist
             if(response.val() !== null) {
-
               // route to run set up form
               navigate(`/setup/${userObj.uid}`)
-
             } else {
-
               setIsBackendValid(false)            
-
             }
-
           })
-
-
         })
         .catch((err) => {
           setIsBackendValid(false)
@@ -224,68 +210,59 @@ function SignUp() {
   return (
     /*
       This component is used to display the sign up form
-      The user is required to type in their name, email and address
-      The form will then be submitted to App.js through a function: handleSignup
+      The user is required to type in their name, email and postal/zip code
     */
-    <div>
+    <main className="card-full">
 
-      <h1>Home: Sign Up Page</h1>
+      <section className="signup-form wrapper">
 
-      <h2>Welcome</h2>
+        <h1>Welcome</h1>
+        {/* Form for signup which takes the user's: name, email, postal/zip code to retrieve location */}
+        <form aria-label="Welcome wizard form" onSubmit={handleSignup} className="flex-column">
 
-      {/* Form for signup which takes the user's: name, email, address */}
-      <form aria-label="Welcome wizard form" onSubmit={handleSignup}>
+          <label htmlFor="name" className="sr-only">Name</label>
+          <input type="text" id="name" name="name" value={name} onChange={handleNameChange} placeholder="Full name"></input>
 
-        {/* Error handling suggestion for app.js: alpha characters only, check for empty input*/}
-        <label htmlFor="name" className="sr-only">Name</label>
-        <input type="text" id="name" name="name" value={name} onChange={handleNameChange} placeholder="Full name"></input>
+          <label htmlFor="email" className="sr-only">Email</label>
+          <input type="text" id="email" name="email" value={email} onChange={handleEmailChange} placeholder="Email address"></input>
 
-        {/* Error handling suggestion for app.js: regex to check for email format, check for empty input*/}
-        <label htmlFor="email" className="sr-only">Email</label>
-        <input type="text" id="email" name="email" value={email} onChange={handleEmailChange} placeholder="Email address"></input>
+          <label htmlFor="country" className="sr-only">Country</label>
+          <select name="country" id="country" onChange={handleCountryChange}>
+            <option value="canada">Canada</option>
+            <option value="usa">USA</option>
+          </select>
 
-        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        <label htmlFor="country" className="sr-only">Country</label>
-        <select name="country" id="country" onChange={handleCountryChange}>
-          <option value="canada">Canada</option>
-          <option value="usa">USA</option>
-        </select>
-
-        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        {/* <label for="address" className="sr-only">Street Address</label>
-        <input type="text" id="address" name="address" value={address} onChange={handleAddressChange} placeholder="Street Address"></input> */}
-
-        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        {country === 'canada' ?
-        <>
-        <label htmlFor="postalcode" className="sr-only">Postal Code</label>
-        <input type="text" id="postalcode" name="postalcode" value={postalCode} onChange={handlePostalCodeChange} placeholder="first 3 letter o postalcode" maxLength="3"></input>
-        </>
-        :
-        <>
-          <label htmlFor="zipcode" className="sr-only">Zip Code</label>
-            <input type="text" id="zipcode" name="zipcode" value={zipcode} placeholder="zipcode" onChange={handleZipcodeChange}></input>
-        </>
-        }
+          {/* Render either postal or zip code input depending on selected country */}
+          {country === 'canada' ?
+          <>
+            <label htmlFor="postalcode" className="sr-only">Postal Code</label>
+            <input type="text" id="postalcode" name="postalcode" value={postalCode} onChange={handlePostalCodeChange} placeholder="First 3 letter of Postal Code" maxLength="3"></input>
+          </>
+          :
+          <>
+            <label htmlFor="zipcode" className="sr-only">Zip Code</label>
+            <input type="text" id="zipcode" name="zipcode" value={zipcode} placeholder="Zipcode" onChange={handleZipcodeChange} maxLength="5"></input>
+          </>
+          }
         
+          {/* Submit button to sign up and pass info to input handlers */}
+          <button className="btn-green" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
 
-        {/* Error handling suggestion for app.js: no illegal characters, check for empty input, maybe min amount of characters, check for numerical and alpha*/}
-        {/* <label for="city" className="sr-only">City</label>
-        <input type="text" id="city" name="city" value={city} onChange={handleCityChange} placeholder="City"></input>
-         */}
-        {/* <input type="text" id="country" name="country" value={country} onChange={handleCountryChange} placeholder="Country"></input> */}
-      
-        {/* Submit button to sign up and pass info to input handlers */}
-        <button aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
-        {!isSignupValid && <p className="error-text">Form is invalid, please try again.</p> }
-        {!isBackendValid && <p className="error-text">Something's wrong on our end it's not your fault, try again later.</p> }
-        {!isNameValid && <p className="error-text">Your name is not in the proper format.</p> }
-        {!isEmailValid && <p className="error-text">Please enter a valid email address.</p> }
-        {!isPostalValid && country === 'canada' && <p className="error-text">Please enter the first 3 characters of a valid postal code.</p> }
-        {!isZipValid && country === 'usa' && <p className="error-text">Please enter a valid zip code.</p> }
+          {/* Input validation messages */}
+          <ul className="validation-box flex-column">
+            {!isSignupValid && <li className="error-text">Form is invalid, please try again.</li> }
+            {!isBackendValid && <li className="error-text">Something's wrong on our end it's not your fault, try again later.</li> }
+            {!isNameValid && <li className="error-text"><i className="far fa-times-circle"></i> Enter your full name</li> }
+            {!isEmailValid && <li className="error-text"><i className="far fa-times-circle"></i> Enter a valid email address</li> }
+            {!isPostalValid && country === 'canada' && <li className="error-text"><i className="far fa-times-circle"></i> Enter a valid postal code.</li> }
+            {!isZipValid && country === 'usa' && <li className="error-text"><i className="far fa-times-circle"></i> Enter a valid zip code.</li> }
+          </ul>
 
-      </form>
-    </div>
+        </form>
+
+      </section>
+
+    </main>
   )
 }
 
