@@ -128,6 +128,7 @@ button.btn-green {
   color: #000;
   border-radius: 10px;
   background-color: #B8E070;
+  line-height: 2rem;
 }
 
 button.btn-green:hover,
@@ -146,6 +147,7 @@ button.btn-red {
   color: #ffffff;
   border-radius: 10px;
   background-color: #D66761;
+  line-height: 2rem;
 }
 
 button.btn-red:hover,
@@ -155,4 +157,57 @@ button.btn-red:focus {
 
 button:active {
   transform: translateY(2px);
+}
+
+/* RunSetup.js */
+
+.select-box {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.select-box input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.select-box input[type="radio"]:checked + label,
+.select-box input[type="radio"]:focus-within + label {
+  background-color: #c6c6c6;
+  color: #000;
+}
+
+.select-box label {
+  border-radius: 5px;
+  border: none;
+  color: white;
+  background-color: #4E4E4E;
+  box-sizing: border-box;
+  padding: .6rem 1rem;
+}
+
+.select-box label:hover,
+.select-box label:focus {
+  background-color: #686868;
+}
+
+.runResults {
+  margin: 0 auto;
+  width: 300px;
+}
+
+.runResults p {
+  color: white;
+}
+.runResults p:last-of-type {
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.runResults h4 {
+  font-size: 2rem;
+  margin: 0 auto;
+  color: white;
 }
