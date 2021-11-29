@@ -18,9 +18,11 @@ function UsersCalendar(props) {
 
         if(runs.length>0){
             runs.forEach(run=>{
-                if(run.date === moment(date).format("YYYY-MM-DD") ){
-                    className='runDay'
-                    return 'runDay'
+                if(run.completed ===false){
+                    if(run.date === moment(date).format("YYYY-MM-DD") ){
+                        className='runDay'
+                        return 'runDay'
+                    }
                 }
             })
 
@@ -34,12 +36,12 @@ function UsersCalendar(props) {
 
         if(runs.length>0){
             runs.forEach(run=>{
+                if(run.comp)
                 if(run.date === moment(date).format("YYYY-MM-DD") ){
                     content='runDay'
                     return 'runDay'
                 }
             })
-
         }
         return content
     }
@@ -55,12 +57,10 @@ function UsersCalendar(props) {
     },[])
     return(
         <div>
-
             <Calendar
             onChange={setRunDate}
             value={runDate}
             tileClassName={renderingRunsArray}
-            tileContent ={showRunContent}
             />
         </div>
     )
