@@ -128,10 +128,13 @@ function RunSetup() {
         }
 
         // User's firstRun values converted from a string to a number
+        let userSelectedSunTime
         let timeInMinutes
         if(firstRun.userSunrise){
+          userSelectedSunTime=localSunriseTime
           timeInMinutes = convertH2M(localSunriseTime);
         }else if(firstRun.userSunset){
+          userSelectedSunTime=localSunsetTime
           timeInMinutes = convertH2M(localSunsetTime);
         }
         
@@ -182,8 +185,7 @@ function RunSetup() {
         }else {
           sunsetToHourMinute = (`${sunsetHour}:${sunsetMin} AM`)
         }
-
-        setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute });   
+        setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute, runDuration: totalTime, userSelectedSunTime: userSelectedSunTime});   
         setShowForm(false)
         setShowResult(true)
       });
@@ -219,6 +221,8 @@ function RunSetup() {
                 timeOfDay: timeOfDay,
                 date: runResults.date,
                 departureTime: runResults.departureTime,
+                runDuration: runResults.runDuration,
+                suntime: runResults.userSelectedSunTime,
                 completed: false
               }
               let usersCurrenRunArray = [...userInfo.runs]
@@ -247,6 +251,8 @@ function RunSetup() {
                 timeOfDay: timeOfDay,
                 date: runResults.date,
                 departureTime: runResults.departureTime,
+                runDuration: runResults.runDuration,
+                suntime: runResults.userSelectedSunTime,
                 completed: false
               }
           ]

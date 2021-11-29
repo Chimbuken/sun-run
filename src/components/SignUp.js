@@ -34,7 +34,6 @@ function SignUp() {
   const handleNameChange = (event) => {
 
     setIsNameValid(false)
-
     // set name
     setName(event.target.value);
 
@@ -44,9 +43,7 @@ function SignUp() {
     if(nameRegex.test(event.target.value)) {
       setIsNameValid(true);
     }
-
   }
-
   // handleEmailChange -> setEmail -> email
   const handleEmailChange = (event) => {
     
