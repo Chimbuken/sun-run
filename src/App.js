@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import SignUp from './components/SignUp';
 import RunSetup from './components/RunSetup';
 import Dashboard from './components/Dashboard';
+import EditRun from './components/EditRun';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<SignUp />} />
         <Route path="*" element={<SignUp />} />
         <Route path="/setup/:userId" element={<RunSetup />} />
+        <Route path="/editRun/:userId/:runId" element={<EditRun />} />
         <Route path="/dashboard/:userId" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
