@@ -1,16 +1,16 @@
 import {useState, useEffect} from 'react'
 import firebase from '../firebase';
 import {useParams, Routes, Route, Link} from 'react-router-dom'
+import DeleteRun from './DeleteRun';
 
 // nobody work on this please. wait till im finished functionality.
 
 function UpcomingRuns() {
-
+    const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
     // useState declarations
-    const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
-    const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
-    const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
-
+    const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete 🧢 dallan 
+    const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete 🧢 dallan 
+    const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete 🧢 dallan 
     // run modal states
     const [modal, setModal] = useState(false);
     const [runId, setRunId] = useState('');
@@ -25,38 +25,53 @@ function UpcomingRuns() {
     // console.log(incompleteRuns)
 
     useEffect( () => {
-
         // make database connection using our userId
         const dbRef = firebase.database().ref(`/sample/${user.userId}`);
-
         // fetch user data stored in database
         dbRef.on('value', (response) => {
         
             // store user data in data variable
             const data = response.val();
+            console.log('data: ', data)
 
             // check if data is fetched
             // console.log(data.runs)
 
             // store all user's runs in useState
-            setUserRuns(data.runs)
+            if(data.runs){ // added by 😈sara 
+                setUserRuns(data.runs)
+            }
+            setUserInfo(data) // added by 😈sara 
             
             // iterate through userRuns and deconstruct userRuns into separate useState arrays
-            Object.entries(data.runs).map(([key, value]) => {
-
-                // if run is completed (true) we push to incompleteRuns
-                if(value.completed)
-                {
-                    setCompletedRuns(completedRuns => [...completedRuns, value])
-                }
-                // if run is incomplete (false) we push to completedRuns
-                else
-                {
-                    setIncompleteRuns(incompleteRuns => [...incompleteRuns, value])
-                }
-
-            })
-
+            if(data.runs) {// added by 😈sara 
+                //  added by 😈sara 
+                let completedRunArray = []
+                let incompletedRunArray = []
+                data.runs.forEach(run=>{
+                    if(run.completed === false){
+                        incompletedRunArray.push(run)
+                    }else {
+                        completedRunArray.push(run)
+                    }
+                })
+                setIncompleteRuns(incompletedRunArray)
+                setCompletedRuns(completedRunArray)
+                //  by 🧢 dallan 
+                // Object.entries(data.runs).map(([key, value]) => {
+    
+                    // if run is completed (true) we push to incompleteRuns
+                //     if(value.completed)
+                //     {
+                //         setCompletedRuns(completedRuns => [...completedRuns, value])
+                //     }
+                    // if run is incomplete (false) we push to completedRuns
+                //     else
+                //     {
+                //         setIncompleteRuns(incompleteRuns => [...incompleteRuns, value])
+                //     }
+                // })
+            }
         })
     },[])
 
@@ -79,28 +94,6 @@ function UpcomingRuns() {
     function closeModal() {
         setModal(false);
         setRunId('')
-    }
-
-    // function to remove run from database
-    function removeRun(removeItem) {
-
-        // make database connection using our userId
-        const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/`);
-
-        for(let i=0; i<incompleteRuns.length;i++) {
-            console.log(i, removeItem)
-
-            if(incompleteRuns[i].id === removeItem) {
-                dbRef.child(i).remove();
-                console.log('this is my item to remove')
-            }
-        }
-
-        setIncompleteRuns(incompleteRuns)
-        // setCompletedRuns([])
-        // use new firebase method to remove an item
-        // dbRef.child(removeItem).remove();
-
     }
 
     // function to add a note to your run
@@ -127,26 +120,14 @@ function UpcomingRuns() {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        
-        // // create a timestamp
-        // const currentDate = new Date();
-        // const cDay = currentDate.getDate();
-        // const cMonth = currentDate.getMonth() + 1;
-        // const cYear = currentDate.getFullYear();
-    
-        // set the data to userInputIncome
         setNote({
-          ...note,
-          [name]: value,
-        })
-        
-    
-      }
+            ...note,
+            [name]: value,
+            })
+    }
 
     return (
         <>
-       
-
             <h3>Upcoming runs</h3>
             {/* list the user's upcoming runs */}
             <div>
@@ -161,10 +142,7 @@ function UpcomingRuns() {
                                     </button>
 
                                     {/* option to remove run (will place in dropdown menu) */}
-                                    <button className="runs-item" onClick={() => removeRun(run.id)}>
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                
+                                    <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> {/* added by 😈sara  */}
                                 {/* </Link> */}
                             </div>
                         )
