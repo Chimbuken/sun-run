@@ -1,14 +1,15 @@
 import {useState, useEffect} from 'react'
 import firebase from '../firebase';
-import {useParams} from 'react-router-dom'
+import {useParams , useNavigate} from 'react-router-dom'
 
 import DeleteRun from './DeleteRun';
-import EditRun from './EditRun';
 import '../modal.css'
 
 // nobody work on this please. wait till im finished functionality.
 
 function UpcomingRuns() {
+    let navigate = useNavigate();
+
 
     // useState declarations
     const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
@@ -22,6 +23,8 @@ function UpcomingRuns() {
     const [runKey, setRunKey] = useState('');
     const [runObj, setRunObj] = useState([]);
     const [note, setNote] = useState('');
+
+    const [runObjForModal, setRunObjForModal]=useState({})
 
     // get userId from url and store in userId
     const user = useParams()
@@ -68,7 +71,13 @@ function UpcomingRuns() {
     function runModal(runId) {
         setModal(true);
         setRunId(runId);
-
+        incompleteRuns.forEach((run, idx)=>{
+            if(run.id === runId){
+                console.log('runObj', run)
+                console.log('run id', idx)
+                setRunObjForModal(run)
+            }
+        })
         for(let i=0; i<incompleteRuns.length;i++) {
             console.log(incompleteRuns[i].id)
 
@@ -112,19 +121,21 @@ function UpcomingRuns() {
 
     // function to add a note to your run
     const markRunComplete = () => {
-
-
         // make db connection
+        console.log('runKey: ', runKey)
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
+        dbRef.on('value', (response)=>{
+            console.log('retrived',response.val())
+        })
 
         // set 'completed' to be true
         const mark = {completed:true}
         
         // push mark obj to db
-        dbRef.update(mark);
-        console.log('runKey', runKey)
+        // dbRef.update(mark);
+        // console.log('runKey', runKey)
 
-        closeModal()
+        // closeModal()
 
 
         incompleteRuns.forEach(run => {
@@ -134,19 +145,18 @@ function UpcomingRuns() {
         
 
         console.log(incompleteRuns)
+    }
+    const editRun =(runObj)=>{
+        console.log(runObj)
+        navigate(`/setup/${user.userId}/${runObj.id}`);
 
     }
 
     return (
         <>
 
-   
-
-
             <h3>Upcoming runs</h3>
-            <div className="flex-container">
-
-            
+            <div className="flex-container">            
             {/* list the user's upcoming runs */}
             <div>
                 {
@@ -158,11 +168,9 @@ function UpcomingRuns() {
                                     <button className="runs-item" onClick={() => runModal(run.id)}>
                                         You have a run on {run.date} <i class="fas fa-ellipsis-h"></i>
                                     </button>
-
                                     {/* option to remove run (will place in dropdown menu) */}
-                                    <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> {/* added by 😈sara  */}
-                                    <EditRun run={run} userId={user.userId} />
-                            
+                                    {/* <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> */}
+                                     {/* added by 😈sara  */}
                             </div>
                         )
                     })
@@ -204,8 +212,9 @@ function UpcomingRuns() {
             {
                 modal === true ? (
                     <>
-                        {/* set modal overlay overtop of entire page */}
-                        <div className="modal-overlay" onClick={() => closeModal()}></div>
+                    {/* set modal overlay overtop of entire page */}
+                    <div className="modal-overlay" onClick={() => closeModal()}></div>
+
 
                         {/* set modal card overtop of overlay */}
                         <div className="modal-card">
@@ -213,36 +222,41 @@ function UpcomingRuns() {
                             <div className="modal-grid modal-title">
                                 <h3>Run information</h3>
                                 <div className="modal-options">
-
                                     {/* mark run complete button */}
                                     <button aria-label="mark run complete" onClick={() => markRunComplete()}>
                                         <i class="fas fa-check-circle"></i>
                                     </button>
 
                                     {/* edit the run settings */}
-                                    <button aria-label="edit the run settings">
+                                    <button aria-label="edit the run settings" onClick={()=>editRun(runObjForModal)}>
                                         <i class="fas fa-edit"></i>
                                     </button>
 
                                     {/* delete the run */}
-                                    <button aria-label="delete the run">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-
+                                    <DeleteRun run={runObjForModal} setRunKey={setRunKey} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns} closeModal={closeModal}/> {/* added by 😈sara  */}
                                 </div>
                             </div>
 
                             <div className="modal-grid modal-content">
 
-                            {/* <p>Run id: {incompleteRuns[runKey].id}</p> */}
-                            <p>Date: {incompleteRuns[runKey].date}</p>
-                            <p>Departure time: {incompleteRuns[runKey].departureTime}</p>
-                            <p>Distance: {incompleteRuns[runKey].distance}</p>
-                            <p>Pace: {incompleteRuns[runKey].pace}</p>
-                            <p>Duration: {incompleteRuns[runKey].runDuration}</p>
-                            <p>Sun time: {incompleteRuns[runKey].suntime}</p>
-                            <p>Time of Day: {incompleteRuns[runKey].timeOfDay}</p>
+                                {/* <p>Run id: {incompleteRuns[runKey].id}</p> */}
+                                {/* <p>Date: {incompleteRuns[runKey].date}</p>
+                                <p>Departure time: {incompleteRuns[runKey].departureTime}</p>
+                                <p>Distance: {incompleteRuns[runKey].distance}</p>
+                                <p>Pace: {incompleteRuns[runKey].pace}</p>
+                                <p>Duration: {incompleteRuns[runKey].runDuration}</p>
+                                <p>Sun time: {incompleteRuns[runKey].suntime}</p>
+                                <p>Time of Day: {incompleteRuns[runKey].timeOfDay}</p> */}
 
+
+                                {/* sara  😈 sara */}
+                                <p>Date: {runObjForModal.date}</p>
+                                <p>Departure time: {runObjForModal.departureTime}</p>
+                                <p>Distance: {runObjForModal.distance}</p>
+                                <p>Pace: {runObjForModal.pace}</p>
+                                <p>Duration: {runObjForModal.runDuration}</p>
+                                <p>Sun time: {runObjForModal.suntime}</p>
+                                <p>Time of Day: {runObjForModal.timeOfDay}</p>
                             </div>
                             
 
@@ -253,7 +267,8 @@ function UpcomingRuns() {
 
                             {/* add sr-only label to textarea */}
                             <form className="modal-notepad-form" aria-label="Display income data with a remove income option" onSubmit={addNote}>
-                                <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{incompleteRuns[runKey].note}</textarea>
+                                {/* <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{incompleteRuns[runKey].note}</textarea> */}
+                                <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{runObjForModal.note}</textarea>
 
                                 <button aria-label="Add note" className="btn-green">Update notes</button>
                             </form>

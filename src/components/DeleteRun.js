@@ -22,9 +22,11 @@ function DeleteRun(props) {
                 
                 // rerendering the runs in the dom with the new array.
                 props.runReRender(filteredArray)
+                props.setRunKey('')
 
                 // updating the runs array in the firebase with the new filtered array of runs.
                 firebase.database().ref(`/sample/${props.userId}`).update(runObj);
+                props.closeModal()
                 
             }else{
                 console.log('nothing to remove')
@@ -32,7 +34,7 @@ function DeleteRun(props) {
         }
     return (
         <button className="runs-item" onClick={() => removeRun(props.run.id)}>
-            <i className="fas fa-times"></i>
+            <i className="fas fa-trash"></i>
         </button>
     )
 }

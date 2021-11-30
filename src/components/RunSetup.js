@@ -216,7 +216,6 @@ function RunSetup() {
         }else {
           timeOfDay = 'sunset'
         }
-
         const newRun ={
                 id: runId,
                 pace: runResults.pace,
