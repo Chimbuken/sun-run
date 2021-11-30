@@ -9,7 +9,6 @@ function EditRun(props) {
             <button className="runs-item" onClick={() => editRun(props.run.id)}>
                 <i className="far fa-edit"></i>
             </button>
-            
         </>
     )
 }

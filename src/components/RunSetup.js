@@ -11,7 +11,6 @@ function RunSetup() {
   const d = new Date();
   let navigate = useNavigate();
 
-
   // useState
   const [alert, setAlert] = useState({alert: false, alertMessage:''})
   const [firstRun, setFirstRun] = useState({

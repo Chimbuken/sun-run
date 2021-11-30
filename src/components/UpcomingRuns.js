@@ -61,7 +61,6 @@ function UpcomingRuns() {
                 setIncompleteRuns(incompletedRunArray)
                 setCompletedRuns(completedRunArray)
             }
-
         })
     },[])
 
@@ -69,8 +68,6 @@ function UpcomingRuns() {
     function runModal(runId) {
         setModal(true);
         setRunId(runId);
-
-
 
         for(let i=0; i<incompleteRuns.length;i++) {
             console.log(incompleteRuns[i].id)
@@ -81,7 +78,6 @@ function UpcomingRuns() {
             }
         }
     }
-
     // function to close the modal
     function closeModal() {
         setModal(false);
@@ -94,7 +90,7 @@ function UpcomingRuns() {
 
         // make db connection
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
-        
+
         // push note to db
         dbRef.update(note);
     }
@@ -108,14 +104,15 @@ function UpcomingRuns() {
     
         // set the data to note state
         setNote({
-          ...note,
-          [name]: value,
+            ...note,
+            [name]: value,
         })
         
     }
 
     // function to add a note to your run
     const markRunComplete = () => {
+
 
         // make db connection
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
@@ -125,6 +122,10 @@ function UpcomingRuns() {
         
         // push mark obj to db
         dbRef.update(mark);
+        console.log('runKey', runKey)
+
+        closeModal()
+
 
         incompleteRuns.forEach(run => {
             console.log(run)
@@ -133,11 +134,14 @@ function UpcomingRuns() {
         
 
         console.log(incompleteRuns)
+
     }
 
     return (
         <>
-        <div className="flex-container">
+
+   
+
 
             <h3>Upcoming runs</h3>
             <div className="flex-container">
@@ -176,7 +180,6 @@ function UpcomingRuns() {
                         return(
                             <div key={run.id}>
                                 <p>You have completed the run that was on {run.date}</p>
-                                
                                     {/* {
                                         // check if run is completed
                                         run.completed ?
@@ -188,7 +191,6 @@ function UpcomingRuns() {
                                             <span> false</span>
                                         )
                                     } */}
-                                
                             </div>
 
                             
