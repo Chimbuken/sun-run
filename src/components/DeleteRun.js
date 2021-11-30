@@ -7,7 +7,6 @@ function DeleteRun(props) {
 
         // function to remove run from database
         function removeRun(removeItemId) {
-            
             const user = props.userInfo
             // if theres is a key property of runs then run the following functions
             if(user.runs){

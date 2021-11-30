@@ -140,15 +140,12 @@ function UpcomingRuns() {
                                     {/* option to remove run (will place in dropdown menu) */}
                                     <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> {/* added by 😈sara  */}
                                     <EditRun run={run} userId={user.userId} />
-                            
+                                    
                             </div>
                         )
                     })
-
                 }
             </div>
-
-
             <h3>Completed runs</h3>
             {/* list the user's upcoming runs */}
             <div>
@@ -170,14 +167,11 @@ function UpcomingRuns() {
                                         )
                                     } */}
                             </div>
-
-                            
                         )
                     })
 
                 }
             </div>
-
             {/* modal for displaying run info and note pad */}
             {
                 modal === true ? (
