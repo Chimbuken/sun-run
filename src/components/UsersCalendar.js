@@ -1,12 +1,16 @@
 import Calendar from "react-calendar";
 // import 'react-calendar/dist/Calendar.css';
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import firebase from "firebase";
 import moment from "moment";
 import '../usersCalendar.css'
 
 function UsersCalendar(props) {
     const userId = props.userId
+    let navigate = useNavigate();
+
     console.log(props)
     const [runDate, setRunDate] = useState(new Date());
     const [runs, setRuns] = useState([])
@@ -15,33 +19,29 @@ function UsersCalendar(props) {
 
         // "2021-11-30"
         let className = ''
-
         if(runs.length>0){
             runs.forEach(run=>{
-                if(run.date === moment(date).format("YYYY-MM-DD") ){
-                    className='runDay'
-                    return 'runDay'
+                if(run.completed ===false){
+                    if(run.date === moment(date).format("YYYY-MM-DD") ){
+                        className='runDay'
+                    }
+                }
+                if(run.completed ===true){
+                    if(run.date === moment(date).format("YYYY-MM-DD") ){
+                        className='runDone'
+                    }
                 }
             })
-
         }
         return className
     }
-    const showRunContent =({ date, view })=>{
+    const addRun =(e)=>{
+        e.preventDefault()
+        console.log(
+            'add new run'
+        )
+        navigate(`/setup/${userId}`)
 
-        // "2021-11-30"
-        let content = ''
-
-        if(runs.length>0){
-            runs.forEach(run=>{
-                if(run.date === moment(date).format("YYYY-MM-DD") ){
-                    content='runDay'
-                    return 'runDay'
-                }
-            })
-
-        }
-        return content
     }
     
     useEffect(()=>{
@@ -50,34 +50,19 @@ function UsersCalendar(props) {
             const data = response.val();
             console.log(data)
             setRuns(data.runs)
-
         })
     },[])
     return(
         <div>
-
+            <div>
+                <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
+            </div>
             <Calendar
             onChange={setRunDate}
             value={runDate}
             tileClassName={renderingRunsArray}
-            tileContent ={showRunContent}
             />
         </div>
     )
 }
 export default UsersCalendar;
-
-
-//   const userId = useParams()
-//   useEffect(()=>{
-//     firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
-//       const data = response.val();
-//       console.log('date: ', data)
-//       setUserInfo(data)
-//       setFirstRun({
-//         ...firstRun,
-//         lat: data.coords.lat, 
-//         lng: data.coords.long,
-//       })
-//     })
-//   },[])
