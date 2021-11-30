@@ -137,7 +137,7 @@ function UpcomingRuns() {
 
     return (
         <>
-       
+        <div className="flex-container">
 
             <h3>Upcoming runs</h3>
             <div className="flex-container">
@@ -197,7 +197,7 @@ function UpcomingRuns() {
 
                 }
             </div>
-
+        </div>        
             {/* modal for displaying run info and note pad */}
             {
                 modal === true ? (
