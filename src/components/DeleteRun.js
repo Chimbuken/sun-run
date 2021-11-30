@@ -20,9 +20,9 @@ function DeleteRun(props) {
                     runs: filteredArray
                 }
                 // updating the runs array in the firebase with the new filtered array of runs.
+                props.runReRender(filteredArray)
                 firebase.database().ref(`/sample/${props.userId}`).update(runObj);
                 // rerendering the runs in the dom with the new array.
-                props.runReRender(filteredArray)
             }else{
                 console.log('nothing to remove')
             }
