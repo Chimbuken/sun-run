@@ -2,11 +2,14 @@ import {useState, useEffect} from 'react'
 import firebase from '../firebase';
 import {useParams} from 'react-router-dom'
 
+// import components
+import MarkComplete from './MarkComplete';
 import DeleteRun from './DeleteRun';
 import EditRun from './EditRun';
+
+//import css
 import '../modal.css'
 
-// nobody work on this please. wait till im finished functionality.
 
 function UpcomingRuns() {
 
@@ -215,9 +218,15 @@ function UpcomingRuns() {
                                 <div className="modal-options">
 
                                     {/* mark run complete button */}
-                                    <button aria-label="mark run complete" onClick={() => markRunComplete()}>
+                                    {/* <button aria-label="mark run complete" onClick={() => markRunComplete()}>
                                         <i class="fas fa-check-circle"></i>
-                                    </button>
+                                    </button> */}
+                                    <MarkComplete 
+                                        run={runKey} 
+                                        userId={user.userId} 
+                                        userInfo={userInfo} 
+                                        runReRender={setIncompleteRuns}
+                                    />
 
                                     {/* edit the run settings */}
                                     <button aria-label="edit the run settings">
