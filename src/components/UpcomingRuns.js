@@ -68,6 +68,7 @@ function UpcomingRuns() {
     function runModal(runId) {
         setModal(true);
         setRunId(runId);
+
         for(let i=0; i<incompleteRuns.length;i++) {
             console.log(incompleteRuns[i].id)
 
@@ -82,12 +83,14 @@ function UpcomingRuns() {
         setModal(false);
         setRunId('')
     }
+
     // function to add a note to your run
     const addNote = (event) => {
         event.preventDefault();
 
         // make db connection
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
+
         // push note to db
         dbRef.update(note);
     }
@@ -109,9 +112,11 @@ function UpcomingRuns() {
 
     // function to add a note to your run
     const markRunComplete = () => {
+
+
         // make db connection
-        console.log('runKey', runKey)
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
+
         // set 'completed' to be true
         const mark = {completed:true}
         
@@ -120,11 +125,28 @@ function UpcomingRuns() {
         console.log('runKey', runKey)
 
         closeModal()
+
+
+        incompleteRuns.forEach(run => {
+            console.log(run)
+            console.log('runkey ', runKey)
+        })
+        
+
+        console.log(incompleteRuns)
+
     }
 
     return (
         <>
+
+   
+
+
             <h3>Upcoming runs</h3>
+            <div className="flex-container">
+
+            </div>
             {/* list the user's upcoming runs */}
             <div>
                 {
@@ -177,7 +199,7 @@ function UpcomingRuns() {
 
                 }
             </div>
-
+        </div>        
             {/* modal for displaying run info and note pad */}
             {
                 modal === true ? (
