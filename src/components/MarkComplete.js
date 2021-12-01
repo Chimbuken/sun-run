@@ -18,7 +18,6 @@ function MarkComplete(props) {
 
         // close the modal
         props.closeModal();
-
     }
 
     return (

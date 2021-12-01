@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 import firebase from '../firebase';
-import runType from './runType';
-import {convertH2M, convertM2H} from './runType.js'
+import runType from '../functions/runType';
+import {convertH2M, convertM2H} from '../functions/runType.js'
 import { v4 as uuidv4 } from 'uuid';
 
 function SettingUpRun() {
@@ -41,6 +41,8 @@ function SettingUpRun() {
         }).then((response) => {
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
+            console.log('direct from api: ', sunrise)
+            console.log('direct from api: ', sunset)
             let startTime;
             if( firstRun.timeOfDay === "sunrise" ){
                 const sunriseInMinute = convertH2M(sunrise);

@@ -17,14 +17,14 @@ function UpcomingRuns() {
     let navigate = useNavigate();
     // useState declarations
     const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
-    const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
-    const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
+    // const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
+    // const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
     const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
     // run modal states
     const [modal, setModal] = useState(false);
     const [runId, setRunId] = useState('');
     const [runKey, setRunKey] = useState('');
-    const [runObj, setRunObj] = useState([]);
+    // const [runObj, setRunObj] = useState([]);
     const [note, setNote] = useState('');
 
     const [runObjForModal, setRunObjForModal]=useState({})
@@ -35,6 +35,9 @@ function UpcomingRuns() {
 
     // get userId from url and store in userId
     const user = useParams()
+    const getusersRuns = ()=>{
+
+    }
 
     useEffect( () => {
 
@@ -52,25 +55,8 @@ function UpcomingRuns() {
                 setUserRuns(data.runs)
             }
             setUserInfo(data) // added by 😈sara 
-            
-            // iterate through userRuns and deconstruct userRuns into separate useState arrays
-            if(data.runs) {// added by 😈sara 
-                //  added by 😈sara 
-                let completedRunArray = []
-                let incompletedRunArray = []
-                data.runs.forEach(run=>{
-                    if(run.completed === false){
-                        incompletedRunArray.push(run)
-                    }else {
-                        completedRunArray.push(run)
-                    }
-                })
-                setIncompleteRuns(incompletedRunArray)
-                setCompletedRuns(completedRunArray)
-            }
         })
     },[])
-
     // function to set and open modal
     function runModal(runId) {
         setModal(true);
@@ -193,35 +179,12 @@ function UpcomingRuns() {
             ...note,
             [name]: value,
         })
-        
-              
     }
 
-    // function to add a note to your run
-    const markRunComplete = () => {
-
-        // make db connection
-        console.log('runKey: ', runKey)
-        const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
-        dbRef.on('value', (response)=>{
-            console.log('retrived',response.val())
-        })
-
-        // set 'completed' to be true
-        const mark = {completed:true}
-        
-        // push mark obj to db
-        dbRef.update(mark);
-
-        // close the modal
-        closeModal()
-
-    }
     const editRun =(runObj)=>{
         console.log(runObj)
         navigate(`/editRun/${user.userId}/${runObj.id}`);
     }
-
     return (
         <>
 
@@ -253,7 +216,7 @@ function UpcomingRuns() {
                 {
                     userRuns.length>0 ?
                     userRuns.map(run=>run.completed===false?
-                        <div>{run.distance}</div> : null
+                        <div key={run.id}>{run.distance}</div> : null
                         ) 
                         : null
                 }
@@ -300,11 +263,11 @@ function UpcomingRuns() {
 
                                     {/* edit the run settings */}
                                     <button aria-label="edit the run settings" onClick={()=>editRun(runObjForModal)}>
-                                        <i class="fas fa-edit"></i>
+                                        <i className="fas fa-edit"></i>
                                     </button>
 
                                     {/* delete the run */}
-                                    <DeleteRun run={runObjForModal} setRunKey={setRunKey} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns} closeModal={closeModal}/> {/* added by 😈sara  */}
+                                    <DeleteRun run={runObjForModal} setRunKey={setRunKey} userId={user.userId} userInfo={userInfo} closeModal={closeModal} runReRender={setUserRuns}/> {/* added by 😈sara  */}
                                 </div>
                             </div>
 
@@ -324,7 +287,6 @@ function UpcomingRuns() {
                             {/* set modal card overtop of overlay */}
                             <h3>Run notes</h3>
 
-                            {/* <p>Notes: {incompleteRuns[runKey].notes}</p> */}
 
                             {/* add sr-only label to textarea */}
                             <form className="modal-notepad-form" aria-label="Display income data with a remove income option" onSubmit={addNote}>
@@ -341,7 +303,7 @@ function UpcomingRuns() {
                             
                             </form>
                             <button aria-label="Close run info popup modal" className="modal-close" onClick={() => closeModal()}>
-                                <i class="far fa-times-circle"></i>
+                                <i className="far fa-times-circle"></i>
                             </button>
                         </div>
                     </>
