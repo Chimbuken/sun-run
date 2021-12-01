@@ -188,7 +188,6 @@ function SignUp() {
           setIsBackendValid(false)
           console.error(err)
         })
-
     }
   }
 
