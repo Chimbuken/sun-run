@@ -9,6 +9,7 @@ function Settings() {
     const {userId} = useParams()
     const [showNameForm, setShowNameForm] = useState(false);
     const [showEmailForm, setShowEmailForm] = useState(false);
+    const [showAddressForm, setShowAddressForm] = useState(false);
     const [alert, setAlert] = useState({alert: false, alertMessage:''})
     const [zipcode, setZipcode] = useState('');
     const [country, setCountry] = useState('canada');
@@ -59,47 +60,55 @@ function Settings() {
     }, [])
     return (
         <main className="card-full">
-            <Link to={`/dashboard/${userId}`}>Back to dashboard</Link>
-            <section className="signup-form wrapper">
-                <div >
-                    <div className="flex">
-                        <h1>{userInfo.name} </h1> <i className="fas fa-user-edit" onClick={()=>setShowNameForm(!showNameForm)}></i>
+            <div className='flex-column'>
+                <h1>settings</h1>
+                <Link to={`/dashboard/${userId}`}>Back to dashboard</Link>
+                <section className="signup-form wrapper">
+                    <div >
+                        <div className="flex">
+                            <h1>{userInfo.name} </h1> <i className="fas fa-user-edit" onClick={()=>setShowNameForm(!showNameForm)}></i>
+                        </div>
+                        {showNameForm?
+                        <form onSubmit={submitName}>
+                            <label htmlFor="name" className="sr-only">Name</label>
+                            <input type="text" id="name" name="name" value={userInfo.name} onChange={handleInputChange} placeholder="Full name"></input>
+                            <button>save</button>
+                            <i className="far fa-times-circle" onClick={()=>setShowNameForm(!showNameForm)}></i>
+                        </form>
+                        : null
+                        }
                     </div>
-                    {showNameForm?
-                    <form onSubmit={submitName}>
-                        <label htmlFor="name" className="sr-only">Name</label>
-                        <input type="text" id="name" name="name" value={userInfo.name} onChange={handleInputChange} placeholder="Full name"></input>
-                        <button>save</button>
-                        <i className="far fa-times-circle" onClick={()=>setShowNameForm(!showNameForm)}></i>
-                    </form>
-                    : null
-                    }
-                </div>
-                <div >
-                    <div className="flex">
-                        <h4>{userInfo.email} </h4> <i className="far fa-envelope" onClick={()=>setShowEmailForm(!showEmailForm)}></i>
+                    <div >
+                        <div className="flex">
+                            <h4>{userInfo.email} </h4> <i className="far fa-envelope" onClick={()=>setShowEmailForm(!showEmailForm)}></i>
+                        </div>
+                        {showEmailForm?
+                        <form onSubmit={submitEmail}>
+                            <label htmlFor="email" className="sr-only">email</label>
+                            <input type="text" id="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email Address"></input>
+                            <button>save</button>
+                            <i className="far fa-times-circle" onClick={()=>setShowEmailForm(!showEmailForm)}></i>
+                        </form>
+                        : null
+                        }
                     </div>
-                    {showEmailForm?
-                    <form onSubmit={submitEmail}>
-                        <label htmlFor="email" className="sr-only">email</label>
-                        <input type="text" id="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email Address"></input>
-                        <button>save</button>
-                        <i className="far fa-times-circle" onClick={()=>setShowEmailForm(!showEmailForm)}></i>
-                    </form>
-                    : null
-                    }
-                </div>
-                <div>
-                    <div className="flex">
-                    <h4>{userInfo.location} </h4> <i className="far fa-envelope" onClick={()=>setShowEmailForm(!showEmailForm)}></i>
-
+                    <div>
+                        <div className="flex">
+                        <h4>{userInfo.location} </h4> <i className="far fa-envelope" onClick={()=>setShowAddressForm(!showAddressForm)}></i>
+                        {showAddressForm?
+                        <form onSubmit={submitEmail}>
+                            <label htmlFor="code" className="sr-only">email</label>
+                            <input type="text" id="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email Address"></input>
+                            <button>save</button>
+                            <i className="far fa-times-circle" onClick={()=>setShowAddressForm(!showAddressForm)}></i>
+                        </form>
+                        : null
+                        }
+                        </div>
                     </div>
-                </div>
-                {alert ?  <p>{alert.alertMessage}</p> : null }
-            </section>
-            change names
-            change address
-            change email
+                    {alert ?  <p>{alert.alertMessage}</p> : null }
+                </section>
+            </div>
         </main>
     )
 }
