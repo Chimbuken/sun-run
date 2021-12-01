@@ -57,7 +57,6 @@ function SignUp() {
     if(emailRegex.test(event.target.value)) {
       setIsEmailValid(true); 
     }  
-
   }
 
   // handleCountryChange ->

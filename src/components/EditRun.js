@@ -9,17 +9,19 @@ import {useParams , useNavigate} from 'react-router-dom'
 function EditRun() {
     const month= ["January","February","March","April","May","June","July",
     "August","September","October","November","December"];
+    const [today, setToday]=useState(new Date())
     const {userId} = useParams()
     const {runId} = useParams()
     const [runObj, setRunObj] = useState({})
+    const [oldRun, setOldRun] = useState({})
     const [userInfo, setUserInfo] = useState({})
     const [showForm, setShowForm] =useState(true)
     const [showResult, setShowResult] =useState(false);
     const [alert, setAlert] = useState({alert: false, alertMessage:''})
-    const [runResults, setRunResults] = useState({})
+    const [runResults, setRunResults] = useState({});
 
+    let navigate = useNavigate();
 
-    console.log(userId)
 
     const handleChange = (e)=>{
         const {id, value} = e.target;
@@ -29,7 +31,6 @@ function EditRun() {
     const handleTimeClick = (e)=>{
         e.preventDefault()
         const {id} = e.target;
-        console.log(id);
         if(id === "userSunrise"){
             setRunObj({...runObj, userSunrise:true, userSunset:false})
         }else {
@@ -52,10 +53,8 @@ function EditRun() {
             // Results in format HH:MM:SS AM or PM UTC timezone
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
-      
             // Stored values of Date and converted from the User's Choice to be in the same format as the API call response in UTC time
             const selectedDateArray =  runObj.date.split("-")
-            console.log('dateArray: ', selectedDateArray)
             const selectedYear = selectedDateArray[0]
             const selectedMonth = selectedDateArray[1]
             const selectedDate = selectedDateArray[2]
@@ -165,20 +164,51 @@ function EditRun() {
             }else {
               sunsetToHourMinute = (`${sunsetHour}:${sunsetMin} AM`)
             }
-            setRunResults({...runObj, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute, runDuration: totalTime, userSelectedSunTime: userSelectedSunTime});   
+            setRunResults({...runObj, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute, runDuration: totalTime, userSelectedSunTime: userSelectedSunTime});
+ 
             setShowForm(false)
             setShowResult(true)
+            
           });
-    }
+        }
+        function convertH2M(timeInHour){
+          let timeParts = timeInHour.split(":");
+          return Number(timeParts[0]) * 60 + Number(timeParts[1]);
+        }
+        
+        const handleConfirmation =()=>{
 
-    function convertH2M(timeInHour){
-        let timeParts = timeInHour.split(":");
-        return Number(timeParts[0]) * 60 + Number(timeParts[1]);
-      }
-    
-    const handleConfirmation =()=>{
         console.log('runResults: ', runResults)
-    }
+        let timeOfDay ;
+        if(runResults.userSunrise){
+          timeOfDay = 'sunrise'
+        }else {
+          timeOfDay = 'sunset'
+        }
+            const editedRunObj = {
+              id: runId,
+              pace: runResults.pace,
+              distance: runResults.distance,
+              timeOfDay: timeOfDay,
+              date: runResults.date,
+              departureTime: runResults.departureTime,
+              runDuration: runResults.runDuration,
+              suntime: runResults.userSelectedSunTime,
+              completed: false
+          }
+          console.log('editedRunObj', editedRunObj);
+          let key
+          userInfo.runs.forEach((run, idx)=>{
+            if(run.id === runId){
+              console.log('run: ', run);
+              console.log('run: ', idx);
+              key = idx
+            }
+          })
+          const dbRef = firebase.database().ref(`/sample/${userId}/runs/${key}`);
+          dbRef.update(editedRunObj);
+          navigate(`/dashboard/${userId}`);
+        }
     const showTheForm =()=>{
         setShowResult(false)
         setShowForm(true)
@@ -186,14 +216,12 @@ function EditRun() {
     useEffect(() => {
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response) => {
-        
             // store user data in data variable
             const data = response.val();
-            console.log('data:', data)
             setUserInfo(data)
             data.runs.forEach(element => {
                 if(element.id ===runId){
-                    console.log('this is the run id: ', element)
+                    console.log('old run: ', element)
                     const newObj={
                         pace : element.pace,
                         distance: element.distance,
@@ -203,12 +231,12 @@ function EditRun() {
                         lat: data.coords.lat, 
                         lng: data.coords.long,
                     }
+                    setOldRun(element)
                     setRunObj(newObj)
                 }
             });
         })
     }, [])
-
 
     return (
         <main  className="card-full">
@@ -234,16 +262,17 @@ function EditRun() {
                     <input type="date" id="date" name="date"
                     onChange={handleChange}
                     value={runObj.date}
-                    min={runObj.date}/>
+                    min={`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`}/>
                     <div className="select-box">
                     {/* selectedBtn */}
-                    <button id="userSunrise" className={runObj.userSunrise ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunrise</button>
-                    <button id="userSunset" className={runObj.userSunset ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunset</button>
+                    {/* <button id="userSunrise" className={runObj.userSunrise ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunrise</button>
+                    <button id="userSunset" className={runObj.userSunset ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunset</button> */}
 
-                        {/* <input type="radio" name="userTime" id="userSunrise" onChange={handleTimeClick} checked={runObj.userSunrise}/>
+                        <input type="radio" name="userTime" id="userSunrise" onChange={handleTimeClick} checked={runObj.userSunrise}/>
                         <label htmlFor="userSunrise" >Sunrise</label>
+
                         <input type="radio" name="userTime" id="userSunset" onChange={handleTimeClick} checked={runObj.userSunset}/>
-                        <label htmlFor="userSunset">Sunset</label> */}
+                        <label htmlFor="userSunset">Sunset</label>
 
                     </div>
                     <button className="btn-red" onSubmit={editRun}>VIew Result</button>
@@ -279,8 +308,9 @@ function EditRun() {
                     }
                     <div className="select-box">
                       <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Confirm Run</button>
-                        <button id='editRun' className="btn-red" onClick={showTheForm}>Edit Run</button>
+                      <button id='editRun' className="btn-red" onClick={showTheForm}>Edit Run</button>
                     </div>
+                      <button id='cancelBtn' className="btn-red" onClick={()=>navigate(`/dashboard/${userId}`)}>Cancel</button>
                 </div>
                 : null
             }

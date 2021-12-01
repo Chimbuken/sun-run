@@ -5,22 +5,19 @@ import {useParams , useNavigate} from 'react-router-dom'
 // import components
 import MarkComplete from './MarkComplete';
 import DeleteRun from './DeleteRun';
-import EditRun from './EditRun';
 
 //import css
+
 import '../modal.css'
 
 
 function UpcomingRuns() {
     let navigate = useNavigate();
-
-
     // useState declarations
     const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
     const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
     const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
     const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
-
     // run modal states
     const [modal, setModal] = useState(false);
     const [runId, setRunId] = useState('');
@@ -43,9 +40,6 @@ function UpcomingRuns() {
         
             // store user data in data variable
             const data = response.val();
-
-            // check if data is fetched
-            console.log(data.runs)
 
             // store all user's runs in useState
             if(data.runs){ // added by 😈sara 
@@ -77,16 +71,12 @@ function UpcomingRuns() {
         setRunId(runId);
         incompleteRuns.forEach((run, idx)=>{
             if(run.id === runId){
-                console.log('runObj', run)
-                console.log('run id', idx)
                 setRunObjForModal(run)
             }
         })
         for(let i=0; i<incompleteRuns.length;i++) {
-            console.log(incompleteRuns[i].id)
 
             if(incompleteRuns[i].id === runId) {
-                console.log('im here')
                 setRunKey(i);
             }
         }
@@ -136,24 +126,13 @@ function UpcomingRuns() {
         const mark = {completed:true}
         
         // push mark obj to db
-        // dbRef.update(mark);
-        // console.log('runKey', runKey)
+        dbRef.update(mark);
 
-        // closeModal()
-
-
-        incompleteRuns.forEach(run => {
-            console.log(run)
-            console.log('runkey ', runKey)
-        })
-        
-
-        console.log(incompleteRuns)
+        closeModal()
     }
     const editRun =(runObj)=>{
         console.log(runObj)
-        navigate(`/setup/${user.userId}/${runObj.id}`);
-
+        navigate(`/editRun/${user.userId}/${runObj.id}`);
     }
 
     return (
@@ -188,11 +167,15 @@ function UpcomingRuns() {
                             </div>
                         )
                     })
-
+                }
+                {
+                    userRuns.length>0 ?
+                    userRuns.map(run=>run.completed===false?
+                        <div>{run.distance}</div> : null
+                        ) 
+                        : null
                 }
             </div>
-
-
             <h3>Completed runs</h3>
             {/* list the user's upcoming runs */}
             <div>
@@ -267,8 +250,6 @@ function UpcomingRuns() {
                                 <p>Duration: {incompleteRuns[runKey].runDuration}</p>
                                 <p>Sun time: {incompleteRuns[runKey].suntime}</p>
                                 <p>Time of Day: {incompleteRuns[runKey].timeOfDay}</p> */}
-
-
                                 {/* sara  😈 sara */}
                                 <p>Date: {runObjForModal.date}</p>
                                 <p>Departure time: {runObjForModal.departureTime}</p>
@@ -292,8 +273,6 @@ function UpcomingRuns() {
 
                                 <button aria-label="Add note" className="btn-green">Update notes</button>
                             </form>
-
-
                             <button aria-label="Close run info popup modal" className="modal-close" onClick={() => closeModal()}>
                                 <i class="far fa-times-circle"></i>
                             </button>
@@ -306,7 +285,6 @@ function UpcomingRuns() {
 
         </>
     )
-
 }
 
 export default UpcomingRuns
