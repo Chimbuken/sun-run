@@ -58,7 +58,7 @@ function UsersCalendar(props) {
         })
     },[])
     return(
-        <div className="calendar-container">
+        <div className="calendar-container flex-column">
 
             <div>
                 <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
