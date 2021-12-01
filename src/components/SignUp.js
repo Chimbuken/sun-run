@@ -57,7 +57,6 @@ function SignUp() {
     if(emailRegex.test(event.target.value)) {
       setIsEmailValid(true); 
     }  
-
   }
 
   // handleCountryChange ->
@@ -174,16 +173,7 @@ function SignUp() {
           dbRef.update(userObj);
           
           // check to see if userObj was updated
-          dbRef.on('value', (response) => {
-            
-            // check if the response is null / does not exist
-            if(response.val() !== null) {
-              // route to run set up form
-              navigate(`/setup/${userObj.uid}`)
-            } else {
-              setIsBackendValid(false)            
-            }
-          })
+          navigate(`/settingUpRun/${userObj.uid}`)
         })
         .catch((err) => {
           setIsBackendValid(false)

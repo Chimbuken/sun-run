@@ -12,6 +12,8 @@ function UsersCalendar(props) {
     let navigate = useNavigate();
     const [runDate, setRunDate] = useState(new Date());
     const [runs, setRuns] = useState([])
+    const [today, setToday]=useState(new Date())
+
 
     const renderingRunsArray =({ date, view })=>{
 
@@ -41,7 +43,11 @@ function UsersCalendar(props) {
         console.log(
             'add new run'
         )
-        navigate(`/setup/${userId}`)
+        navigate(`/settingUpRun/${userId}`)
+    }
+    const settings =(e)=>{
+        e.preventDefault()
+        navigate(`/settings/${userId}`)
     }
     
     useEffect(()=>{
@@ -54,13 +60,15 @@ function UsersCalendar(props) {
     return(
         <div className="calendar-container flex-column">
 
-            <div className="add-run">
-                <button onClick={addRun} className="btn-green"><i className="fas fa-plus"></i> Add Run</button>
+            <div>
+                <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
+                <button onClick={settings}><i class="fas fa-users-cog"></i></button>
             </div>
             <Calendar
             onChange={setRunDate}
             value={runDate}
             tileClassName={renderingRunsArray}
+            minDate={new Date()}
             />
         </div>
     )

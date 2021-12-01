@@ -96,6 +96,53 @@ button.btn-green {
     background-color:#fafafa;
 }
 
+.modal-msg {
+    padding:.5em;
+    margin:.5em 0;
+    border-radius: 10px;
+    text-align: center;
+    opacity:0;
+
+    animation-name: fadeIn, fadeOut;
+    animation-duration: 1s, 1s;
+    animation-delay: 0s, 5s; /* this will delay the 2nd animation from commencing by 2s */
+    animation-fill-mode: forwards; 
+
+    /* animation-name: fadeOut;
+    animation-duration: 2s, 2s;
+    animation-fill-mode: forwards; */
+    
+}
+
+/* animations for error and popups*/
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+  }
+
+  /* animations for error and popups*/
+@keyframes fadeOut {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+        width:0; height:0;
+        margin:0;padding:0;
+    }
+  }
+
+.modal-error {
+    background-color: #d66761;
+}
+
+.modal-success {
+    background-color:#b8e070;
+}
 
 .modal-content {
     grid-template-columns: repeat(2, 1fr);
