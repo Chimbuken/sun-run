@@ -236,7 +236,7 @@ function SignUp() {
           {country === 'canada' ?
           <>
             <label htmlFor="postalcode" className="sr-only">Postal Code</label>
-            <input type="text" id="postalcode" name="postalcode" value={postalCode} onChange={handlePostalCodeChange} placeholder="First 3 letter of Postal Code" maxLength="3"></input>
+            <input type="text" id="postalcode" name="postalcode" value={postalCode} onChange={handlePostalCodeChange} placeholder="First 3 digits of Postal Code" maxLength="3"></input>
           </>
           :
           <>

@@ -159,8 +159,8 @@ function UpcomingRuns() {
     return (
         <>
 
+        <div className="flex-container">
             <h3>Upcoming runs</h3>
-            <div className="flex-container">            
             {/* list the user's upcoming runs */}
             <div>
                 {
@@ -168,10 +168,20 @@ function UpcomingRuns() {
                     incompleteRuns.map((run) => {
                         return(
                             <div className="runs-panel" key={run.id}>
+                                
                                 {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
-                                    <button className="runs-item" onClick={() => runModal(run.id)}>
-                                        You have a run on {run.date} <i class="fas fa-ellipsis-h"></i>
+
+                                    <button className="runs-item flex" onClick={() => runModal(run.id)}>
+                                    <div className="flex-column">    
+                                        <p>Sunrise or Sunset</p>
+                                        <p>{run.date}</p>
+                                    </div> 
+                                        <div className="flex">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </div>
                                     </button>
+
+
                                     {/* option to remove run (will place in dropdown menu) */}
                                     {/* <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> */}
                                      {/* added by 😈sara  */}
@@ -191,7 +201,7 @@ function UpcomingRuns() {
                     completedRuns.map((run) => {
                         return(
                             <div key={run.id}>
-                                <p>You have completed the run that was on {run.date}</p>
+                                <p className="font-white">You completed a run on {run.date}.</p>
                                     {/* {
                                         // check if run is completed
                                         run.completed ?
