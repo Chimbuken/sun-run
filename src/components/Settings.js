@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useParams , useNavigate} from 'react-router-dom';
+import {useParams , useNavigate, Link} from 'react-router-dom';
 import firebase from '../firebase';
 
 
@@ -59,6 +59,7 @@ function Settings() {
     }, [])
     return (
         <main className="card-full">
+            <Link to={`/dashboard/${userId}`}>Back to dashboard</Link>
             <section className="signup-form wrapper">
                 <div >
                     <div className="flex">
