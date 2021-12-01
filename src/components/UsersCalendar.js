@@ -59,6 +59,7 @@ function UsersCalendar(props) {
     },[])
     return(
         <div className="calendar-container">
+
             <div>
                 {/* <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button> */}
                 <button onClick={settings}><i class="fas fa-users-cog"></i></button>
