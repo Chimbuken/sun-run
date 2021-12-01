@@ -3,12 +3,16 @@ import axios from 'axios';
 import firebase from '../firebase';
 import { useParams, useNavigate} from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment'
 
 
 function RunSetup() {
   const month= ["January","February","March","April","May","June","July",
   "August","September","October","November","December"];
+  const [today, setToday]=useState(new Date())
+
   const d = new Date();
+  
   let navigate = useNavigate();
 
   // useState
@@ -216,7 +220,6 @@ function RunSetup() {
         }else {
           timeOfDay = 'sunset'
         }
-
         const newRun ={
                 id: runId,
                 pace: runResults.pace,
@@ -325,7 +328,7 @@ function RunSetup() {
           <input type="date" id="date" name="date"
           onChange={handleChange}
           value={firstRun.date}
-          min={firstRun.date}/>
+          min={`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`}/>
         
         <div className="select-box">
           {/* selectedBtn */}
@@ -357,6 +360,8 @@ function RunSetup() {
               <>
               {runResults.userSunrise === true ? 
               <div>
+                {/* moment().format('dddd') */}
+                <h4>{moment(runResults.date).format('dddd')}</h4>
                 <h4>{runResults.date}</h4>
                 <p>Departure Time:  {runResults.departureTime}</p>
                 <p>Sunrise: {runResults.sunriseData}</p> 
@@ -378,6 +383,11 @@ function RunSetup() {
               <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Confirm Run</button>
                 <button id='editRun' className="btn-red" onClick={handleConfirmation}>Edit Run</button>
             </div>
+
+            {userInfo.runs?
+      
+            <button id='cancelBtn' className="btn-red" onClick={()=>navigate(`/dashboard/${userId.userId}`)}>Cancel</button>
+              : null            }
           </div>
           : null
       }

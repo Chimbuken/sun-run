@@ -3,25 +3,23 @@ import firebase from '../firebase';
 import {useParams , useNavigate} from 'react-router-dom'
 import raw from '../includes/list.txt'; // profanity list! >:)
 
+
 // import components
 import MarkComplete from './MarkComplete';
 import DeleteRun from './DeleteRun';
-import EditRun from './EditRun';
 
 //import css
+
 import '../modal.css'
 
 
 function UpcomingRuns() {
     let navigate = useNavigate();
-
-
     // useState declarations
     const [userRuns, setUserRuns] = useState([]) // initial runs state, has both incomplete and complete
     const [incompleteRuns, setIncompleteRuns] = useState([]) // only holds runs that are incomplete
     const [completedRuns, setCompletedRuns] = useState([]) // only holds runs that are complete
     const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
-
     // run modal states
     const [modal, setModal] = useState(false);
     const [runId, setRunId] = useState('');
@@ -48,9 +46,6 @@ function UpcomingRuns() {
         
             // store user data in data variable
             const data = response.val();
-
-            // check if data is fetched
-            console.log(data.runs)
 
             // store all user's runs in useState
             if(data.runs){ // added by 😈sara 
@@ -92,6 +87,7 @@ function UpcomingRuns() {
 
             if(userRuns[i].id === runId) {
                 console.log('im here')
+
                 setRunKey(i);
             }
         }
@@ -205,7 +201,11 @@ function UpcomingRuns() {
     const markRunComplete = () => {
 
         // make db connection
+        console.log('runKey: ', runKey)
         const dbRef = firebase.database().ref(`/sample/${user.userId}/runs/${runKey}`);
+        dbRef.on('value', (response)=>{
+            console.log('retrived',response.val())
+        })
 
         // set 'completed' to be true
         const mark = {completed:true}
@@ -217,22 +217,22 @@ function UpcomingRuns() {
         closeModal()
 
     }
-
     const editRun =(runObj)=>{
         console.log(runObj)
-        navigate(`/setup/${user.userId}/${runObj.id}`);
-
+        navigate(`/editRun/${user.userId}/${runObj.id}`);
     }
 
     return (
         <>
 
+
+        <div className="flex-container">
             <h3>Upcoming runs</h3>
-            <div className="flex-container">            
             {/* list the user's upcoming runs */}
             <div>
                 {
                     // using map to iterate through userRuns array
+
                     userRuns.map((run) => {
                         if(run.completed===false) {
                             return(
@@ -247,12 +247,17 @@ function UpcomingRuns() {
                                 </div>
                             )
                         }
-                    })
 
+                    })
+                }
+                {
+                    userRuns.length>0 ?
+                    userRuns.map(run=>run.completed===false?
+                        <div>{run.distance}</div> : null
+                        ) 
+                        : null
                 }
             </div>
-
-
             <h3>Completed runs</h3>
             {/* list the user's upcoming runs */}
             <div>
@@ -266,6 +271,7 @@ function UpcomingRuns() {
                                 </div> 
                             )
                         }
+
                     })
 
                 }
@@ -304,16 +310,6 @@ function UpcomingRuns() {
 
                             <div className="modal-grid modal-content">
 
-                                {/* <p>Run id: {incompleteRuns[runKey].id}</p> */}
-                                {/* <p>Date: {incompleteRuns[runKey].date}</p>
-                                <p>Departure time: {incompleteRuns[runKey].departureTime}</p>
-                                <p>Distance: {incompleteRuns[runKey].distance}</p>
-                                <p>Pace: {incompleteRuns[runKey].pace}</p>
-                                <p>Duration: {incompleteRuns[runKey].runDuration}</p>
-                                <p>Sun time: {incompleteRuns[runKey].suntime}</p>
-                                <p>Time of Day: {incompleteRuns[runKey].timeOfDay}</p> */}
-
-
                                 {/* sara  😈 sara */}
                                 <p>Date: {runObjForModal.date}</p>
                                 <p>Departure time: {runObjForModal.departureTime}</p>
@@ -337,14 +333,13 @@ function UpcomingRuns() {
                                 {isNoteValid === 1 && <div className="modal-msg modal-error">Watch the language there chief.</div> }
                                 {isNoteValid === 2 && <div className="modal-msg modal-error">The note cannot be more than 250 characters long! </div> }
                                 
+
                                 {/* <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{incompleteRuns[runKey].note}</textarea> */}
                                 <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{runObjForModal.note}</textarea>
 
                                 <button aria-label="Add note" className="btn-green">Update notes</button>
                             
                             </form>
-
-
                             <button aria-label="Close run info popup modal" className="modal-close" onClick={() => closeModal()}>
                                 <i class="far fa-times-circle"></i>
                             </button>
@@ -357,7 +352,6 @@ function UpcomingRuns() {
 
         </>
     )
-
 }
 
 export default UpcomingRuns
