@@ -173,7 +173,7 @@ function SignUp() {
           dbRef.update(userObj);
           
           // check to see if userObj was updated
-          navigate(`/setup/${userObj.uid}`)
+          navigate(`/settingUpRun/${userObj.uid}`)
         })
         .catch((err) => {
           setIsBackendValid(false)

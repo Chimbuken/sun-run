@@ -43,7 +43,7 @@ function UsersCalendar(props) {
         console.log(
             'add new run'
         )
-        navigate(`/setup/${userId}`)
+        navigate(`/settingUpRun/${userId}`)
     }
     const settings =(e)=>{
         e.preventDefault()
