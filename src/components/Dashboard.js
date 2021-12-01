@@ -25,22 +25,13 @@ function Dashboard(){
           const data = response.val();
           setUpdateName(data)
           axios({
-            url: `https://api.sunrise-sunset.org/json?lat=${data.coords.lat}&lng=${data.coords.long}&date=today`,
+            url: `https://api.sunrise-sunset.org/json?lat=${data.coords.lat}=${data.coords.long}&date=today`,
             method: "GET",
             dataResponse: "json",
           }).then((response) => {
 
             const todaySunriseUTC = response.data.results.sunrise;
             const todaySunsetUTC = response.data.results.sunset;
-
-            let todaySunriseUTCString = todaySunriseUTC.toString();
-            console.log(todaySunriseUTCString);
-          
-            const time = moment.utc().format('LT');
-            console.log('UTC',time)
-            const local = moment.utc().local().format('LT')
-            console.log('local', local)
-
             setTodaySunrise(todaySunriseUTC)
             setTodaySunset(todaySunsetUTC)
           })
@@ -48,13 +39,13 @@ function Dashboard(){
       
     }, [])
     
-    const todayDate = moment().format("dddd, MMMM Do YYYY")
+    const todayDate = moment().format("dddd, MMMM Do")
     
 
   return (
     <section className="card-full">
       <div className="flex dashboard-welcome">
-        <h2>Hello, {updateName.name}</h2>
+        <h2 className="title-cont">Hello, {updateName.name}</h2>
         <div className="flex-column todays-metrics">
           <h3>{todayDate}</h3>
           <p>Sunrise: {todaySunrise}</p>
@@ -64,7 +55,6 @@ function Dashboard(){
       </div>
       <div className="flex dashboard">
         <UpcomingRuns/>
-        
         <UsersCalendar userId={userId} />
       </div>
     </section>  

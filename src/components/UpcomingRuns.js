@@ -229,7 +229,7 @@ function UpcomingRuns() {
         <div className="flex-container">
             <h3>Upcoming runs</h3>
             {/* list the user's upcoming runs */}
-            <div>
+            <div className="flex-horizontal">
                 {
                     // using map to iterate through userRuns array
 
@@ -238,8 +238,9 @@ function UpcomingRuns() {
                             return(
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
-                                        <button className="runs-item" onClick={() => runModal(run.id)}>
-                                            You have a run on {run.date} <i class="fas fa-ellipsis-h"></i>
+                                        <button className="runs-item font-white" onClick={() => runModal(run.id)}>
+                                            <p>{run.distance} {run.timeOfDay} run on: {run.date}</p>
+                                            <i class="fas fa-ellipsis-h"></i>
                                         </button>
                                         {/* option to remove run (will place in dropdown menu) */}
                                         {/* <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> */}
@@ -267,7 +268,7 @@ function UpcomingRuns() {
                         if(run.completed === true) {
                             return(
                                 <div key={run.id}>
-                                    <p>You have completed the run that was on {run.date}</p>
+                                    <p>You completed a run on {run.date}.</p>
                                 </div> 
                             )
                         }

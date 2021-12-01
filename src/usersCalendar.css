@@ -17,16 +17,16 @@ html {
 }
 
 /* DASHBOARD */
-h1{
+h2{
   margin-top: 0;
   margin-bottom: 0;
 }
 
 .dashboard {
   display: flex;
+  align-items: flex-start;
   gap: 50px;
 }
-
 
 .flex-container{
   width: 50%;
@@ -40,11 +40,9 @@ h1{
   align-items: flex-end;
 }
 
-/* usersCalendar */
-.runs-panel{
-  display: flex;
-}
 
+
+/* usersCalendar */
 button.runs-item{
   color: black;
   font-family: 'Roboto', sans-serif;
@@ -56,16 +54,19 @@ button.runs-item{
   padding: 10px 20px;
   width: 100%;
   justify-content: space-between;
+  display: flex;
 }
 
 .runs-item>*{
   margin-bottom: 0;
   margin-top: 0;
   color: white;
+  border: 1px solid blue,
 }
 
 .runs-item p {
   margin: 0;
+  width: 80%;
   color: white;
 }
 
@@ -79,7 +80,24 @@ button.runs-item{
   /* text-align: right; */
 }
 
+button.btn-user{
+  height: 2rem;
+  width: 50px;
+  color: #000;
+  margin: 0 auto;
+  border: none;
+  border-radius: 10px;
+  margin-left: 10px;
+}
 
+.btn-cont .btn-green{
+  margin-top: 10px;
+}
+
+.btn-cont{
+  margin-bottom: 10px;
+  margin-top: 0;
+}
 
 .dashboard-welcome{
   justify-content: space-between;
@@ -95,7 +113,6 @@ button.runs-item{
   text-align: right;
   
 }
-
 
 /* Calendar */
 .react-calendar {
@@ -139,7 +156,7 @@ button.runs-item{
 }
 
 .react-calendar__navigation button {
-  min-width: 40px;
+  min-width: 50px;
   background: none;
 }
 
@@ -174,6 +191,11 @@ button.runs-item{
   background: none;
 }
 
+.react-calendar__tile:disabled {
+  background-color: grey;
+  color: white;
+}
+
 .react-calendar__tile.runDay {
   background:#B8E070;
   color: #000;
@@ -183,17 +205,15 @@ button.runs-item{
   background: grey;
 }
 
-.react-calendar__tile:disabled {
-  background-color: #f0f0f0;
-}
-
 .react-calendar__tile--now {
-  background: grey;
+  background: #D66761;
+  color: #000;
 }
 
 .react-calendar__tile--now:enabled:hover,
 .react-calendar__tile--now:enabled:focus {
-  background: grey;
+  background: #FFFE93;
+  color: #000;
 }
 
 .react-calendar__tile:enabled:hover,
