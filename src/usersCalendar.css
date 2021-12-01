@@ -17,11 +17,9 @@ html {
 }
 
 /* Flex Modifier */
-.flex .dashboard {
+.dashboard {
   display: flex;
-  justify-content: space-between;
-  width: 80%;
-  margin: 0 auto;
+  gap:50px;
 }
 
 .flex-column {
@@ -30,40 +28,101 @@ html {
   justify-content: center;
 }
 
+
+
+/* DASHBOARD */
+h1{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .flex-container{
   width: 50%;
 }
 
 .calendar-container{
   width: 50%;
-  margin: 0 auto;
 }
 
 .calendar {
   margin: 0 auto;
 }
 
-/* DASHBOARD */
-h1{
-  text-align: center;
-}
 
 /* usersCalendar */
 .runs-panel{
   display: flex;
-
 }
 
-button.runs-item  {
+
+
+button.runs-item{
   color: black;
+  font-family: 'Roboto', sans-serif;
+  background-color: #4E4E4E;
+  border: none;
+  text-align: left;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 100%;
+  justify-content: space-between;
 }
 
+.runs-item>*{
+  margin-bottom: 0;
+  margin-top: 0;
+  color: white;
+}
+
+.runs-item p {
+  margin: 0;
+  color: white;
+}
+
+.font-white{
+  color: white;
+  margin: 5px 0;
+}
+
+
+
+.add-run{
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.calendar-container h3{
+  margin: 0;
+}
+
+.calendar-container p{
+  margin: 0;
+}
+
+.dashboard-welcome{
+  justify-content: space-between;
+} 
+
+.dashboard-welcome h2 {
+  margin: 0;
+}
+
+.todays-metrics{
+  /* width: 50%; */
+}
+
+.todays-metrics h3,
+.todays-metrics p{
+  margin: 0;
+  text-align: right;
+  
+}
 
 
 
 
 /* Calendar */
-
 .react-calendar {
   width: 435px;
   height: 305px;
@@ -73,7 +132,6 @@ button.runs-item  {
   font-family: 'Roboto', sans-serif;
   font-size: 18px;
   line-height: 24px;
-  letter-spacing: 1px;
 }
 
 .react-calendar,
@@ -126,6 +184,12 @@ button.runs-item  {
 
 .react-calendar__month-view__weekdays__weekday {
   padding: 0.5em;
+}
+
+.react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
 }
 
 .react-calendar__tile {

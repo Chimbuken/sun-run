@@ -53,8 +53,9 @@ function UsersCalendar(props) {
     },[])
     return(
         <div className="calendar-container">
-            <div>
-                <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
+
+            <div className="add-run">
+                <button onClick={addRun} className="btn-green"><i className="fas fa-plus"></i> Add Run</button>
             </div>
             <Calendar
             onChange={setRunDate}
