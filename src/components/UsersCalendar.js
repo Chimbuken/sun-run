@@ -64,7 +64,6 @@ function UsersCalendar(props) {
                 <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
                 <button onClick={settings}><i class="fas fa-users-cog"></i></button>
             </div>
-            
             <Calendar
             onChange={setRunDate}
             value={runDate}
