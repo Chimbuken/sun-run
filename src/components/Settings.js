@@ -18,15 +18,15 @@ function Settings() {
         const {id, value} = e.target;
         setUserInfo({...userInfo, [id]:value});
     }
-    const submitName=(e)=>{
+    const submitName= async (e)=>{
         e.preventDefault()
         // console.log(userInfo)
         const nameRegex = /\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
         if(nameRegex.test(userInfo.name)) {
-            const dbRef = firebase.database().ref(`/sample/${userId}`);
-            dbRef.update(userInfo)
+            await firebase.database().ref(`/sample/${userId}`).update(userInfo);
             setAlert({alert: false, alertMessage:''})
             setShowNameForm(!showNameForm)
+
         }else {
             console.log('please provide a valid full name')
             setAlert({alert: true, alertMessage:'please provide a valid full name'})
@@ -38,6 +38,7 @@ function Settings() {
         if(emailRegex.test(userInfo.email)) {
             const dbRef = firebase.database().ref(`/sample/${userId}`);
             dbRef.update(userInfo)
+            
             setAlert({alert: false, alertMessage:''})
             setShowEmailForm(!showEmailForm)
         }else {

@@ -12,7 +12,6 @@ import DeleteRun from './DeleteRun';
 
 import '../modal.css'
 
-
 function UpcomingRuns() {
     let navigate = useNavigate();
     // useState declarations
@@ -24,7 +23,6 @@ function UpcomingRuns() {
     const [modal, setModal] = useState(false);
     const [runId, setRunId] = useState('');
     const [runKey, setRunKey] = useState('');
-    const [runObj, setRunObj] = useState([]);
     const [note, setNote] = useState('');
 
     const [runObjForModal, setRunObjForModal]=useState({})
@@ -193,8 +191,6 @@ function UpcomingRuns() {
             ...note,
             [name]: value,
         })
-        
-              
     }
 
     // function to add a note to your run
@@ -233,9 +229,8 @@ function UpcomingRuns() {
                 {
                     // using map to iterate through userRuns array
 
-                    userRuns.map((run) => {
-                        if(run.completed===false) {
-                            return(
+                    userRuns.map((run) => 
+                        run.completed===false ?
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
                                         <button className="runs-item" onClick={() => runModal(run.id)}>
@@ -245,10 +240,8 @@ function UpcomingRuns() {
                                         {/* <DeleteRun run={run} userId={user.userId} userInfo={userInfo} runReRender={setIncompleteRuns}/> */}
                                         {/* added by 😈sara  */}
                                 </div>
-                            )
-                        }
-
-                    })
+                                :''
+                    )
                 }
                 {
                     userRuns.length>0 ?

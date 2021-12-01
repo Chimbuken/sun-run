@@ -22,9 +22,7 @@ function RunSetup() {
     distance: '5km',
     date: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`, //be default the value will be the current date
     userSunrise: false,
-    userSunset: false,
-    lat: 43.64829, 
-    lng: -79.39785,
+    userSunset: false
   })
 
   const [showForm, setShowForm] =useState(true)
@@ -116,7 +114,6 @@ function RunSetup() {
             totalTime = 315
           }
         }
-
         // Logic for Run Choice
         if(firstRun.pace ==="Run"){
           if(firstRun.distance === '5km'){
@@ -191,7 +188,11 @@ function RunSetup() {
         }else {
           sunsetToHourMinute = (`${sunsetHour}:${sunsetMin} AM`)
         }
-        setRunResults({...firstRun, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute, runDuration: totalTime, userSelectedSunTime: userSelectedSunTime});   
+        setRunResults({...firstRun, 
+          sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, 
+          departureTime: convertingToHourMinute, 
+          runDuration: totalTime, 
+          userSelectedSunTime: userSelectedSunTime});   
         setShowForm(false)
         setShowResult(true)
       });
@@ -205,9 +206,8 @@ function RunSetup() {
 
   // Function to handle User's Choice to confirm and store their Run Results or move back to the Run Setup form to edit their run pace, distance and time of day.
   // Firebase collects User's info and pushes to the User's Account for storage of their Run Data
-  const handleConfirmation = (e)=> {
+  const handleConfirmation = async (e)=> {
     const runId = uuidv4();
-
     console.log('runId: ', runId)
     const confirmationID = e.target.id
     if (confirmationID === "confirmRun") {
@@ -238,10 +238,8 @@ function RunSetup() {
           const updateUsersRun={
             runs: usersCurrenRunArray
             }
-          firebase.database().ref(`/sample/${userId.userId}`).update(updateUsersRun);
-          console.log('firebase updated')
+          await firebase.database().ref(`/sample/${userId.userId}`).update(updateUsersRun);
           navigate(`/dashboard/${userId.userId}`);
-
       } else {
         console.log('there are no runs')
         let timeOfDay;
@@ -265,13 +263,12 @@ function RunSetup() {
               }
           ]
       }
-        firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
+        await firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
         console.log('firebase updated')
         navigate(`/dashboard/${userId.userId}`);
-      }
 
+      }
     } else {
-      console.log('edit run')
       setShowForm(true)
       setShowResult(true)
     }
@@ -282,7 +279,6 @@ function RunSetup() {
   useEffect(()=>{
     firebase.database().ref(`/sample/${userId.userId}`).on('value', (response) => {
       const data = response.val();
-      console.log('date: ', data)
       setUserInfo(data)
       setFirstRun({
         ...firstRun,
@@ -355,8 +351,7 @@ function RunSetup() {
         showResult === true ?
           <div className='runResults flex-column'>
             <h3>Here's what we got for you:</h3>
-            {
-              runResults ?
+  
               <>
               {runResults.userSunrise === true ? 
               <div>
@@ -377,17 +372,15 @@ function RunSetup() {
               
               : null}
               </>
-              : null
-            }
+
             <div className="select-box">
               <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Confirm Run</button>
                 <button id='editRun' className="btn-red" onClick={handleConfirmation}>Edit Run</button>
             </div>
 
             {userInfo.runs?
-      
             <button id='cancelBtn' className="btn-red" onClick={()=>navigate(`/dashboard/${userId.userId}`)}>Cancel</button>
-              : null            }
+              : null}
           </div>
           : null
       }

@@ -18,33 +18,31 @@ function Dashboard(){
 
     useEffect( () => {
 
-      const dbRef = firebase.database().ref(`/sample/${user.userId}`);
+      // const dbRef = firebase.database().ref(`/sample/${user.userId}`);
+      // dbRef.on('value', (response) => {
+      //     const data = response.val();
+      //     setUpdateName(data)
+      //     axios({
+      //       url: `https://api.sunrise-sunset.org/json?lat=${data.coords.lat}&lng=${data.coords.long}&date=today`,
+      //       method: "GET",
+      //       dataResponse: "json",
+      //     }).then((response) => {
 
-      dbRef.on('value', (response) => {
-      
-          const data = response.val();
-          setUpdateName(data)
-          axios({
-            url: `https://api.sunrise-sunset.org/json?lat=${data.coords.lat}&lng=${data.coords.long}&date=today`,
-            method: "GET",
-            dataResponse: "json",
-          }).then((response) => {
+      //       const todaySunriseUTC = response.data.results.sunrise;
+      //       const todaySunsetUTC = response.data.results.sunset;
 
-            const todaySunriseUTC = response.data.results.sunrise;
-            const todaySunsetUTC = response.data.results.sunset;
-
-            let todaySunriseUTCString = todaySunriseUTC.toString();
-            console.log(todaySunriseUTCString);
+      //       let todaySunriseUTCString = todaySunriseUTC.toString();
+      //       console.log(todaySunriseUTCString);
           
-            const time = moment.utc().format('LT');
-            console.log('UTC',time)
-            const local = moment.utc().local().format('LT')
-            console.log('local', local)
+      //       const time = moment.utc().format('LT');
+      //       console.log('UTC',time)
+      //       const local = moment.utc().local().format('LT')
+      //       console.log('local', local)
 
-            setTodaySunrise(todaySunriseUTC)
-            setTodaySunset(todaySunsetUTC)
-          })
-      })   
+      //       setTodaySunrise(todaySunriseUTC)
+      //       setTodaySunset(todaySunsetUTC)
+      //     })
+      // })   
       
     }, [])
     

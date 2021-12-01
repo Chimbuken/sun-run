@@ -172,17 +172,20 @@ function SignUp() {
           // update db to user object
           dbRef.update(userObj);
           
-          // check to see if userObj was updated
-          dbRef.on('value', (response) => {
+          // // check to see if userObj was updated
+          // dbRef.on('value', (response) => {
             
-            // check if the response is null / does not exist
-            if(response.val() !== null) {
-              // route to run set up form
-              navigate(`/setup/${userObj.uid}`)
-            } else {
-              setIsBackendValid(false)            
-            }
-          })
+          //   // check if the response is null / does not exist
+          //   if(response.val() !== null) {
+          //     // route to run set up form
+
+          //     // navigate(`/setup/${userObj.uid}`)
+
+          //   } else {
+          //     setIsBackendValid(false)            
+          //   }
+          // })
+          navigate(`/setup/${userObj.uid}`)
         })
         .catch((err) => {
           setIsBackendValid(false)
