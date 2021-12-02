@@ -5,7 +5,7 @@ import firebase from '../firebase';
 import { useEffect, useState } from 'react';
 // import moment from 'moment';
 import '../usersCalendar.css'
-// import axios from 'axios';
+import Stats from './Stats';
 
 function Dashboard(){
   const [updateName, setUpdateName] = useState({});
@@ -59,6 +59,7 @@ function Dashboard(){
         <UpcomingRuns/>
         <UsersCalendar userId={userId} />
       </div>
+        <Stats  userId={userId}/>
     </section>  
   )
 }

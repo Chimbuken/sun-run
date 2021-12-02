@@ -188,8 +188,12 @@ function SignUp() {
       <section className="signup-form wrapper">
 
         <h1>Welcome</h1>
+        <p style={{width: "300px", margin: "0 auto"}}>Sun Run is an app that helps you catch the Sunrise or Sunset during your run! We calculate when you should start your run so you don't have to!</p>
+
         {/* Form for signup which takes the user's: name, email, postal/zip code to retrieve location */}
         <form aria-label="Welcome wizard form" onSubmit={handleSignup} className="flex-column">
+
+          <p>First, please sign up and enter your postal code so we can get the accurate sunrise/sunset times for your region.</p>
 
           <label htmlFor="name" className="sr-only">Name</label>
           <input type="text" id="name" name="name" value={name} onChange={handleNameChange} placeholder="Full name"></input>

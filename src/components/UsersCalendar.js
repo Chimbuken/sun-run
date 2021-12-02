@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import firebase from "firebase";
+import firebase from "../firebase";
 import moment from "moment";
 import '../usersCalendar.css'
 
