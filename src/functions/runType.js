@@ -1,4 +1,3 @@
-import React from 'react'
 
 const runType =(object)=>{
     let totalTime
