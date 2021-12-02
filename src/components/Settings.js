@@ -145,7 +145,7 @@ function Settings() {
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response)=>{
             const data = response.val();
-            console.log('recieved data for user: ', data)
+            console.log('recieved data for user: ', data);
             setUserInfo(data)
             const userLocation= data.location.split(',').reverse()
             console.log('location:', userLocation);
