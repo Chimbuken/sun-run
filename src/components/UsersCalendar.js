@@ -10,6 +10,8 @@ import '../usersCalendar.css'
 // for modals:
 import Modal from './Modal';
 
+import TodaysStats from "./TodaysStats";
+
 
 function UsersCalendar(props) {
     const userId = props.userId
@@ -140,8 +142,11 @@ function UsersCalendar(props) {
         <div className="calendar-container flex-column">
             <div>
                 <button className="btn-gray small" onClick={addRun}><i className="fas fa-plus"></i></button>
-          <button className="btn-gray small" onClick={settings}><i className="fas fa-users-cog"></i></button>
+                <button className="btn-gray small" onClick={settings}><i className="fas fa-users-cog"></i></button>
             </div>
+
+            <TodaysStats/>
+            
             <Calendar
             onChange={setRunDate}
             value={runDate}

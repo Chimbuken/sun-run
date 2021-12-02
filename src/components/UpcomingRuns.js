@@ -82,7 +82,7 @@ function UpcomingRuns() {
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
                                         <button className="runs-item font-white" onClick={() => runModal(run.id)}>
-                                            <p>{run.distance} {run.timeOfDay} run on: {run.date}</p>
+                                            <p>{run.timeOfDay} Run: <span>{run.date}</span></p>
                                             <i class="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
