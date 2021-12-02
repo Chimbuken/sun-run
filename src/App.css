@@ -293,3 +293,9 @@ button:active {
 .todays-metrics {
   margin-bottom: 1.5rem;
 }
+
+
+/* sara */
+select:focus {
+  box-shadow: 0px 0px 10px #B8E070;
+}
