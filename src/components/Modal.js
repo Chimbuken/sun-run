@@ -8,7 +8,7 @@ import firebase from '../firebase';
 
 function Modal(props) {
         // const [runObj, setRunObj] = useState([]);
-    const [note, setNote] = useState({note: props.runObjForModal.note});
+    const [note, setNote] = useState({note: props.runObjForModal.note?props.runObjForModal.note :''});
             // note validity check
     const [isNoteValid, setIsNoteValid] = useState(0); // added by dallan
     const [didNoteUpdate, setDidNoteUpdate] = useState(0);
