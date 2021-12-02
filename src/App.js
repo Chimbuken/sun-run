@@ -6,10 +6,13 @@ import Dashboard from './components/Dashboard';
 import EditRun from './components/EditRun';
 import Settings from './components/Settings';
 import SettingUpRun from './components/SettingUpRun';
+import bg from './assets/sunrun-bg-3.png';
 
 function App() {
   return (
     <BrowserRouter>
+      {/* style={{ backgroundImage: `url(${bg})` }} */}
+    <div className="background" >
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="*" element={<SignUp />} />
@@ -21,6 +24,8 @@ function App() {
         <Route path="/dashboard/:userId" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+
+    </div>
       
     </BrowserRouter>
   );

@@ -23,7 +23,19 @@ html {
 }
 
 body {
-  background-color: #2C2C2C;
+  /* background-color: #2C2C2C; */
+  background: url('./assets/sunrun-bg-3.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Background */
+.background {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Flex Modifier */
@@ -40,7 +52,7 @@ body {
 /* TYPOGRAPHY */
 h1, h2, h3, h4, p, input, button{
   font-family:'Roboto', sans-serif;
-  color: #B8E070;
+  color: #e4e4e4;
 }
 
 a, li {
@@ -78,7 +90,7 @@ a, li {
 /* SignUp.js */
 .signup-form > form {
   margin: 0 auto;
-  width: 300px;
+  max-width: 300px;
   position: relative;
 }
 
@@ -112,7 +124,11 @@ input, select {
   padding: 0.75rem 1rem;
   font-size: 1rem;
   color: #ffffff;
-  background-color: #4E4E4E;
+  background-color: #ffffff0f;
+}
+
+input::placeholder, select {
+  color: rgb(191, 191, 191);
 }
 
 /* Buttons */
@@ -155,6 +171,36 @@ button.btn-red:focus {
   background-color: #7d3430;
 }
 
+button.btn-gray {
+  font-family:'Roboto', sans-serif;
+  font-weight: 500;
+  border: none;
+  height: 2rem;
+  margin: 0 auto;
+  width: 150px;
+  color: #ffffff;
+  border-radius: 10px;
+  background-color: #575757;
+  line-height: 2rem;
+}
+
+button.small {
+  height: auto;
+  width: 50px;
+  margin-left: .5rem;
+}
+
+button.small i{
+  width: 100%;
+}
+
+button.btn-gray:hover,
+button.btn-gray:focus {
+  background-color: #8f8f8f;
+  transform: scale(1.01);
+  transition: all 0.1s ease-in-out;
+}
+
 button:active {
   transform: translateY(2px);
 }
@@ -194,8 +240,12 @@ button:active {
 }
 
 .runResults {
+  border-radius: 15px;
+  padding: 2rem;
+  background-color: #ffffff12;
   margin: 0 auto;
-  width: 300px;
+  max-width: 500px;
+  margin-top: 2rem;
 }
 
 .runResults p {
@@ -210,4 +260,36 @@ button:active {
   font-size: 2rem;
   margin: 0 auto;
   color: white;
+}
+
+.runResults h4:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.runResults .select-box {
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+/* Signup Form */
+
+.signup-form h1, 
+.runSetupPage h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.signup-form button {
+  margin-top: 1rem;
+}
+
+/* RunSetup */
+
+.runSetupPage select{
+  color: #ffffff;
+}
+
+/* Dashboard */
+.todays-metrics {
+  margin-bottom: 1.5rem;
 }

@@ -54,16 +54,6 @@ function UsersCalendar(props) {
             }
         }
     }
-    // function to close the modal
-    // function closeModal() {
-    //     setModal(false);
-    //     // setRunId('')
-
-    //     // reset note validation messages
-    //     setIsNoteValid(0)
-    //     setDidNoteUpdate(0)
-    // }
-    
 
     const renderingRunsArray =({ date, view })=>{
         // "2021-11-30"
@@ -149,8 +139,8 @@ function UsersCalendar(props) {
     return(
         <div className="calendar-container flex-column">
             <div>
-                <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
-                <button onClick={settings}><i className="fas fa-users-cog"></i></button>
+                <button className="btn-gray small" onClick={addRun}><i className="fas fa-plus"></i></button>
+          <button className="btn-gray small" onClick={settings}><i className="fas fa-users-cog"></i></button>
             </div>
             <Calendar
             onChange={setRunDate}

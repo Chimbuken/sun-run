@@ -217,7 +217,7 @@ function SignUp() {
           }
         
           {/* Submit button to sign up and pass info to input handlers */}
-          <button className="btn-green" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
+          <button className="btn-gray" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
 
           {/* Input validation messages */}
           <ul className="validation-box flex-column">

@@ -54,8 +54,8 @@ function Dashboard(){
         <h2>Hello, {updateName.name}</h2>
         <div className="flex-column todays-metrics">
           <h3>{todayDate}</h3>
-          <p>Sunrise: {todaySunrise}</p>
-          <p>Sunset: {todaySunset}</p>
+          {/* <p>Sunrise: {todaySunrise}</p>
+          <p>Sunset: {todaySunset}</p> */}
         </div>
 
       </div>

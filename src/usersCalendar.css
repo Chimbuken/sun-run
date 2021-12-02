@@ -99,6 +99,7 @@ button.runs-item{
 
 /* Calendar */
 .react-calendar {
+  margin-top: 1rem;
   width: 435px;
   height: 305px;
   max-width: 100%;
