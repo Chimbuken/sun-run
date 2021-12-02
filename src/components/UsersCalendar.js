@@ -43,7 +43,7 @@ function UsersCalendar(props) {
         console.log(
             'add new run'
         )
-        navigate(`/setup/${userId}`)
+        navigate(`/settingUpRun/${userId}`)
     }
     const settings =(e)=>{
         e.preventDefault()
@@ -58,13 +58,12 @@ function UsersCalendar(props) {
         })
     },[])
     return(
-        <div className="calendar-container">
+        <div className="calendar-container flex-column">
 
             <div>
-                {/* <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button> */}
+                <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
                 <button onClick={settings}><i class="fas fa-users-cog"></i></button>
             </div>
-            
             <Calendar
             onChange={setRunDate}
             value={runDate}
