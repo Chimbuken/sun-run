@@ -160,7 +160,6 @@ function Modal(props) {
                 {/* set modal card overtop of overlay */}
                 <h3>Run notes</h3>
 
-
                 {/* add sr-only label to textarea */}
                 <form className="modal-notepad-form" aria-label="Display income data with a remove income option" onSubmit={addNote}>
                     
@@ -168,9 +167,7 @@ function Modal(props) {
                     {isNoteValid === 1 && <div className="modal-msg modal-error">Watch the language there chief.</div> }
                     {isNoteValid === 2 && <div className="modal-msg modal-error">The note cannot be more than 250 characters long! </div> }
                     
-
-                    {/* <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{incompleteRuns[runKey].note}</textarea> */}
-                    <textarea className="modal-notepad" name="note" id="note" onChange={props.handleNoteChange}>{props.runObjForModal.note}</textarea>
+                    <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{props.runObjForModal.note}</textarea>
 
                     <button aria-label="Add note" className="btn-green">Update notes</button>
                 
