@@ -324,3 +324,23 @@ select:focus {
   width: 45%;
   text-align: center;
 }
+.statsSection{
+  background-color: rgba(165, 165, 165, 0.212);
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+.sunBox {
+  width: 45%;
+  text-align: center;
+}
+p.alert{
+  color: #D66761;
+  background: none;
+}
