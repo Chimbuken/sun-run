@@ -10,12 +10,6 @@ import SettingUpRun from './components/SettingUpRun';
 function App() {
   return (
     <BrowserRouter>
-      <ul className="test-menu">
-        <h4>Route Setup / Testing</h4>
-        <li><Link to="/">to home/sign up</Link></li>
-        <li><Link to="/setup">to setup</Link></li>
-        <li><Link to="/dashboard">to dashboard</Link></li>
-      </ul>
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="*" element={<SignUp />} />
