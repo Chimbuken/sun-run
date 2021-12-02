@@ -1,14 +1,13 @@
 import {useParams } from 'react-router-dom';
 import UsersCalendar from "./UsersCalendar";
 import UpcomingRuns from './UpcomingRuns.js';
-import firebase from 'firebase';
+import firebase from '../firebase';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import '../usersCalendar.css'
 import axios from 'axios';
 
 function Dashboard(){
-  const [today, setToday] = useState(new Date());
   const [updateName, setUpdateName] = useState({});
   const [todaySunrise, setTodaySunrise] = useState('');
   const [todaySunset, setTodaySunset] = useState('');
@@ -37,7 +36,7 @@ function Dashboard(){
           })
       })   
       
-    }, [])
+    }, [user.userId])
     
     const todayDate = moment().format("dddd, MMMM Do")
     
@@ -48,8 +47,8 @@ function Dashboard(){
         <h2 className="title-cont">Hello, {updateName.name}</h2>
         <div className="flex-column todays-metrics">
           <h3>{todayDate}</h3>
-          <p>Sunrise: {todaySunrise}</p>
-          <p>Sunset: {todaySunset}</p>
+          {/* <p>Sunrise: {todaySunrise}</p>
+          <p>Sunset: {todaySunset}</p> */}
         </div>
 
       </div>

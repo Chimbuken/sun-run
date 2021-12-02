@@ -3,25 +3,32 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 import firebase from '../firebase';
-import runType from './runType';
-import {convertH2M, convertM2H} from './runType.js'
+import runType from '../functions/runType';
+import {convertH2M, convertM2H} from '../functions/runType.js'
 import { v4 as uuidv4 } from 'uuid';
 
 function SettingUpRun() {
     let navigate = useNavigate();
+    const {selectedDate} = useParams()
 
     const {userId} = useParams()
+    console.log('selected date: ', selectedDate)
+    if(!selectedDate){
+        console.log('selected date: what? ', selectedDate)
+    }
       // handleChange targets User's choice of Pace and Distance
     const today = new Date();
     const [showResult, setShowResult]=useState(false)
     const [showForm, setShowForm] =useState(true)
     const [user, setUser]=useState({})
     const [firstRun, setFirstRun] = useState({
-    pace :'Jog',
-    distance: '5km',
-    date: moment(today).format('YYYY-MM-DD'), //be default the value will be the current date
-    timeOfDay:'sunrise'
+    pace :'Pace',
+    distance: 'Distance',
+    // date: moment(today).format('YYYY-MM-DD'), //be default the value will be the current date
+    date: !selectedDate ? moment(today).format('YYYY-MM-DD') : selectedDate, //be default the value will be the current date
+    timeOfDay:'Sunrise or Sunset'
     })
+    // react-calendar__tile react-calendar__month-view__days__day react-calendar__month-view__days__day--neighboringMonth 
     const [runResults, setRunResults]= useState({})
 
     const handleChange = (e)=>{
@@ -41,6 +48,8 @@ function SettingUpRun() {
         }).then((response) => {
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
+            console.log('direct from api: ', sunrise)
+            console.log('direct from api: ', sunset)
             let startTime;
             if( firstRun.timeOfDay === "sunrise" ){
                 const sunriseInMinute = convertH2M(sunrise);
@@ -113,6 +122,7 @@ function SettingUpRun() {
     setUser({...data})
     setFirstRun({...firstRun, lat: data.coords.lat, long: data.coords.long})
     })
+    // eslint-disable-next-line
     }, [])
 
     return (
@@ -125,38 +135,40 @@ function SettingUpRun() {
                             <h1>Add New Run</h1> : <h1>Let's setup your first run!</h1>
                         }
 
-                        <form action="" onSubmit={getSunTime}>
-                            <div>
+                        <form action="" className="flex-column" onSubmit={getSunTime}>
+                            
                                 <label htmlFor="pace" className="sr-only">Pace</label>
                                 <select name="pace" id="pace" value={firstRun.pace} onChange={handleChange}> 
+                                    <option value="Pace" disabled selected hidden>Pace</option>
                                     <option value="Jog">Jog (8km/hr)</option>
                                     <option value="Run">Run (16km/h)</option>
                                 </select>
-                            </div>
-                            <div>
+                            
                                 <label htmlFor="distance" className="sr-only">Distance</label>
-                                <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange}>
+                                <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange} required>
+                                    <option value="Distance" disabled selected hidden>Distance</option>
                                     <option value="5km">5km</option>
                                     <option value="10km">10km</option>
                                     <option value="Half Marathon">Half Marathon</option>
                                     <option value="Marathon">Marathon</option>
                                 </select>
-                            </div>
-                            <div>
+                            
+                            
                                 <label htmlFor="date" className="sr-only">Start date:</label>
                                 <input type="date" id="date" name="date"
                                 onChange={handleChange}
                                 value={firstRun.date}
                                 min={moment(today).format('YYYY-MM-DD')}/>
-                            </div>
-                            <div>
+
                                 <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
-                                <select name="timeOfDay" id="timeOfDay" value={firstRun.timeOfDay} onChange={handleChange}>
-                                    <option value="sunrise">sunrise</option>
-                                    <option value="sunset">sunset</option>
+                                <select name="timeOfDay" id="timeOfDay" value={firstRun.timeOfDay} onChange={handleChange} required>
+                                    <option value="Sunrise or Sunset" disabled selected hidden>Sunrise or Sunset</option>
+                                    <option value="sunrise">Sunrise</option>
+                                    <option value="sunset">Sunset</option>
                                 </select>
-                            </div>
-                            <button style={{color: 'black'}}>Get Results</button>
+
+                                <button className="btn-gray">Next</button>
+                        
                         </form>
                     </> 
                     : null
@@ -164,21 +176,22 @@ function SettingUpRun() {
 
                 {showResult ? 
                 <div  className='runResults flex-column'>
-                    <h3>Here's what we got for you:</h3>
+                    <h3 style={{color: '#ffffff'}}>Here's our suggestion for you</h3>
                     {
                         runResults ?
                         <>
                             <div>
                                 <h4>{moment(runResults.date).format('dddd')}</h4>
                                 <h4>{runResults.date}</h4>
+                                <p>Total Run Time:  {runResults.runDuration} mins</p>
                                 <p>Departure Time:  {runResults.departureTime}</p>
-                                <p>{runResults.sunTime === "sunrise"? "sunrise" : "sunset"  }: {runResults.sunTime}</p> 
+                                <p>{runResults.sunTime === "Sunrise"? "Sunrise" : "Sunset"  }: {runResults.sunTime}</p> 
                             </div>
                         </>
                         : null
                     }
                     <div className="select-box">
-                        <button id='confirmRun' className="btn-red"  style={{color: 'black'}} onClick={confirmRun}>Save Run</button>
+                        <button id='confirmRun' className="btn-red" onClick={confirmRun}>Save Run</button>
                         <button id='editRun' className="btn-red" onClick={()=>setShowForm(true)}>Edit Run</button>
 
                     </div>

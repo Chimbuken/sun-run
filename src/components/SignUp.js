@@ -1,11 +1,7 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import firebase from '../firebase';
-
-// profanity list import
-import list from '../includes/list.txt';
-
 
 function SignUp() {
 
@@ -38,7 +34,7 @@ function SignUp() {
     setName(event.target.value);
 
     // this regex requires first and last name
-    const nameRegex = /\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
+    const nameRegex = /\s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
 
     if(nameRegex.test(event.target.value)) {
       setIsNameValid(true);
@@ -53,7 +49,7 @@ function SignUp() {
     setEmail(event.target.value);
 
     // check if email is in proper format and is not empty -> set email validation to true
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if(emailRegex.test(event.target.value)) {
       setIsEmailValid(true); 
     }  
@@ -168,7 +164,6 @@ function SignUp() {
           console.log(userObj);
           // set up firebase prepare statement/reference
           const dbRef = firebase.database().ref(`sample/${userObj.uid}`);
-          const dbRef2 = firebase.database().ref(`poop/${userObj.uid}`);
           // update db to user object
           dbRef.update(userObj);
           
@@ -182,20 +177,6 @@ function SignUp() {
 
     }
   }
-
-  // function to check if input is empty
-  const isNotEmpty = (input) => {
-
-    // check if the input is empty
-    if(input.trim() === '') {
-      return false;
-    }
-
-    // if input is not empty return true
-    return true;
-
-  }
-
 
   return (
     /*
@@ -236,7 +217,7 @@ function SignUp() {
           }
         
           {/* Submit button to sign up and pass info to input handlers */}
-          <button className="btn-green" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
+          <button className="btn-gray" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
 
           {/* Input validation messages */}
           <ul className="validation-box flex-column">

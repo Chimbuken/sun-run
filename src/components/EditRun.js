@@ -9,15 +9,15 @@ import {useParams , useNavigate} from 'react-router-dom'
 function EditRun() {
     const month= ["January","February","March","April","May","June","July",
     "August","September","October","November","December"];
-    const [today, setToday]=useState(new Date())
+    const today = new Date()
     const {userId} = useParams()
     const {runId} = useParams()
     const [runObj, setRunObj] = useState({})
-    const [oldRun, setOldRun] = useState({})
+    // const [oldRun, setOldRun] = useState({})
     const [userInfo, setUserInfo] = useState({})
     const [showForm, setShowForm] =useState(true)
     const [showResult, setShowResult] =useState(false);
-    const [alert, setAlert] = useState({alert: false, alertMessage:''})
+    // const [alert, setAlert] = useState({alert: false, alertMessage:''})
     const [runResults, setRunResults] = useState({});
 
     let navigate = useNavigate();
@@ -231,12 +231,12 @@ function EditRun() {
                         lat: data.coords.lat, 
                         lng: data.coords.long,
                     }
-                    setOldRun(element)
+                    // setOldRun(element)
                     setRunObj(newObj)
                 }
             });
         })
-    }, [])
+    }, [userId, runId])
 
     return (
         <main  className="card-full">

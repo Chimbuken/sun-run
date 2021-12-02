@@ -18,12 +18,11 @@ function MarkComplete(props) {
 
         // close the modal
         props.closeModal();
-
     }
 
     return (
         <button aria-label="mark run complete" className="runs-item" onClick={() => markRunComplete()}>
-            <i class="fas fa-check-circle"></i>
+            <i className="fas fa-check-circle"></i>
         </button>
     )
 }
