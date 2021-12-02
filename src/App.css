@@ -279,13 +279,20 @@ button:active {
   margin-bottom: 1.5rem;
 }
 
+.signup-form p {
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #35414f85;
+}
+
 .signup-form button {
   margin-top: 1rem;
 }
 
 /* RunSetup */
 
-.runSetupPage select{
+.runSetupPage select, 
+.runSetupPage label {
   color: #ffffff;
 }
 

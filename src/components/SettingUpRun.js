@@ -160,7 +160,6 @@ function SettingUpRun() {
                                 value={firstRun.date}
                                 min={moment(today).format('YYYY-MM-DD')}/>
 
-                                <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
                                 <select name="timeOfDay" id="timeOfDay" value={firstRun.timeOfDay} onChange={handleChange} required>
                                     <option value="Sunrise or Sunset" disabled selected hidden>Sunrise or Sunset</option>
                                     <option value="sunrise">Sunrise</option>
