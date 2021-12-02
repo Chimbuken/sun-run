@@ -3,11 +3,6 @@ import firebase from '../firebase';
 import {useParams , useNavigate} from 'react-router-dom'
 
 
-// import components
-// import MarkComplete from './MarkComplete';
-// import DeleteRun from './DeleteRun';
-
-//import css
 
 import '../modal.css'
 import Modal from './Modal';
