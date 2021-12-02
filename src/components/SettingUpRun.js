@@ -152,9 +152,8 @@ function SettingUpRun() {
                         {user.runs?
                             <div>
                                 <Link to={`/dashboard/${userId}`}>
-                                    <p>
-                                        <i class="fas fa-arrow-left"></i> Dashboard
-                                    </p>
+                                    <i class="fas fa-arrow-left"></i> Dashboard
+
                                 </Link>
                                 <h1>Add New Run</h1> 
                             </div>
@@ -194,7 +193,7 @@ function SettingUpRun() {
                     : null
                 }
                 {
-                    alert ?  <p className="error-text">{alert.message}</p> : null
+                    alert ?  <p className="alert">{alert.message}</p> : null
                 }
                 {showResult ? 
                 <div  className='runResults flex-column'>

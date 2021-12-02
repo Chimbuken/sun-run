@@ -11,8 +11,6 @@ function Stats(props) {
         numOfSunsetSeen: 0, 
         totalDistanceCovered: 0})
 
-
-
     useEffect(()=>{
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response) => {
