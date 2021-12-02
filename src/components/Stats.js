@@ -7,7 +7,10 @@ function Stats(props) {
     const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
     const [runs, setRuns] = useState([])
     
-    const [stats, setStats] = useState({})
+    const [stats, setStats] = useState({numOfRunsCompleted : 0,
+        numOfSunriseSeen: 0, 
+        numOfSunsetSeen: 0, 
+        totalDistanceCovered: 0})
 
 
 
@@ -18,38 +21,36 @@ function Stats(props) {
             setRuns(data.runs)
             setUserInfo(data) // added by 😈sara 
             console.log('data for stats: ', data)
-            let completedRunArr = []
             let numOfRunsCompleted = 0
             let numOfSunriseSeen = 0
             let numOfSunsetSeen = 0
             let totalDistanceCovered = 0
-            // half marathon = 21.0975km
-            // marathon = 42.195
+            if(data.runs){
+                data.runs.forEach(run=>{
+                    if(run.completed === true){
+                        numOfRunsCompleted = numOfRunsCompleted + 1
+                        if(run.timeOfDay==="sunrise"){
+                            numOfSunriseSeen = numOfSunriseSeen + 1
+                        }
+                        if(run.timeOfDay==="sunset"){
+                            numOfSunsetSeen = numOfSunsetSeen + 1
+                        }
+                        if(run.distance === '5km'){
+                            totalDistanceCovered = totalDistanceCovered + 5
+                        }
+                        if(run.distance === "10km"){
+                            totalDistanceCovered = totalDistanceCovered + 10
+                        }
+                        if(run.distance === "Half Marathon"){
+                            totalDistanceCovered = totalDistanceCovered + 21.0975
+                        }
+                        if(run.distance === "Marathon"){
+                            totalDistanceCovered = totalDistanceCovered + 42.195
+                        }
+                    }
+                })
 
-            data.runs.forEach(run=>{
-                if(run.completed === true){
-                    completedRunArr.push(run)
-                    numOfRunsCompleted = numOfRunsCompleted + 1
-                    if(run.timeOfDay==="sunrise"){
-                        numOfSunriseSeen = numOfSunriseSeen + 1
-                    }
-                    if(run.timeOfDay==="sunset"){
-                        numOfSunsetSeen = numOfSunsetSeen + 1
-                    }
-                    if(run.distance === '5km'){
-                        totalDistanceCovered = totalDistanceCovered + 5
-                    }
-                    if(run.distance === "10km"){
-                        totalDistanceCovered = totalDistanceCovered + 10
-                    }
-                    if(run.distance === "Half Marathon"){
-                        totalDistanceCovered = totalDistanceCovered + 21.0975
-                    }
-                    if(run.distance === "Marathon"){
-                        totalDistanceCovered = totalDistanceCovered + 42.195
-                    }
-                }
-            })
+            }
             const runstats = {
                 numOfRunsCompleted : numOfRunsCompleted,
                 numOfSunriseSeen: numOfSunriseSeen, 
