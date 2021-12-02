@@ -3,14 +3,19 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 import firebase from '../firebase';
-import runType from './runType';
-import {convertH2M, convertM2H} from './runType.js'
+import runType from '../functions/runType';
+import {convertH2M, convertM2H} from '../functions/runType.js'
 import { v4 as uuidv4 } from 'uuid';
 
 function SettingUpRun() {
     let navigate = useNavigate();
+    const {selectedDate} = useParams()
 
     const {userId} = useParams()
+    console.log('selected date: ', selectedDate)
+    if(!selectedDate){
+        console.log('selected date: what? ', selectedDate)
+    }
       // handleChange targets User's choice of Pace and Distance
     const today = new Date();
     const [showResult, setShowResult]=useState(false)
@@ -19,9 +24,11 @@ function SettingUpRun() {
     const [firstRun, setFirstRun] = useState({
     pace :'Jog',
     distance: '5km',
-    date: moment(today).format('YYYY-MM-DD'), //be default the value will be the current date
+    // date: moment(today).format('YYYY-MM-DD'), //be default the value will be the current date
+    date: !selectedDate ? moment(today).format('YYYY-MM-DD') : selectedDate, //be default the value will be the current date
     timeOfDay:'sunrise'
     })
+    // react-calendar__tile react-calendar__month-view__days__day react-calendar__month-view__days__day--neighboringMonth 
     const [runResults, setRunResults]= useState({})
 
     const handleChange = (e)=>{
@@ -41,6 +48,8 @@ function SettingUpRun() {
         }).then((response) => {
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
+            console.log('direct from api: ', sunrise)
+            console.log('direct from api: ', sunset)
             let startTime;
             if( firstRun.timeOfDay === "sunrise" ){
                 const sunriseInMinute = convertH2M(sunrise);

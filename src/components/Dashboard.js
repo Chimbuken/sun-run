@@ -49,8 +49,6 @@ function Dashboard(){
     }, [])
     
     const todayDate = moment().format("dddd, MMMM Do YYYY")
-    
-
   return (
     <section className="card-full">
       <div className="flex dashboard-welcome">

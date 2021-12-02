@@ -21,6 +21,7 @@ function App() {
         <Route path="*" element={<SignUp />} />
         <Route path="/setup/:userId" element={<RunSetup />} />
         <Route path="/settingUpRun/:userId" element={<SettingUpRun />} />
+        <Route path="/settingUpRun/:userId/:selectedDate" element={<SettingUpRun />} />
         <Route path="/settings/:userId" element={<Settings />} />
         <Route path="/editRun/:userId/:runId" element={<EditRun />} />
         <Route path="/dashboard/:userId" element={<Dashboard />} />
