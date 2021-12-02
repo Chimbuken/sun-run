@@ -27,7 +27,7 @@ function RunSetup() {
     lng: -79.39785,
   })
 
-  const [showForm, setShowForm] =useState(true)
+  const [showForm, setShowForm] =useState(true);
   const [showResult, setShowResult] =useState(false);
   const [ userInfo, setUserInfo] =useState({})
   const [runResults, setRunResults] = useState({})

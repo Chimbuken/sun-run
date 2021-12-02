@@ -148,7 +148,7 @@ function Settings() {
             console.log('recieved data for user: ', data)
             setUserInfo(data)
             const userLocation= data.location.split(',').reverse()
-            console.log('location:', userLocation)
+            console.log('location:', userLocation);
         })
     }, [])
 
