@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import firebase from '../firebase';
 import {useParams , useNavigate} from 'react-router-dom'
-
+import Stats from './Stats';
 
 
 import '../modal.css'
@@ -65,7 +65,7 @@ function UpcomingRuns() {
     return (
         <>
         <div className="flex-container">
-            <h3>Upcoming runs</h3>
+            <h2>Upcoming Runs</h2>
             {/* list the user's upcoming runs */}
             <div className="flex-horizontal">
                 {
@@ -85,9 +85,11 @@ function UpcomingRuns() {
                     })
                 }
             </div>
-            <h3>Completed runs</h3>
+
+            <Stats  userId={user.userId}/>
+            {/* <h3>Completed runs</h3> */}
             {/* list the user's upcoming runs */}
-            <div>
+            {/* <div>
                 {
                     // using map to iterate through userRuns array
                     userRuns
@@ -101,7 +103,7 @@ function UpcomingRuns() {
                     })
 
                 }
-            </div>
+            </div> */}
         </div>        
             {/* modal for displaying run info and note pad */}
             {
