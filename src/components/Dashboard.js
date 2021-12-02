@@ -34,7 +34,6 @@ function Dashboard(){
         <UpcomingRuns/>
         <UsersCalendar userId={userId} />
       </div>
-        {/* <Stats  userId={userId}/> */}
     </section>  
   )
 }

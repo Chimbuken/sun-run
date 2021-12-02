@@ -308,18 +308,7 @@ select:focus {
   box-shadow: 0px 0px 10px #B8E070;
 }
 
-.statsSection{
-  background-color:  #ffffff0f;
-  border-radius: 10px;
-  /* margin-top: 20px; */
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
+
 .sunBox {
   width: 45%;
   text-align: center;
@@ -379,7 +368,7 @@ button.runs-item{
 .runs-item>*{
   margin-bottom: 0;
   margin-top: 0;
-  color: white;
+  color: #595959;
   border: 1px solid blue,
 }
 
@@ -436,7 +425,7 @@ button.btn-user{
 /* Calendar */
 .react-calendar {
   width: 80%;
-  height: 400px;
+  padding-bottom: 1.5rem;
   max-width: 100%;
   background: #ffffff0f;
   color: #ffffff;
@@ -552,16 +541,16 @@ Green: #B8E070, rgba(184, 224, 112, 0.2)
 */
 
 .statsSection{
-  background-color: rgba(165, 165, 165, 0.212);
+  background-color:  #ffffff0f;
   border-radius: 10px;
-  margin-top: 20px;
-  padding: 10px 20px;
+  /* margin-top: 20px; */
+  padding: 30px 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 100%;
 }
 
 p.alert{

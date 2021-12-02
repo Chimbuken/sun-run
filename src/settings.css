@@ -32,31 +32,33 @@ h1.settings-spacing {
   display:flex;
 }
 
-.card-full {
-  /* background:blue; */
-}
-
 .settings-right {
+  justify-content: space-between;
   display:flex;
   flex-direction: column;
   border-radius:12.5px;
   margin:0 auto;
   align-items: space-between;
-
+  width: 45%;
 }
 
 .settings-panel-spacing {
   margin:1em;
 }
 
+
 .settings-panel {
   background:#ffffff0f;
   padding:2em;
   border-radius:12.5px;
   margin:0 auto;
+  text-align: center;
   /* margin-left:2em; */
 }
 
+.settings-panel.location-panel {
+  padding: 2.75rem 1rem;
+}
 .settings-label {
   color:#fff;
   text-align: left;

@@ -158,7 +158,7 @@ function EditRun2() {
                                 <h4>{runResults.date}</h4>
                                 <p>Total Run Time:  {runResults.runDuration} mins</p>
                                 <p>Departure Time:  {runResults.departureTime}</p>
-                                <p>{runResults.sunTime === "Sunrise"? "Sunrise" : "Sunset"  }: {runResults.sunTime}</p> 
+                                <p>{runResults.timeOfDay === "sunrise"? "Sunrise" : "Sunset"  }: {runResults.sunTime}</p> 
                             </div>
                         </>
                         : null

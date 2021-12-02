@@ -7,6 +7,9 @@ import Stats from './Stats';
 import '../modal.css'
 import Modal from './Modal';
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function UpcomingRuns() {
     let navigate = useNavigate();
@@ -69,6 +72,10 @@ function UpcomingRuns() {
             {/* list the user's upcoming runs */}
             <div className="flex-horizontal">
                 {
+                  userRuns.filter(run => run.completed === false) ? 
+                      <p>No upcoming Run</p> : null
+                  }
+                {   
                     // using map to iterate through userRuns array
                     userRuns
                     .filter(run => run.completed === false)
@@ -77,7 +84,7 @@ function UpcomingRuns() {
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
                                         <button className="runs-item font-white" onClick={() => runModal(run.id)}>
-                                            <p>{run.timeOfDay} Run: <span>{run.date}</span></p>
+                                            <p>{capitalize(run.timeOfDay)} Run: <span>{run.date}</span></p>
                                             <i class="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
@@ -86,7 +93,7 @@ function UpcomingRuns() {
                 }
             </div>
 
-            <Stats  userId={user.userId}/>
+            <Stats  showH2={true} userId={user.userId}/>
             {/* <h3>Completed runs</h3> */}
             {/* list the user's upcoming runs */}
             {/* <div>

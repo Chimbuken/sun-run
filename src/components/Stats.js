@@ -60,7 +60,7 @@ function Stats(props) {
     return (
         
         <div className='stats'>
-            <h2>Stats</h2>
+            {props.showH2 && <h2>Stats</h2>}
             <div className='statsSection'>
                 <div className="sunBox">
                     <h3>Sunrise Seen</h3>

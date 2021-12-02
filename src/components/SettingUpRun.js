@@ -152,7 +152,7 @@ function SettingUpRun() {
                         {user.runs?
                             <div>
                                 <Link to={`/dashboard/${userId}`}>
-                                    <i class="fas fa-arrow-left"></i> Dashboard
+                                    <i className="fas fa-arrow-left"></i> Dashboard
 
                                 </Link>
                                 <h1>Add New Run</h1> 
@@ -161,14 +161,14 @@ function SettingUpRun() {
                         }
                         <form action="" className="flex-column" onSubmit={getSunTime}>
                                 <label  htmlFor="pace" className="sr-only">Pace</label>
-                                <select ref={inputPace} name="pace" id="pace" onChange={handleChange}> 
-                                    <option defaultValue={firstRun.pace} disabled selected hidden>Pace</option>
-                                    <option value="Jog">Jog (8km/hr)</option>
+                                  <select ref={inputPace} name="pace" id="pace" onChange={handleChange} defaultValue={firstRun.pace}>
+                                    <option  value="Pace" hidden>Pace</option>
                                     <option value="Run">Run (16km/h)</option>
+                                    <option value="Jog">Jog (8km/hr)</option>
                                 </select>
                                 <label htmlFor="distance" className="sr-only">Distance</label>
-                                <select ref={inputDistance} name="distance" id="distance" onChange={handleChange} required>
-                                    <option defaultValue={firstRun.distance} disabled selected hidden>Distance</option>
+                  <select ref={inputDistance} name="distance" id="distance" onChange={handleChange} defaultValue={firstRun.distance} required>
+                                    <option hidden>Distance</option>
                                     <option value="5km">5km</option>
                                     <option value="10km">10km</option>
                                     <option value="Half Marathon">Half Marathon</option>
@@ -181,9 +181,8 @@ function SettingUpRun() {
                                 min={moment(today).format('YYYY-MM-DD')}/>
 
                                 <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
-                                <select ref={inputSunTime} name="timeOfDay" id="timeOfDay" onChange={handleChange} required>
-                                    <option defaultValue={firstRun.timeOfDay} disabled selected hidden>Sunrise or Sunset</option>
-
+                  <select ref={inputSunTime} name="timeOfDay" id="timeOfDay" onChange={handleChange} required defaultValue={firstRun.timeOfDay}>
+                                    <option hidden>Sunrise or Sunset</option>
                                     <option value="sunrise">Sunrise</option>
                                     <option value="sunset">Sunset</option>
                                 </select>
@@ -206,7 +205,7 @@ function SettingUpRun() {
                                 <h4>{runResults.date}</h4>
                                 <p>Total Run Time:  {runResults.runDuration} mins</p>
                                 <p>Departure Time:  {runResults.departureTime}</p>
-                                <p>{runResults.sunTime === "Sunrise"? "Sunrise" : "Sunset"  }: {runResults.sunTime}</p> 
+                                <p>{runResults.timeOfDay === "sunrise" ? "Sunrise" : "Sunset"  } : {runResults.sunTime}</p> 
                             </div>
                         </>
                         : null
