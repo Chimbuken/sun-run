@@ -56,16 +56,12 @@ function UpcomingRuns() {
         // setRunId(runId);
         userRuns.forEach((run, idx)=>{
             if(run.id === runId){
-                console.log('runObj', run)
-                console.log('run id', idx)
                 setRunObjForModal(run)
             }
         })
         for(let i=0; i<userRuns.length;i++) {
-            console.log(userRuns[i].id)
 
             if(userRuns[i].id === runId) {
-                console.log('im here')
                 setRunKey(i);
             }
         }
@@ -87,7 +83,7 @@ function UpcomingRuns() {
                             return(
                                 <div className="runs-panel" key={run.id}>
                                         <button className="runs-item" onClick={() => runModal(run.id)}>
-                                            You have a run on {run.date} <i class="fas fa-ellipsis-h"></i>
+                                            You have a run on {run.date} <i className="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
                             )

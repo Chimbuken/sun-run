@@ -153,7 +153,7 @@ function UsersCalendar(props) {
         <div className="calendar-container flex-column">
             <div>
                 <button onClick={addRun}><i className="fas fa-plus"></i> Add Run</button>
-                <button onClick={settings}><i class="fas fa-users-cog"></i></button>
+                <button onClick={settings}><i className="fas fa-users-cog"></i></button>
             </div>
             <Calendar
             onChange={setRunDate}

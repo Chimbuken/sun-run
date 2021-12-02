@@ -6,12 +6,9 @@ import raw from '../includes/list.txt'; // profanity list! >:)
 
 import firebase from '../firebase';
 
-
-
-
 function Modal(props) {
         // const [runObj, setRunObj] = useState([]);
-    const [note, setNote] = useState('');
+    const [note, setNote] = useState({note: props.runObjForModal.note});
             // note validity check
     const [isNoteValid, setIsNoteValid] = useState(0); // added by dallan
     const [didNoteUpdate, setDidNoteUpdate] = useState(0);
@@ -20,7 +17,6 @@ function Modal(props) {
         // function to add a note to your run
         const addNote = (event) => { // by dallan
             event.preventDefault();
-    
             // fetch the imported profanity list >:) by dallan
             fetch(raw)
             .then(r => r.text())
@@ -167,8 +163,7 @@ function Modal(props) {
                     {isNoteValid === 1 && <div className="modal-msg modal-error">Watch the language there chief.</div> }
                     {isNoteValid === 2 && <div className="modal-msg modal-error">The note cannot be more than 250 characters long! </div> }
                     
-                    <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange}>{props.runObjForModal.note}</textarea>
-
+                    <textarea className="modal-notepad" name="note" id="note" onChange={handleNoteChange} value={note.note}></textarea>
                     <button aria-label="Add note" className="btn-green">Update notes</button>
                 
                 </form>
