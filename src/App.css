@@ -297,5 +297,6 @@ button:active {
 
 /* sara */
 select:focus {
+  background-color: rgba(0, 0, 0, 0.452);
   box-shadow: 0px 0px 10px #B8E070;
 }
