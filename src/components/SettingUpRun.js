@@ -184,6 +184,7 @@ function SettingUpRun() {
                                 <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
                                 <select ref={inputSunTime} name="timeOfDay" id="timeOfDay" onChange={handleChange} required>
                                     <option defaultValue={firstRun.timeOfDay} disabled selected hidden>Sunrise or Sunset</option>
+
                                     <option value="sunrise">Sunrise</option>
                                     <option value="sunset">Sunset</option>
                                 </select>
