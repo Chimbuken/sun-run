@@ -1,5 +1,4 @@
 import React, { useState, useEffect }  from 'react'
-import '../stats.css'
 import firebase from "../firebase";
 
 function Stats(props) {
@@ -20,7 +19,6 @@ function Stats(props) {
             const data = response.val();
             setRuns(data.runs)
             setUserInfo(data) // added by 😈sara 
-            console.log('data for stats: ', data)
             let numOfRunsCompleted = 0
             let numOfSunriseSeen = 0
             let numOfSunsetSeen = 0
