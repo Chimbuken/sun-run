@@ -27,7 +27,7 @@ function RunSetup() {
     lng: -79.39785,
   })
 
-  const [showForm, setShowForm] =useState(true)
+  const [showForm, setShowForm] =useState(true);
   const [showResult, setShowResult] =useState(false);
   const [ userInfo, setUserInfo] =useState({})
   const [runResults, setRunResults] = useState({})
@@ -242,6 +242,9 @@ function RunSetup() {
           console.log('firebase updated')
           navigate(`/dashboard/${userId.userId}`);
 
+          // remove this later 
+          window.location.reload(false);
+
       } else {
         console.log('there are no runs')
         let timeOfDay;
@@ -268,6 +271,9 @@ function RunSetup() {
         firebase.database().ref(`/sample/${userId.userId}`).update(runObj);
         console.log('firebase updated')
         navigate(`/dashboard/${userId.userId}`);
+        
+        // remove this later 
+        window.location.reload(false);
       }
 
     } else {
