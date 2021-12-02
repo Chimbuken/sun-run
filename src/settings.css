@@ -1,0 +1,97 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.settings-header {
+  display: flex;
+  flex-direction: column;
+  /* justify-self: left; */
+  width: 80%;
+  /* background-color: black; */
+  margin:0 auto;
+  padding-left:2em;
+  /* padding-bottom:2em; */
+  margin-bottom:1em;
+  /* padding:2em; */
+}
+
+h1.settings-spacing {
+  margin-bottom:.125em;
+}
+.settings-container {
+  display:flex;
+}
+
+.card-full {
+  /* background:blue; */
+}
+
+.settings-right {
+  display:flex;
+  flex-direction: column;
+  border-radius:12.5px;
+  margin:0 auto;
+  align-items: space-between;
+
+}
+
+.settings-panel-spacing {
+  margin:1em;
+}
+
+.settings-panel {
+  background:#ffffff0f;
+  padding:2em;
+  border-radius:12.5px;
+  margin:0 auto;
+  /* margin-left:2em; */
+}
+
+.settings-label {
+  color:#fff;
+  text-align: left;
+}
+
+.settings-grid {
+  display:grid;
+  align-items: center;
+}
+
+.grid-2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.grid-2-1 {
+  grid-template-columns: repeat(2,1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3,1fr);
+}
+
+.settings-full {
+  width:100%;
+}
+
+h3.settings-title {
+  margin-bottom: 1.25em;
+}
+.settings-stat {
+  /* background:saddlebrown; */
+  text-align: center;
+  /* margin: 0 auto; */
+}
+
+.settings-user-details {
+  display:flex;
+}
