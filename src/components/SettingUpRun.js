@@ -122,6 +122,7 @@ function SettingUpRun() {
     setUser({...data})
     setFirstRun({...firstRun, lat: data.coords.lat, long: data.coords.long})
     })
+    // eslint-disable-next-line
     }, [])
 
     return (

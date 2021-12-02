@@ -4,8 +4,8 @@ import {useParams , useNavigate} from 'react-router-dom'
 
 
 // import components
-import MarkComplete from './MarkComplete';
-import DeleteRun from './DeleteRun';
+// import MarkComplete from './MarkComplete';
+// import DeleteRun from './DeleteRun';
 
 //import css
 
@@ -28,9 +28,6 @@ function UpcomingRuns() {
 
     // get userId from url and store in userId
     const user = useParams()
-    const getusersRuns = ()=>{
-
-    }
 
     useEffect( () => {
 
@@ -49,7 +46,7 @@ function UpcomingRuns() {
             }
             setUserInfo(data) // added by 😈sara 
         })
-    },[])
+    },[user.userId])
     // function to set and open modal
     function runModal(runId) {
         setModal(true);
@@ -78,8 +75,9 @@ function UpcomingRuns() {
             <div>
                 {
                     // using map to iterate through userRuns array
-                    userRuns.map((run) => {
-                        if(run.completed===false) {
+                    userRuns
+                    .filter(run => run.completed === false)
+                    .map((run) => {
                             return(
                                 <div className="runs-panel" key={run.id}>
                                         <button className="runs-item" onClick={() => runModal(run.id)}>
@@ -87,8 +85,6 @@ function UpcomingRuns() {
                                         </button>
                                 </div>
                             )
-                        }
-
                     })
                 }
             </div>
@@ -97,15 +93,14 @@ function UpcomingRuns() {
             <div>
                 {
                     // using map to iterate through userRuns array
-                    userRuns.map((run) => {
-                        if(run.completed === true) {
+                    userRuns
+                    .filter(run => run.completed === true)
+                    .map((run) => {
                             return(
                                 <div key={run.id}>
                                     <p>You have completed the run that was on {run.date}</p>
                                 </div> 
                             )
-                        }
-
                     })
 
                 }

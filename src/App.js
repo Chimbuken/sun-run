@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import SignUp from './components/SignUp';
-import RunSetup from './components/RunSetup';
+// import RunSetup from './components/RunSetup';
 import Dashboard from './components/Dashboard';
 import EditRun from './components/EditRun';
 import Settings from './components/Settings';
@@ -19,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="*" element={<SignUp />} />
-        <Route path="/setup/:userId" element={<RunSetup />} />
+        {/* <Route path="/setup/:userId" element={<RunSetup />} /> */}
         <Route path="/settingUpRun/:userId" element={<SettingUpRun />} />
         <Route path="/settingUpRun/:userId/:selectedDate" element={<SettingUpRun />} />
         <Route path="/settings/:userId" element={<Settings />} />

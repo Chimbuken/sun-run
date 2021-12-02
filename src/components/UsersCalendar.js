@@ -18,7 +18,6 @@ function UsersCalendar(props) {
     let navigate = useNavigate();
     const [runDate, setRunDate] = useState(new Date());
     const [runs, setRuns] = useState([])
-    const [today, setToday]=useState(new Date())
 
     // for modal
     const [runKey, setRunKey] = useState('');
@@ -27,8 +26,8 @@ function UsersCalendar(props) {
     const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
 
         // note validity check
-    const [isNoteValid, setIsNoteValid] = useState(0); // added by dallan
-    const [didNoteUpdate, setDidNoteUpdate] = useState(0);
+    // const [isNoteValid, setIsNoteValid] = useState(0); // added by dallan
+    // const [didNoteUpdate, setDidNoteUpdate] = useState(0);
     
     const editRun =(runObj)=>{
         console.log(runObj)
@@ -56,17 +55,15 @@ function UsersCalendar(props) {
         }
     }
     // function to close the modal
-    function closeModal() {
-        setModal(false);
-        // setRunId('')
+    // function closeModal() {
+    //     setModal(false);
+    //     // setRunId('')
 
-        // reset note validation messages
-        setIsNoteValid(0)
-        setDidNoteUpdate(0)
-    }
+    //     // reset note validation messages
+    //     setIsNoteValid(0)
+    //     setDidNoteUpdate(0)
+    // }
     
-
-
 
     const renderingRunsArray =({ date, view })=>{
         // "2021-11-30"
@@ -148,7 +145,7 @@ function UsersCalendar(props) {
             setUserInfo(data) // added by 😈sara 
 
         })
-    },[])
+    },[userId])
     return(
         <div className="calendar-container flex-column">
             <div>

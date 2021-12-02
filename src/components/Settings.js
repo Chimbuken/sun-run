@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import {useParams , useNavigate} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
 import firebase from '../firebase';
 import axios from 'axios';
 
 
 function Settings() {
     const [userInfo, setUserInfo]=useState({});
-    const [usersLocation, setUsersLocation]=useState('')
+    // const [usersLocation, setUsersLocation]=useState('')
     const {userId} = useParams()
     const [showNameForm, setShowNameForm] = useState(false);
     const [showEmailForm, setShowEmailForm] = useState(false);
     const [alert, setAlert] = useState({alert: false, alertMessage:''})
 
     // for editing location -> dallan's thingys
-    const [zipcode, setZipcode] = useState('');
+    // const [zipcode, setZipcode] = useState('');
     const [country, setCountry] = useState('canada');
-    const [postalCode, setPostalCode] = useState('');
+    // const [postalCode, setPostalCode] = useState('');
     const [showLocationForm, setShowLocationForm] = useState(false);
 
     // when any of the inputs are changed we update the userInfo object
@@ -28,7 +28,7 @@ function Settings() {
     const submitName=(e)=>{
         e.preventDefault()
         // console.log(userInfo)
-        const nameRegex = /\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
+        const nameRegex = /\s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
         if(nameRegex.test(userInfo.name)) {
             const dbRef = firebase.database().ref(`/sample/${userId}`);
             dbRef.update(userInfo)
@@ -43,7 +43,7 @@ function Settings() {
     // when the user submits and updates their email
     const submitEmail = (e)=>{
         e.preventDefault()
-        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
         if(emailRegex.test(userInfo.email)) {
             const dbRef = firebase.database().ref(`/sample/${userId}`);
             dbRef.update(userInfo)
@@ -150,15 +150,15 @@ function Settings() {
             const userLocation= data.location.split(',').reverse()
             console.log('location:', userLocation)
         })
-    }, [])
+    }, [userId])
 
     // when the user selects their country of choice we update the country and clear the states
     const handleCountryChange = (event) => {
 
         // set Country
         setCountry(event.target.value);
-        setZipcode('');
-        setPostalCode('');
+        // setZipcode('');
+        // setPostalCode('');
 
     }
 
@@ -167,6 +167,7 @@ function Settings() {
         <main className="card-full">
             <section className="signup-form wrapper">
                 <div >
+                    <Link to={`/dashboard/${userId}`}>Back to Dashboard</Link>
                     <div className="flex">
                         <h1>{userInfo.name} </h1> <i className="fas fa-user-edit" onClick={()=>setShowNameForm(!showNameForm)}></i>
                     </div>
