@@ -72,7 +72,7 @@ function UpcomingRuns() {
         <div className="flex-container">
             <h3>Upcoming runs</h3>
             {/* list the user's upcoming runs */}
-            <div>
+            <div className="flex-horizontal">
                 {
                     // using map to iterate through userRuns array
                     userRuns
@@ -80,8 +80,10 @@ function UpcomingRuns() {
                     .map((run) => {
                             return(
                                 <div className="runs-panel" key={run.id}>
-                                        <button className="runs-item" onClick={() => runModal(run.id)}>
-                                            You have a run on {run.date} <i className="fas fa-ellipsis-h"></i>
+                                    {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
+                                        <button className="runs-item font-white" onClick={() => runModal(run.id)}>
+                                            <p>{run.timeOfDay} Run: <span>{run.date}</span></p>
+                                            <i class="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
                             )
@@ -98,7 +100,7 @@ function UpcomingRuns() {
                     .map((run) => {
                             return(
                                 <div key={run.id}>
-                                    <p>You have completed the run that was on {run.date}</p>
+                                    <p>You completed a run on {run.date}.</p>
                                 </div> 
                             )
                     })
