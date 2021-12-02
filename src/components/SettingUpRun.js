@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, {useState, useEffect, useRef} from 'react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 import firebase from '../firebase';
@@ -8,26 +8,27 @@ import {convertH2M, convertM2H} from '../functions/runType.js'
 import { v4 as uuidv4 } from 'uuid';
 
 function SettingUpRun() {
+    const inputPace = useRef();
+    const inputDistance = useRef();
+    const inputSunTime = useRef();
+
+
     let navigate = useNavigate();
     const {selectedDate} = useParams()
-
     const {userId} = useParams()
-    console.log('selected date: ', selectedDate)
-    if(!selectedDate){
-        console.log('selected date: what? ', selectedDate)
-    }
       // handleChange targets User's choice of Pace and Distance
     const today = new Date();
     const [showResult, setShowResult]=useState(false)
     const [showForm, setShowForm] =useState(true)
     const [user, setUser]=useState({})
     const [firstRun, setFirstRun] = useState({
-    pace :'Pace',
-    distance: 'Distance',
+    pace :'Select your Pace',
+    distance: 'Select the Distance you would like to cover',
     // date: moment(today).format('YYYY-MM-DD'), //be default the value will be the current date
     date: !selectedDate ? moment(today).format('YYYY-MM-DD') : selectedDate, //be default the value will be the current date
     timeOfDay:'Sunrise or Sunset'
     })
+    const [alert, setAlert] =useState({alert: false, message: ''})
     // react-calendar__tile react-calendar__month-view__days__day react-calendar__month-view__days__day--neighboringMonth 
     const [runResults, setRunResults]= useState({})
 
@@ -41,6 +42,22 @@ function SettingUpRun() {
         // getting the total run time for the selected distance
         const totalTime = runType(firstRun)
         console.log(`TotalTime to ${firstRun.pace} a ${firstRun.distance} is ${totalTime} mins`, )
+        if(firstRun.pace === 'Select your Pace'){
+            inputPace.current.focus();
+            setAlert({alert: true, message: 'Please select your pace!'})
+            return
+        }
+        if(firstRun.distance === 'Select the Distance you would like to cover'){
+            inputDistance.current.focus();
+            setAlert({alert: true, message: 'Please select the Distance you would like to cover!'})
+            return
+        }
+        if(firstRun.timeOfDay === 'Sunrise or Sunset'){
+            inputSunTime.current.focus();
+            setAlert({alert: true, message: 'Please select Sunrise or Sunset!'})
+            return
+        }
+
         axios({
             url: `https://api.sunrise-sunset.org/json?lat=${firstRun.lat}=${firstRun.long}=${firstRun.date}`,
             method: "GET",
@@ -48,8 +65,6 @@ function SettingUpRun() {
         }).then((response) => {
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
-            console.log('direct from api: ', sunrise)
-            console.log('direct from api: ', sunset)
             let startTime;
             if( firstRun.timeOfDay === "sunrise" ){
                 const sunriseInMinute = convertH2M(sunrise);
@@ -67,6 +82,8 @@ function SettingUpRun() {
                 departureTime: startTime,
                 runDuration: totalTime            
             })
+            setAlert({alert: false, message: ''})
+
             setShowResult(true)
             setShowForm(false)
         })
@@ -131,48 +148,54 @@ function SettingUpRun() {
                 {
                     showForm? 
                     <> 
+                        
                         {user.runs?
-                            <h1>Add New Run</h1> : <h1>Let's setup your first run!</h1>
+                            <div>
+                                <Link to={`/dashboard/${userId}`}>
+                                    <p>
+                                        <i class="fas fa-arrow-left"></i> Dashboard
+                                    </p>
+                                </Link>
+                                <h1>Add New Run</h1> 
+                            </div>
+                            : <h1>Let's setup your first run!</h1>
                         }
-
                         <form action="" className="flex-column" onSubmit={getSunTime}>
-                            
-                                <label htmlFor="pace" className="sr-only">Pace</label>
-                                <select name="pace" id="pace" value={firstRun.pace} onChange={handleChange}> 
-                                    <option value="Pace" disabled selected hidden>Pace</option>
+                                <label  htmlFor="pace" className="sr-only">Pace</label>
+                                <select ref={inputPace} name="pace" id="pace" onChange={handleChange}> 
+                                    <option defaultValue={firstRun.pace} disabled selected hidden>Pace</option>
                                     <option value="Jog">Jog (8km/hr)</option>
                                     <option value="Run">Run (16km/h)</option>
                                 </select>
-                            
                                 <label htmlFor="distance" className="sr-only">Distance</label>
-                                <select name="distance" id="distance" value={firstRun.distance} onChange={handleChange} required>
-                                    <option value="Distance" disabled selected hidden>Distance</option>
+                                <select ref={inputDistance} name="distance" id="distance" onChange={handleChange} required>
+                                    <option defaultValue={firstRun.distance} disabled selected hidden>Distance</option>
                                     <option value="5km">5km</option>
                                     <option value="10km">10km</option>
                                     <option value="Half Marathon">Half Marathon</option>
                                     <option value="Marathon">Marathon</option>
                                 </select>
-                            
-                            
                                 <label htmlFor="date" className="sr-only">Start date:</label>
                                 <input type="date" id="date" name="date"
                                 onChange={handleChange}
                                 value={firstRun.date}
                                 min={moment(today).format('YYYY-MM-DD')}/>
 
-                                <select name="timeOfDay" id="timeOfDay" value={firstRun.timeOfDay} onChange={handleChange} required>
-                                    <option value="Sunrise or Sunset" disabled selected hidden>Sunrise or Sunset</option>
+                                <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
+                                <select ref={inputSunTime} name="timeOfDay" id="timeOfDay" onChange={handleChange} required>
+                                    <option defaultValue={firstRun.timeOfDay} disabled selected hidden>Sunrise or Sunset</option>
+
                                     <option value="sunrise">Sunrise</option>
                                     <option value="sunset">Sunset</option>
                                 </select>
-
                                 <button className="btn-gray">Next</button>
-                        
                         </form>
                     </> 
                     : null
                 }
-
+                {
+                    alert ?  <p className="error-text">{alert.message}</p> : null
+                }
                 {showResult ? 
                 <div  className='runResults flex-column'>
                     <h3 style={{color: '#ffffff'}}>Here's our suggestion for you</h3>
@@ -192,11 +215,9 @@ function SettingUpRun() {
                     <div className="select-box">
                         <button id='confirmRun' className="btn-red" onClick={confirmRun}>Save Run</button>
                         <button id='editRun' className="btn-red" onClick={()=>setShowForm(true)}>Edit Run</button>
-
                     </div>
                 </div>
                 : null}
-
             </section>
         </main>
     )
