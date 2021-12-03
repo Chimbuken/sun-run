@@ -111,7 +111,7 @@ h3.settings-title {
 @media (max-width: 1170px) {
 
   .settings-full-wrapper {
-    justify-content: inherit;
+    justify-content: flex-start;
   }
   
   .settings-right {
