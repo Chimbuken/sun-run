@@ -28,8 +28,9 @@ function Dashboard(){
   return (
     <>
     <section className="card-full mbl-dashboard">
-      <div className="flex dashboard-welcome">
+      <div className="flex-column dashboard-welcome">
         <h1 className="title-cont">Hello, {updateName.name} </h1>
+        <p>User ID: {userId}</p>
       </div>
       <div className="flex dashboard">
         <UpcomingRuns/>

@@ -108,7 +108,12 @@ h3.settings-title {
   justify-content: center;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1170px) {
+
+  .settings-full-wrapper {
+    justify-content: inherit;
+  }
+  
   .settings-right {
     width:100%;
   }

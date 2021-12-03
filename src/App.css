@@ -606,7 +606,11 @@ button.runs-item {
 .runs-item > * {
   margin-bottom: 0;
   margin-top: 0;
-  color: #fff;
+  color: #595959;
+}
+
+.runs-items > i {
+  color: #595959;
 }
 
 .runs-item p {
@@ -830,6 +834,10 @@ p.alert {
   .card-full {
     justify-content: flex-start;
   }
+
+  .settings-full-wrapper {
+    justify-content: flex-start;
+  }
 }
 
 
@@ -877,5 +885,12 @@ p.alert {
   .todays-metrics h2{
     margin: 0;
   }
+  .settings-right .statsSection {
+    margin-bottom: 50px;
+  }
   
+}
+
+.fa-ellipsis-h {
+  color: #fff;
 }

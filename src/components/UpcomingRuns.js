@@ -107,10 +107,10 @@ function UpcomingRuns() {
                                                         (run.date.split('-')[2] - today.getDate() ) < 2 ? 
                                                             (run.date.split('-')[2] - today.getDate() ) == 0 ? 
                                                                 (run.date.split('-')[2] - today.getDate() ) == -1 ? 
-                                                                `Yesterday at ${run.suntime}` 
-                                                                :`Today at ${run.suntime}` 
-                                                            :`Tomorrow at ${run.suntime}` 
-                                                        :`${moment(run.date).format('dddd')} at ${run.suntime}`
+                                                                `Yesterday at ${run.departureTime}` 
+                                                                :`Today at ${run.departureTime}` 
+                                                            :`Tomorrow at ${run.departureTime}` 
+                                                        :`${moment(run.date).format('dddd')} at ${run.departureTime}`
 
                                                     : moment(run.date).format('MMMM Do YYYY')
                                                 }
