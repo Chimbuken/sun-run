@@ -140,20 +140,22 @@ function UsersCalendar(props) {
     },[userId])
     return(
         <div className="calendar-container flex-column">
-            <div>
+            <div className="btn-cont">
                 <button className="btn-gray small" onClick={addRun}><i className="fas fa-plus"></i></button>
                 <button className="btn-gray small" onClick={settings}><i className="fas fa-users-cog"></i></button>
             </div>
 
             <TodaysStats/>
             
-            <Calendar
-            onChange={setRunDate}
-            value={runDate}
-            tileClassName={renderingRunsArray}
-            minDate={new Date()}
-            onClickDay={selectDate}
-            />
+            
+                <Calendar
+                onChange={setRunDate}
+                value={runDate}
+                tileClassName={renderingRunsArray}
+                minDate={new Date()}
+                onClickDay={selectDate}
+                />
+         
             {/* modal for displaying run info and note pad */}
             {
                 modal === true ? (

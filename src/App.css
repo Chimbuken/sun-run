@@ -532,14 +532,6 @@ span{
 }
 
 
-
-
-/* Colours
-Red: #D66761, rgba(214, 103, 97, 0.2)
-Yellow: #FFFE93, rgba(255, 254, 147, 0.2)
-Green: #B8E070, rgba(184, 224, 112, 0.2)
-*/
-
 .statsSection{
   background-color:  #ffffff0f;
   border-radius: 10px;
@@ -576,6 +568,9 @@ p.alert{
 }
 
 @media (max-width: 768px) {
+  .background{
+    min-height: 180vh;
+  }
   .flex.dashboard {
     flex-direction: column-reverse;
     width: 100%;
@@ -584,8 +579,27 @@ p.alert{
   .flex-container{
     width: 100%;
   }
-  .react-calendar{
+  .calendar-container{
     width: 100%;
   }
+}
+
+@media (max-width: 500px) {
+  .background{
+    min-height: 150vh;
+  }
+  .mbl-dashboard{
+    width: 80%;
+  }
+  .title-cont{
+    font-size: 1.8rem;
+  }
+  .btn-cont{
+    margin: 0;
+  }
+  .todays-metrics h2{
+    margin: 0;
+  }
+  
 }
 
