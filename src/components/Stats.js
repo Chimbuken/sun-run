@@ -3,9 +3,6 @@ import firebase from "../firebase";
 
 function Stats(props) {
     const userId = props.userId
-    const [userInfo, setUserInfo]=useState({}) // adding this because i need it keep it- 😈sara
-    const [runs, setRuns] = useState([])
-    
     const [stats, setStats] = useState({numOfRunsCompleted : 0,
         numOfSunriseSeen: 0, 
         numOfSunsetSeen: 0, 
@@ -15,8 +12,6 @@ function Stats(props) {
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response) => {
             const data = response.val();
-            setRuns(data.runs)
-            setUserInfo(data) // added by 😈sara 
             let numOfRunsCompleted = 0
             let numOfSunriseSeen = 0
             let numOfSunsetSeen = 0

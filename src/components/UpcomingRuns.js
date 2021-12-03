@@ -25,11 +25,7 @@ function UpcomingRuns() {
     const [runObjForModal, setRunObjForModal]=useState({})
     const [upcomingRuns, setUpcomingRuns]=useState([])
 
-    const [today, setToday]=useState(new Date)
-    console.log(today.getDate())
-
-
-
+    const today = new Date();
 
     // get userId from url and store in userId
     const user = useParams()
@@ -105,8 +101,8 @@ function UpcomingRuns() {
                                                 { 
                                                     (run.date.split('-')[2] - today.getDate() ) < 7 ? 
                                                         (run.date.split('-')[2] - today.getDate() ) < 2 ? 
-                                                            (run.date.split('-')[2] - today.getDate() ) == 0 ? 
-                                                                (run.date.split('-')[2] - today.getDate() ) == -1 ? 
+                                                            (run.date.split('-')[2] - today.getDate() ) === 0 ? 
+                                                                (run.date.split('-')[2] - today.getDate() ) === -1 ? 
                                                                 `Yesterday at ${run.departureTime}` 
                                                                 :`Today at ${run.departureTime}` 
                                                             :`Tomorrow at ${run.departureTime}` 

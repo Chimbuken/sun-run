@@ -9,7 +9,6 @@ import axios from 'axios';
 function TodaysStats(){
 const [todaySunrise, setTodaySunrise] = useState('');
 const [todaySunset, setTodaySunset] = useState('');
-const [updateName, setUpdateName] = useState({});
 
 const user = useParams()
 
@@ -20,7 +19,6 @@ useEffect( () => {
     dbRef.on('value', (response) => {
     
         const data = response.val();
-        setUpdateName(data)
         axios({
         url: `https://api.sunrise-sunset.org/json?lat=${data.coords.lat}=${data.coords.long}&date=today`,
         method: "GET",

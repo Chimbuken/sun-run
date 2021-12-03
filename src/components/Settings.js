@@ -3,7 +3,6 @@ import {useParams, Link} from 'react-router-dom';
 import firebase from '../firebase';
 import axios from 'axios';
 import Stats from './Stats';
-import Footer from './Footer';
 import '../settings.css';
 
 
@@ -12,7 +11,7 @@ function Settings() {
     const {userId} = useParams()
     const [alert, setAlert] = useState({alert: false, alertMessage:''})
 
-    // for editing location -> dallan's thingys
+    // for editing location
     const [country, setCountry] = useState('canada');
 
     // when any of the inputs are changed we update the userInfo object
@@ -31,7 +30,6 @@ function Settings() {
             const dbRef = firebase.database().ref(`/sample/${userId}`);
             dbRef.update(userInfo)
             setAlert({alert: false, alertMessage:''})
-            // setShowNameForm(!showNameForm)
         }else {
             console.log('please provide a valid full name')
             setAlert({alert: true, alertMessage:'please provide a valid full name'})
@@ -92,9 +90,6 @@ function Settings() {
         const zipRegex = /^\d{5}(?:[-\s]\d{4})?$/g; // zip code regex
 
         if(country === 'canada' && postalRegex.test(userInfo.postalCode)) {
-            // delete the temporary zip and or postal from userInfo before pushing to db
-            // delete userInfo.zipcode;
-            // delete userInfo.postalCode;
 
             // make db connection
             const dbRef = firebase.database().ref(`/sample/${userId}`);
@@ -104,9 +99,6 @@ function Settings() {
             setAlert({alert: false, alertMessage:''})
 
         } else if(country === 'usa' && zipRegex.test(userInfo.zipcode)) {
-            // delete the temporary zip and or postal from userInfo before pushing to db
-            // delete userInfo.postalCode;
-            // delete userInfo.zipcode;
 
             // make db connection
             const dbRef = firebase.database().ref(`/sample/${userId}`);
@@ -119,10 +111,6 @@ function Settings() {
             // setShowLocationForm(!showLocationForm)
 
         } else {
-            // delete the temporary zip and or postal from userInfo
-            // delete userInfo.postalCode;
-            // delete userInfo.zipcode;
-            
             // set the alert to true with a message
             setAlert({alert: true, alertMessage:'please provide a valid postal or zip code'})
         }

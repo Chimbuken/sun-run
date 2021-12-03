@@ -6,7 +6,6 @@ import firebase from '../firebase';
 
 function SignIn() {
   let navigate = useNavigate();
-  const myId = 'kwpcdxsyqt5yt93bnn'
 
   const [userId, setUserId] = useState('');
   const [userKeys, setUserKeys] = useState([]);
