@@ -72,8 +72,7 @@ function UpcomingRuns() {
             {/* list the user's upcoming runs */}
             <div className="flex-horizontal">
                 {
-                  userRuns.filter(run => run.completed === false) ? 
-                      <p>No upcoming Run</p> : null
+              userRuns.filter(run => run.completed === false) ? <p>No upcoming Run</p> : null
                   }
                 {   
                     // using map to iterate through userRuns array
