@@ -1,323 +1,178 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
 import firebase from '../firebase';
+import {useParams , useNavigate, Link} from 'react-router-dom'
+import moment from 'moment'
+import runType from '../functions/runType';
+
+import {convertH2M, convertM2H} from '../functions/runType.js'
+
+
 import axios from 'axios';
 
-
-import {useParams , useNavigate} from 'react-router-dom'
-
-function EditRun() {
-    const month= ["January","February","March","April","May","June","July",
-    "August","September","October","November","December"];
-    const today = new Date()
+function EditRun2() {
     const {userId} = useParams()
     const {runId} = useParams()
-    const [runObj, setRunObj] = useState({})
-    // const [oldRun, setOldRun] = useState({})
     const [userInfo, setUserInfo] = useState({})
+    const [runObj, setRunObj] = useState({})
+
     const [showForm, setShowForm] =useState(true)
-    const [showResult, setShowResult] =useState(false);
-    // const [alert, setAlert] = useState({alert: false, alertMessage:''})
+    const [showResult, setShowResult]=useState(false)
+
+    const today = new Date();
+
     const [runResults, setRunResults] = useState({});
-
+    
     let navigate = useNavigate();
-
-
     const handleChange = (e)=>{
         const {id, value} = e.target;
         setRunObj({...runObj, [id]:value})
     }
-      // handleTimeClick stores the User's choice of Sunrise and Sunset
-    const handleTimeClick = (e)=>{
+
+    const getSunTime=(e)=>{
         e.preventDefault()
-        const {id} = e.target;
-        if(id === "userSunrise"){
-            setRunObj({...runObj, userSunrise:true, userSunset:false})
-        }else {
-            setRunObj({...runObj, userSunrise:false, userSunset: true})
-        }
-    }
-    const editRun =(e)=>{
-        e.preventDefault()
-        console.log(runObj)
+        const totalTime = runType(runObj)
+        console.log(`TotalTime to ${runObj.pace} a ${runObj.distance} is ${totalTime} mins`, )
         axios({
-            url: `https://api.sunrise-sunset.org/json?lat=${runObj.lat}=${runObj.lng}=${runObj.date}`,
+            url: `https://api.sunrise-sunset.org/json?lat=${userInfo.coords.lat}=${userInfo.coords.long}=${runObj.date}`,
             method: "GET",
             dataResponse: "json",
-            params: {
-              lat: runObj.lat,
-              lng: runObj.lng
-            }
-          }).then((response) => {
-            // Stored values of sunrise and sunset values from API call
-            // Results in format HH:MM:SS AM or PM UTC timezone
+        }).then((response) => {
             const sunrise = response.data.results.sunrise;
             const sunset = response.data.results.sunset;
-            // Stored values of Date and converted from the User's Choice to be in the same format as the API call response in UTC time
-            const selectedDateArray =  runObj.date.split("-")
-            const selectedYear = selectedDateArray[0]
-            const selectedMonth = selectedDateArray[1]
-            const selectedDate = selectedDateArray[2]
-            const utcSunrise = `${selectedDate} ${month[selectedMonth-1]} ${selectedYear} ${sunrise} UTC`
-            const utcSunset= `${selectedDate} ${month[selectedMonth-1]} ${selectedYear} ${sunset} UTC`
-            
-            // Converting UTC time to Local time by changing format from a string to an array
-            let localSunriseTime = new Date(utcSunrise).toString()
-            let localSunsetTime = new Date(utcSunset).toString()
-            const sunriseArray = localSunriseTime.split(" ")
-            const sunsetArray = localSunsetTime.split(" ")
-            
-            localSunriseTime =  sunriseArray[4]
-            localSunsetTime =  sunsetArray[4]
-    
-            // User's Choice Logic
-            // totalTime calculated using pre-determined Pace (Jog or Run km/h) and Distance (5km, 10km, 1/2 marathon, marathon) to minutes to make Time a number.
-    
-            let totalTime
-            // Logic for Jog Choice
-            if(runObj.pace ==="Jog" ){
-              if(runObj.distance === '5km'){
-                totalTime = 37.5
-              }
-              if(runObj.distance === '10km'){
-                totalTime = 75
-              }
-              if(runObj.distance === 'Half Marathon'){
-                totalTime = 157.5
-              }
-              if(runObj.distance === 'Marathon'){
-                totalTime = 315
-              }
-            }
-    
-            // Logic for Run Choice
-            if(runObj.pace ==="Run"){
-              if(runObj.distance === '5km'){
-                totalTime = 18.75
-              }
-              if(runObj.distance === '10km'){
-                totalTime = 37.5
-              }
-              if(runObj.distance === 'Half Marathon'){
-                totalTime = 78.75
-              }
-              if(runObj.distance === 'Marathon'){
-                totalTime = 157.5
-              }
-            }
-    
-            // User's runObj values converted from a string to a number
-            let userSelectedSunTime
-            let timeInMinutes
-            if(runObj.userSunrise){
-              userSelectedSunTime=localSunriseTime
-              timeInMinutes = convertH2M(localSunriseTime);
-            }else if(runObj.userSunset){
-              userSelectedSunTime=localSunsetTime
-              timeInMinutes = convertH2M(localSunsetTime);
-            }
-            
-            // Determining the User's Run Departure Time:
-            // API results Sunrise or Sunset have been converted to a number.  The Sunrise and Sunset time act as the mid-point of the run.
-            // totalRun time divided by 2 accounts for the User reaching the destination at the mid-point of the journey.
-            // startTime is then converted back from a number to HH:MM AM/PM
-            const startTime = Number(timeInMinutes) -(totalTime/2)
-            let startMinute = Math.floor(startTime % 60)
-            let startHour = (Math.floor(startTime / 60 ))
-            if(startMinute < 10){
-              startMinute = `0${startMinute}`
-            }
-    
-            let convertingToHourMinute
-            if(startHour > 12){
-              convertingToHourMinute = (`${startHour-12}:${startMinute} PM`)
-            }else {
-              convertingToHourMinute = (`${startHour}:${startMinute} AM`)
-            }
-    
-            // Converting Sunrise time to HH:MM AM
-            const startSunrise = Number(timeInMinutes)
-            let sunriseMin = Math.floor(startSunrise % 60)
-            let sunriseHour = (Math.floor(startSunrise /60))
-            if(sunriseMin < 10){
-              sunriseMin = `0${sunriseMin}`
-            }
-    
-            let sunriseToHourMinute
-            if(sunriseHour > 12){
-              sunriseToHourMinute = (`${sunriseHour-12}:${sunriseMin} PM`)
-            }else {
-              sunriseToHourMinute = (`${sunriseHour}:${sunriseMin} AM`)
-            }
-    
-             // Converting Sunset time to HH:MM PM
-            const startSunset = Number(timeInMinutes)
-            let sunsetMin = Math.floor(startSunset % 60)
-            let sunsetHour = (Math.floor(startSunset /60))
-            if(sunsetMin < 10){
-              sunsetMin = `0${sunsetMin}`
-            }
-    
-            let sunsetToHourMinute
-            if(sunsetHour > 12){
-              sunsetToHourMinute = (`${sunsetHour-12}:${sunsetMin} PM`)
-            }else {
-              sunsetToHourMinute = (`${sunsetHour}:${sunsetMin} AM`)
-            }
-            setRunResults({...runObj, sunsetData: sunsetToHourMinute, sunriseData:sunriseToHourMinute, departureTime: convertingToHourMinute, runDuration: totalTime, userSelectedSunTime: userSelectedSunTime});
- 
-            setShowForm(false)
-            setShowResult(true)
-            
-          });
-        }
-        function convertH2M(timeInHour){
-          let timeParts = timeInHour.split(":");
-          return Number(timeParts[0]) * 60 + Number(timeParts[1]);
-        }
-        
-        const handleConfirmation =()=>{
+            console.log(' lat : ', userInfo.coords.lat)
+            console.log(' long : ', userInfo.coords.long)
+            console.log(' sunset : ', sunset)
+            console.log(' sunrise : ', sunrise)
 
-        console.log('runResults: ', runResults)
-        let timeOfDay ;
-        if(runResults.userSunrise){
-          timeOfDay = 'sunrise'
-        }else {
-          timeOfDay = 'sunset'
-        }
-            const editedRunObj = {
-              id: runId,
-              pace: runResults.pace,
-              distance: runResults.distance,
-              timeOfDay: timeOfDay,
-              date: runResults.date,
-              departureTime: runResults.departureTime,
-              runDuration: runResults.runDuration,
-              suntime: runResults.userSelectedSunTime,
-              completed: false
-          }
-          console.log('editedRunObj', editedRunObj);
-          let key
-          userInfo.runs.forEach((run, idx)=>{
-            if(run.id === runId){
-              console.log('run: ', run);
-              console.log('run: ', idx);
-              key = idx
+            let startTime;
+
+            if( runObj.timeOfDay === "sunrise" ){
+                const sunriseInMinute = convertH2M(sunrise);
+                const startingTime = sunriseInMinute - totalTime/2
+                startTime=convertM2H(startingTime, "sunrise")
+            }else {
+                const sunsetInMinute = convertH2M(sunset);
+                const startingTime = sunsetInMinute - totalTime/2
+                startTime=convertM2H(startingTime, "sunset")
             }
-          })
-          const dbRef = firebase.database().ref(`/sample/${userId}/runs/${key}`);
-          dbRef.update(editedRunObj);
-          navigate(`/dashboard/${userId}`);
+            console.log(`${runObj.timeOfDay} is at ${runObj.timeOfDay==="sunrise" ? sunrise : sunset } so you should start your ${runObj.pace} by ${startTime} to cover ${runObj.distance}`);
+            setRunResults({
+                ...runObj,
+                sunTime: runObj.timeOfDay === "sunrise"? sunrise : sunset,
+                departureTime: startTime,
+                runDuration: totalTime            
+            })
+            setShowResult(true)
+            setShowForm(false)
+            
+        })
+    }
+    const handleConfirmation=(e)=>{
+        const editedRunObj ={
+            id: runId,
+            pace: runResults.pace,
+            distance: runResults.distance,
+            timeOfDay: runResults.timeOfDay,
+            date: runResults.date,
+            departureTime: runResults.departureTime,
+            runDuration: runResults.runDuration,
+            suntime: runResults.sunTime,
+            completed: false
         }
-    const showTheForm =()=>{
-        setShowResult(false)
-        setShowForm(true)
+        let key
+        userInfo.runs.forEach((run, idx)=>{
+            if(run.id === runId){
+                key = idx
+                }
+            })
+        const dbRef = firebase.database().ref(`/sample/${userId}/runs/${key}`);
+        dbRef.update(editedRunObj);
+        navigate(`/dashboard/${userId}`);
+
     }
     useEffect(() => {
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response) => {
             // store user data in data variable
             const data = response.val();
+            console.log(data)
             setUserInfo(data)
             data.runs.forEach(element => {
                 if(element.id ===runId){
-                    console.log('old run: ', element)
-                    const newObj={
-                        pace : element.pace,
-                        distance: element.distance,
-                        date: element.date, //be default the value will be the current date
-                        userSunrise: element.timeOfDay === "sunrise" ? true : false,
-                        userSunset:element.timeOfDay === "sunset" ? true : false,
-                        lat: data.coords.lat, 
-                        lng: data.coords.long,
-                    }
-                    // setOldRun(element)
-                    setRunObj(newObj)
+                    setRunObj(element)
+                    console.log(element)
                 }
             });
         })
     }, [userId, runId])
 
     return (
-        <main  className="card-full">
+        <main className="card-full">
             <section  className="runSetupPage signup-form wrapper">
-                {
-                    showForm === true ?
-                <form  id="runSetupForm"  className="flex-column" onSubmit={editRun}>
-                    <label htmlFor="pace" className="sr-only">Pace</label>
-                    <select name="pace" id="pace" value={runObj.pace} onChange={handleChange}> 
-                        <option value="Jog">Jog (8km/hr)</option>
-                        <option value="Run">Run (16km/h)</option>
-                    </select>
-
-                    <label htmlFor="distance" className="sr-only">Distance</label>
-                    <select name="distance" id="distance" value={runObj.distance} onChange={handleChange}>
-                        <option value="5km">5km</option>
-                        <option value="10km">10km</option>
-                        <option value="Half Marathon">Half Marathon</option>
-                        <option value="Marathon">Marathon</option>
-                    </select>
-
-                    <label htmlFor="date" className="sr-only">Start date:</label>
-                    <input type="date" id="date" name="date"
-                    onChange={handleChange}
-                    value={runObj.date}
-                    min={`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`}/>
-                    <div className="select-box">
-                    {/* selectedBtn */}
-                    {/* <button id="userSunrise" className={runObj.userSunrise ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunrise</button>
-                    <button id="userSunset" className={runObj.userSunset ? 'selectedBtn btn-green' : 'btn-green'} onClick={handleTimeClick}>Sunset</button> */}
-
-                        <input type="radio" name="userTime" id="userSunrise" onChange={handleTimeClick} checked={runObj.userSunrise}/>
-                        <label htmlFor="userSunrise" >Sunrise</label>
-
-                        <input type="radio" name="userTime" id="userSunset" onChange={handleTimeClick} checked={runObj.userSunset}/>
-                        <label htmlFor="userSunset">Sunset</label>
-
+                {showForm ?
+                <>
+                    <div>
+                        <Link to={`/dashboard/${userId}`}>
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </Link>
+                        <h1>Edit Run</h1> 
                     </div>
-                    <button className="btn-red" onSubmit={editRun}>VIew Result</button>
-                </form> : null
+                    <form action="" className="flex-column" onSubmit={getSunTime}>
+                        <label  htmlFor="pace" className="sr-only">Pace</label>
+                        <select name="pace" id="pace" onChange={handleChange} value={runObj.pace}>
+                            <option value="Jog">Jog (8km/hr)</option>
+                            <option value="Run">Run (16km/h)</option>
+                        </select>
+                        <label htmlFor="distance" className="sr-only">Distance</label>
+                        <select name="distance" id="distance" onChange={handleChange} required value={runObj.distance}>
+                            <option value="5km">5km</option>
+                            <option value="10km">10km</option>
+                            <option value="Half Marathon">Half Marathon</option>
+                            <option value="Marathon">Marathon</option>
+                        </select>
+                        <label htmlFor="date" className="sr-only">Start date:</label>
+                        <input type="date" id="date" name="date"
+                        onChange={handleChange}
+                        value={runObj.date}
+                        min={moment(today).format('YYYY-MM-DD')}/>
 
+                        <label htmlFor="timeOfDay" className="sr-only">Select Time of Day</label>
+                        <select name="timeOfDay" id="timeOfDay" onChange={handleChange} required value={runObj.timeOfDay}>
+                            <option value="sunrise">Sunrise</option>
+                            <option value="sunset">Sunset</option>
+                        </select>
+                        <button className="btn-gray">Next</button>
+                    </form>
+                </>
+                :null
                 }
-
-                {
-            showResult === true ?
-                <div className='runResults flex-column'>
-                    <h3>Here's what we got for you:</h3>
+                {showResult ? 
+                <div  className='runResults flex-column'>
+                    <h3 style={{color: '#ffffff'}}>Here's our suggestion for you</h3>
                     {
-                    runResults ?
-                    <>
-                    {runResults.userSunrise === true ? 
-                    <div>
-                        <h4>{runResults.date}</h4>
-                        <p>Departure Time:  {runResults.departureTime}</p>
-                        <p>Sunrise: {runResults.sunriseData}</p> 
-
-                    </div>
-                    : null}
-                    {runResults.userSunset === true ? 
-                    <div>
-                        <h4>{runResults.date}</h4>
-                        <p>Departure Time:  {runResults.departureTime}</p>
-                        <p>Sunset: {runResults.sunsetData}</p>
-                    </div>
-                    
-                    : null}
-                    </>
-                    : null
+                        runResults ?
+                        <>
+                            <div>
+                                <h4>{moment(runResults.date).format('dddd')}</h4>
+                                <h4>{runResults.date}</h4>
+                                <p>Total Run Time:  {runResults.runDuration} mins</p>
+                                <p>Departure Time:  {runResults.departureTime}</p>
+                                <p>{runResults.timeOfDay === "sunrise"? "Sunrise" : "Sunset"  }: {runResults.sunTime}</p> 
+                            </div>
+                        </>
+                        : null
                     }
                     <div className="select-box">
-                      <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Confirm Run</button>
-                      <button id='editRun' className="btn-red" onClick={showTheForm}>Edit Run</button>
+                        <button id='confirmRun' className="btn-red" onClick={handleConfirmation}>Save Run</button>
+                        <button id='editRun' className="btn-red" onClick={()=>setShowForm(true)}>Edit Run</button>
                     </div>
-                      <button id='cancelBtn' className="btn-red" onClick={()=>navigate(`/dashboard/${userId}`)}>Cancel</button>
                 </div>
-                : null
-            }
+                : null}
             </section>
-
+            
         </main>
     )
 }
 
-export default EditRun
+export default EditRun2

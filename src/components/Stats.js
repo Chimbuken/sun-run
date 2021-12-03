@@ -11,8 +11,6 @@ function Stats(props) {
         numOfSunsetSeen: 0, 
         totalDistanceCovered: 0})
 
-
-
     useEffect(()=>{
         const dbRef = firebase.database().ref(`/sample/${userId}`);
         dbRef.on('value', (response) => {
@@ -62,23 +60,23 @@ function Stats(props) {
     return (
         
         <div className='stats'>
-            <h2>Stats</h2>
+            {props.showH2 && <h2>Stats</h2>}
             <div className='statsSection'>
                 <div className="sunBox">
-                    <h4>Sunrise Seen</h4>
-                    <h2 className="statValue">{stats.numOfSunriseSeen}</h2>
+                    <h3>Sunrise Seen</h3>
+                    <h4 className="statValue">{stats.numOfSunriseSeen}</h4>
                 </div>
                 <div className="sunBox">
-                    <h4>Sunsets Seen</h4>
-                    <h2 className="statValue">{stats.numOfSunsetSeen}</h2>
+                    <h3>Sunsets Seen</h3>
+                    <h4 className="statValue">{stats.numOfSunsetSeen}</h4>
                 </div>
                 <div className="sunBox">
-                    <h4>Runs Completed</h4>
-                    <h2 className="statValue">{stats.numOfRunsCompleted}</h2>
+                    <h3>Runs Completed</h3>
+                    <h4 className="statValue">{stats.numOfRunsCompleted}</h4>
                 </div>
                 <div className="sunBox">
-                    <h4>Distance Covered</h4>
-                    <h2 className="statValue">{stats.totalDistanceCovered.toFixed(2)}Km</h2>
+                    <h3>Distance Covered</h3>
+                    <h4 className="statValue">{stats.totalDistanceCovered.toFixed(2)}Km</h4>
                 </div>
             </div>
         </div>

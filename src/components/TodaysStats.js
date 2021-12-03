@@ -40,7 +40,7 @@ const todayDate = moment().format("dddd, MMMM Do")
 
 return (
 <div className="flex-column todays-metrics">
-    <h3>{todayDate}</h3>
+    <h2>{todayDate}</h2>
     <p>Sunrise: {todaySunrise}</p>
     <p>Sunset: {todaySunset}</p>
 </div>
