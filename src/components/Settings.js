@@ -3,6 +3,7 @@ import {useParams, Link} from 'react-router-dom';
 import firebase from '../firebase';
 import axios from 'axios';
 import Stats from './Stats';
+import Footer from './Footer';
 import '../settings.css';
 
 
@@ -149,6 +150,7 @@ function Settings() {
 
 
     return (
+      <>
         <main className="settings-full-wrapper">
 
             {/* title of current page */}
@@ -248,54 +250,8 @@ function Settings() {
           {alert ?  <p>{alert.alertMessage}</p> : null }
 
         </main>
+        </>
     )
 }
 
 export default Settings
-
-
-  // < div className = "settings-panel settings-full" >
-                        
-  //                       <div className="settings-user-details">
-
-  //                           {/* <h3>{userInfo.name}</h3> 
-
-  //                           <h4>{userInfo.email} </h4> */}
-
-  //                       </div>
-
-  //                       <h3>{userInfo.location} </h3> 
-
-  //                   </ >
-
-  //                   <div className="settings-panel-spacing"></div>
-
-  //                   <div className="settings-panel settings-full">
-                        
-  //                       <div className="settings-grid grid-2-1 settings-center">
-                        
-  //                           <div className="settings-stat">
-  //                               <h4>Sunrise Seen</h4>
-  //                               <h2 className="statValue">3</h2>
-  //                           </div>
-
-  //                           <div className="settings-stat">
-  //                               <h4>Sunsets Seen</h4>
-  //                               <h2 className="statValue">1</h2>
-  //                           </div>
-
-  //                       </div>
-
-  //                       <div className="settings-grid grid-2-1">
-                        
-  //                           <div className="settings-stat">
-  //                               <h4>Runs Completed</h4>
-  //                               <h2 className="statValue">4</h2>
-  //                           </div>
-                            
-  //                           <div className="settings-stat">
-  //                               <h4>Distance Covered</h4>
-  //                               <h2 className="statValue">34.2Km</h2>
-  //                           </div>
-  //                       </div>
-  //                   </div>

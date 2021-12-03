@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import firebase from '../firebase';
-// import Footer from './Footer';
+import Footer from './Footer';
 
 function SignUp() {
 
@@ -244,7 +244,7 @@ function SignUp() {
 
       </section>
 
-    {/* <Footer/> */}
+    <Footer/>
     </main>
 
   )

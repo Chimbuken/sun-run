@@ -588,7 +588,7 @@ h2 {
 }
 
 /* usersCalendar */
-
+button.runs-item {
   font-family: 'Roboto', sans-serif;
   background-color: #ffffff0f;
   color: black;
@@ -812,7 +812,7 @@ p.alert {
 
 @media (max-width: 768px) {
   .background{
-    min-height: 180vh;
+    min-height: 100vh;
   }
   .flex.dashboard {
     flex-direction: column-reverse;
@@ -825,6 +825,10 @@ p.alert {
 
   .calendar-container{
     width: 100%;
+  }
+
+  .card-full {
+    justify-content: flex-start;
   }
 }
 
@@ -840,6 +844,7 @@ p.alert {
 @media (max-width: 500px) {
   .card-full {
     width: 100%;
+    justify-content: flex-start;
   }
 
   .wrapper {
@@ -858,7 +863,7 @@ p.alert {
     width: 80%;
   }
   .background{
-    min-height: 150vh;
+    min-height: 100vh;
   }
   .mbl-dashboard{
     width: 80%;
