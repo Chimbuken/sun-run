@@ -24,7 +24,7 @@ html {
 
 body {
   /* background-color: #2C2C2C; */
-  background: url('./assets/sunrun-bg-3.png');
+  background: url('./assets/sunrun-bg-4.png');
   background-size: cover;
   background-position: center;
 }
@@ -557,3 +557,35 @@ p.alert{
   color: #D66761;
   background: none;
 }
+
+.card-footer {
+  width: 80%;
+  height: 10vh;
+  margin: 0 auto;
+  margin-top: 50px;
+  text-align: center;
+}
+
+@media (max-width: 940px) {
+  .react-calendar{
+    width: 100%;
+  }
+  h4.statValue{
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .flex.dashboard {
+    flex-direction: column-reverse;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .flex-container{
+    width: 100%;
+  }
+  .react-calendar{
+    width: 100%;
+  }
+}
+

@@ -4,6 +4,7 @@ import UpcomingRuns from './UpcomingRuns.js';
 import firebase from '../firebase';
 import { useEffect, useState } from 'react';
 import '../usersCalendar.css'
+import Footer from './Footer';
 // import Stats from './Stats';
 
 function Dashboard(){
@@ -25,16 +26,18 @@ function Dashboard(){
     }, [user.userId])
     
   return (
+    <>
     <section className="card-full">
       <div className="flex dashboard-welcome">
         <h1 className="title-cont">Hello, {updateName.name} </h1>
       </div>
-
       <div className="flex dashboard">
         <UpcomingRuns/>
         <UsersCalendar userId={userId} />
       </div>
-    </section>  
+      <Footer/>
+    </section>
+    </>
   )
 }
 

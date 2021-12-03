@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import firebase from '../firebase';
+// import Footer from './Footer';
 
 function SignUp() {
 
@@ -116,6 +117,8 @@ function SignUp() {
         email: email,
         location: "",
         country: country,
+        postalCode: "",
+        zipcode: "",
         registrationDate: "",
         coords: {
           lat: 0,
@@ -156,6 +159,8 @@ function SignUp() {
           userObj.coords.lat = res.data[0].lat
           userObj.coords.long = res.data[0].lon
           userObj.location = res.data[0].display_name
+          userObj.postalCode = (country === 'canada') ? postalCode : null;
+          userObj.zipcode = (country === 'USA') ? zipcode : null;
 
           // create a timestamp
           const currentDate = new Date()
@@ -237,7 +242,9 @@ function SignUp() {
 
       </section>
 
+    {/* <Footer/> */}
     </main>
+
   )
 }
 

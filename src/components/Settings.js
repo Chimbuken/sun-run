@@ -8,54 +8,17 @@ import '../settings.css';
 
 function Settings() {
     const [userInfo, setUserInfo]=useState({});
-    // const [usersLocation, setUsersLocation]=useState('')
     const {userId} = useParams()
-    // const [showNameForm, setShowNameForm] = useState(false);
-    // const [showEmailForm, setShowEmailForm] = useState(false);
     const [alert, setAlert] = useState({alert: false, alertMessage:''})
 
     // for editing location -> dallan's thingys
-    // const [zipcode, setZipcode] = useState('');
     const [country, setCountry] = useState('canada');
-    // const [postalCode, setPostalCode] = useState('');
-    // const [showLocationForm, setShowLocationForm] = useState(false);
 
     // when any of the inputs are changed we update the userInfo object
     const handleInputChange =(e)=>{
         const {id, value} = e.target;
         setUserInfo({...userInfo, [id]:value});
-    }
-
-    // when the user submits and updates their name
-    // const submitName=(e)=>{
-    //     e.preventDefault()
-    //     // console.log(userInfo)
-    //     const nameRegex = /\s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+\.?\s*$/g; //first last
-    //     if(nameRegex.test(userInfo.name)) {
-    //         const dbRef = firebase.database().ref(`/sample/${userId}`);
-    //         dbRef.update(userInfo)
-    //         setAlert({alert: false, alertMessage:''})
-    //         // setShowNameForm(!showNameForm)
-    //     }else {
-    //         console.log('please provide a valid full name')
-    //         setAlert({alert: true, alertMessage:'please provide a valid full name'})
-    //     }
-    // }
-
-    // when the user submits and updates their email
-    // const submitEmail = (e)=>{
-    //     e.preventDefault()
-    //     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    //     if(emailRegex.test(userInfo.email)) {
-    //         const dbRef = firebase.database().ref(`/sample/${userId}`);
-    //         dbRef.update(userInfo)
-    //         setAlert({alert: false, alertMessage:''})
-    //         // setShowEmailForm(!showEmailForm)
-    //     }else {
-    //         console.log('please provide a valid full name')
-    //         setAlert({alert: true, alertMessage:'please provide a valid email'})
-    //     }
-    // }
+    }  
 
     // once location form is submit
     const submitSettings = async (e)=>{
@@ -129,8 +92,8 @@ function Settings() {
 
         if(country === 'canada' && postalRegex.test(userInfo.postalCode)) {
             // delete the temporary zip and or postal from userInfo before pushing to db
-            delete userInfo.zipcode;
-            delete userInfo.postalCode;
+            // delete userInfo.zipcode;
+            // delete userInfo.postalCode;
 
             // make db connection
             const dbRef = firebase.database().ref(`/sample/${userId}`);
@@ -138,12 +101,11 @@ function Settings() {
             // update the user
             dbRef.update(userInfo)
             setAlert({alert: false, alertMessage:''})
-            // setShowLocationForm(!showLocationForm)
 
         } else if(country === 'usa' && zipRegex.test(userInfo.zipcode)) {
             // delete the temporary zip and or postal from userInfo before pushing to db
-            delete userInfo.postalCode;
-            delete userInfo.zipcode;
+            // delete userInfo.postalCode;
+            // delete userInfo.zipcode;
 
             // make db connection
             const dbRef = firebase.database().ref(`/sample/${userId}`);
@@ -157,8 +119,8 @@ function Settings() {
 
         } else {
             // delete the temporary zip and or postal from userInfo
-            delete userInfo.postalCode;
-            delete userInfo.zipcode;
+            // delete userInfo.postalCode;
+            // delete userInfo.zipcode;
             
             // set the alert to true with a message
             setAlert({alert: true, alertMessage:'please provide a valid postal or zip code'})
@@ -183,9 +145,6 @@ function Settings() {
 
         // set Country
         setCountry(event.target.value);
-        // setZipcode('');
-        // setPostalCode('');
-
     }
 
 
@@ -201,17 +160,11 @@ function Settings() {
                 
             </div>
             
-            <section className="signup-form settings-container">
-                
-                
+            <section className="signup-form settings-container">    
 
                 <div className="settings-panel">
                     <h3 className="settings-title">Update your information</h3>
-                    {/* <div className="flex"> */}
-                        
-                        {/* <i className="fas fa-user-edit" onClick={()=>setShowNameForm(!showNameForm)}></i> */}
-                    {/* </div> */}
-                    {/* {showNameForm? */}
+                  
                     <form onSubmit={submitSettings}>
 
                         <div className="settings-grid grid-2">
@@ -223,20 +176,6 @@ function Settings() {
                             <input type="text" id="name" name="name" value={userInfo.name} onChange={handleInputChange} placeholder="Full name"></input>
                         </div>
 
-                        {/* <button className="btn-green">Update name</button> */}
-                        {/* <i className="far fa-times-circle" onClick={()=>setShowNameForm(!showNameForm)}></i> */}
-                    {/* </form> */}
-                    {/* : null */}
-                    {/* } */}
- 
-                    {/* <div className="flex"> */}
-                        {/* <h4>{userInfo.email} </h4> */}
-                        {/* <i className="far fa-envelope" onClick={()=>setShowEmailForm(!showEmailForm)}></i> */}
-                    {/* </div> */}
-                    {/* {showEmailForm? */}
-
-                    {/* <form onSubmit={submitSettings}> */}
-
                         <div className="settings-grid grid-2">
                             
                             <label htmlFor="email" className="settings-label">
@@ -246,24 +185,6 @@ function Settings() {
                             <input type="text" id="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email Address"></input>
                         
                         </div>
-                        
-                        {/* <button className="btn-green">Update email</button> */}
-                        {/* <i className="far fa-times-circle" onClick={()=>setShowEmailForm(!showEmailForm)}></i> */}
-                    {/* </form> */}
-                    {/* : null */}
-                    {/* } */}
-     
-                    {/* display edit location form */}
-                    {/* this will allow the user to enter their country, and either postal or zip code */}
-                    {/* <div className="flex"> */}
-                    {/* <h4>{userInfo.location} </h4> */}
-                     {/* <i class="fas fa-map-marker-alt" onClick={()=>setShowLocationForm(!showLocationForm)}></i> */}
-                    {/* </div> */}
-                    {/* {showLocationForm? */}
-
-                    {/* <form onSubmit={submitLocation}> */}
-                        {/* <label htmlFor="country" className="sr-only">country</label>
-                        <input type="text" id="email" name="email" value={userInfo.email} onChange={handleInputChange} placeholder="Email Address"></input> */}
                         
                         <div className="settings-grid grid-2">
                             
@@ -311,10 +232,8 @@ function Settings() {
                         
                         </div>
 
-                        {/* <i className="far fa-times-circle" onClick={()=>setShowLocationForm(!showLocationForm)}></i> */}
                     </form>
-                    {/* : null */}
-                    {/* } */}
+
                 </div>
 
                 <div className="settings-right">
