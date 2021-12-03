@@ -149,7 +149,7 @@ function Settings() {
 
 
     return (
-        <main className="card-full">
+        <main className="settings-full-wrapper">
 
             {/* title of current page */}
             <div className="settings-header">
@@ -160,7 +160,7 @@ function Settings() {
                 
             </div>
             
-            <section className="signup-form settings-container">    
+            <section className="settings-form settings-container">    
 
                 <div className="settings-panel">
                     <h3 className="settings-title">Update your information</h3>
