@@ -27,7 +27,7 @@ function Dashboard(){
     
   return (
     <>
-    <section className="card-full">
+    <section className="card-full mbl-dashboard">
       <div className="flex dashboard-welcome">
         <h1 className="title-cont">Hello, {updateName.name} </h1>
       </div>
