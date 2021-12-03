@@ -147,7 +147,8 @@ function UsersCalendar(props) {
 
             <TodaysStats/>
             
-            
+
+            <div className="calendar-wrapper">
                 <Calendar
                 onChange={setRunDate}
                 value={runDate}
@@ -155,7 +156,8 @@ function UsersCalendar(props) {
                 minDate={new Date()}
                 onClickDay={selectDate}
                 />
-         
+            </div>
+
             {/* modal for displaying run info and note pad */}
             {
                 modal === true ? (
