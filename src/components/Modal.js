@@ -106,7 +106,6 @@ function Modal(props) {
     // function to close the modal
     function closeModal() {
         props.setModal(false);
-        // setRunId('')
 
         // reset note validation messages
         setIsNoteValid(0)
