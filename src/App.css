@@ -894,3 +894,7 @@ p.alert {
 .fa-ellipsis-h {
   color: #fff;
 }
+
+.title-cont {
+  text-transform: capitalize;
+}
