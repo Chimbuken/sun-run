@@ -123,23 +123,7 @@ function UpcomingRuns() {
             </div>
 
             <Stats  showH2={true} userId={user.userId}/>
-            {/* <h3>Completed runs</h3> */}
-            {/* list the user's upcoming runs */}
-            {/* <div>
-                {
-                    // using map to iterate through userRuns array
-                    userRuns
-                    .filter(run => run.completed === true)
-                    .map((run) => {
-                            return(
-                                <div key={run.id}>
-                                    <p>You completed a run on {run.date}.</p>
-                                </div> 
-                            )
-                    })
 
-                }
-            </div> */}
         </div>        
             {/* modal for displaying run info and note pad */}
             {
