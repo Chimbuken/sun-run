@@ -2,13 +2,14 @@ import {useState, useEffect} from 'react'
 import firebase from '../firebase';
 import {useParams , useNavigate} from 'react-router-dom'
 import Stats from './Stats';
-
+import moment from 'moment'
 
 import '../modal.css'
 import Modal from './Modal';
 
+
 function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function UpcomingRuns() {
@@ -22,6 +23,12 @@ function UpcomingRuns() {
     const [runKey, setRunKey] = useState('');
 
     const [runObjForModal, setRunObjForModal]=useState({})
+    const [upcomingRuns, setUpcomingRuns]=useState([])
+
+    const [today, setToday]=useState(new Date)
+    console.log(today.getDate())
+
+
 
 
     // get userId from url and store in userId
@@ -41,8 +48,16 @@ function UpcomingRuns() {
             // store all user's runs in useState
             if(data.runs){ // added by 😈sara 
                 setUserRuns(data.runs)
+                let upcomingRuns=[]
+                data.runs.forEach(run=>{
+                    if(run.completed=== false){
+                        upcomingRuns.push(run)
+                    }
+                })
+                setUpcomingRuns(upcomingRuns)
             }
             setUserInfo(data) // added by 😈sara 
+
         })
     },[user.userId])
     // function to set and open modal
@@ -72,9 +87,9 @@ function UpcomingRuns() {
             {/* list the user's upcoming runs */}
             <div className="flex-horizontal">
                 {
-                  userRuns.filter(run => run.completed === false) ? 
-                      <p>No upcoming Run</p> : null
-                  }
+                    upcomingRuns.length===0 ? 
+                        <p>No upcoming Run</p> : null
+                    }
                 {   
                     // using map to iterate through userRuns array
                     userRuns
@@ -84,7 +99,21 @@ function UpcomingRuns() {
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
                                         <button className="runs-item font-white" onClick={() => runModal(run.id)}>
-                                            <p>{capitalize(run.timeOfDay)} Run: <span>{run.date}</span></p>
+                                            <p>{capitalize(run.timeOfDay)} Run: <span>
+                                                { 
+                                                    (run.date.split('-')[2] - today.getDate() ) < 7 ? 
+                                                        (run.date.split('-')[2] - today.getDate() ) < 2 ? 
+                                                            (run.date.split('-')[2] - today.getDate() ) == 0 ? 
+                                                                (run.date.split('-')[2] - today.getDate() ) == -1 ? 
+                                                                `Yesterday at ${run.suntime}` 
+                                                                :`Today at ${run.suntime}` 
+                                                            :`Tomorrow at ${run.suntime}` 
+                                                        :`${moment(run.date).format('dddd')} at ${run.suntime}`
+
+                                                    : moment(run.date).format('MMMM Do YYYY')
+                                                }
+                                                </span></p>
+                                                {/* {moment(run.date).add(4, 'days').calendar() } */}
                                             <i class="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
