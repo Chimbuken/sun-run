@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import firebase from '../firebase';
-// import Footer from './Footer';
+import Footer from './Footer';
 
 function SignUp() {
 
@@ -193,10 +193,10 @@ function SignUp() {
       <section className="signup-form wrapper">
 
         <h1>Welcome</h1>
-        <p style={{width: "300px", margin: "0 auto"}}>Sun Run is an app that helps you catch the Sunrise or Sunset during your run! We calculate when you should start your run so you don't have to!</p>
 
         {/* Form for signup which takes the user's: name, email, postal/zip code to retrieve location */}
         <form aria-label="Welcome wizard form" onSubmit={handleSignup} className="flex-column">
+          <p>Sun Run is an app that helps you catch the Sunrise or Sunset during your run! We calculate when you should start your run so you don't have to!</p>
 
           <p>First, please sign up and enter your postal code so we can get the accurate sunrise/sunset times for your region.</p>
 
@@ -228,6 +228,8 @@ function SignUp() {
           {/* Submit button to sign up and pass info to input handlers */}
           <button className="btn-gray" aria-label="Sign up for account" id="submit" name="submit">Sign up</button>
 
+          <Link className="signin-links" to="/login">Have an account? Sign In</Link>
+
           {/* Input validation messages */}
           <ul className="validation-box flex-column">
             {!isSignupValid && <li className="error-text">Form is invalid, please try again.</li> }
@@ -242,7 +244,7 @@ function SignUp() {
 
       </section>
 
-    {/* <Footer/> */}
+    <Footer/>
     </main>
 
   )

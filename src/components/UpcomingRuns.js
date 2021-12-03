@@ -90,6 +90,7 @@ function UpcomingRuns() {
                     upcomingRuns.length===0 ? 
                         <p>No upcoming Run</p> : null
                     }
+
                 {   
                     // using map to iterate through userRuns array
                     userRuns
@@ -99,6 +100,7 @@ function UpcomingRuns() {
                                 <div className="runs-panel" key={run.id}>
                                     {/* <Link key={user.userId} to={`/run/${run.id}`}> */}
                                         <button className="runs-item font-white" onClick={() => runModal(run.id)}>
+
                                             <p>{capitalize(run.timeOfDay)} Run: <span>
                                                 { 
                                                     (run.date.split('-')[2] - today.getDate() ) < 7 ? 
@@ -113,8 +115,7 @@ function UpcomingRuns() {
                                                     : moment(run.date).format('MMMM Do YYYY')
                                                 }
                                                 </span></p>
-                                                {/* {moment(run.date).add(4, 'days').calendar() } */}
-                                            <i class="fas fa-ellipsis-h"></i>
+                                            <i className="fas fa-ellipsis-h"></i>
                                         </button>
                                 </div>
                             )
