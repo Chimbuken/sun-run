@@ -6,6 +6,7 @@ import firebase from '../firebase';
 import runType from '../functions/runType';
 import {convertH2M, convertM2H} from '../functions/runType.js'
 import { v4 as uuidv4 } from 'uuid';
+import Footer from './Footer';
 
 function SettingUpRun() {
     const inputPace = useRef();
@@ -217,6 +218,7 @@ function SettingUpRun() {
                 </div>
                 : null}
             </section>
+        <Footer/>
         </main>
     )
 }
