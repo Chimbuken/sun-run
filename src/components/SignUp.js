@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import firebase from '../firebase';
+// import Footer from './Footer';
 
 function SignUp() {
 
@@ -237,7 +238,9 @@ function SignUp() {
 
       </section>
 
+    {/* <Footer/> */}
     </main>
+
   )
 }
 
